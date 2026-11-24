@@ -29,14 +29,30 @@ def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def download(url: str, target: Path) -> str:
+def download(url: str, target: Path, attempts: int = 3) -> str:
+    """Descarga con reintentos y mensaje claro. Devuelve la fecha UTC."""
     target.parent.mkdir(parents=True, exist_ok=True)
     print(f"descargando {url}")
-    with urllib.request.urlopen(url, timeout=60) as response:
-        data = response.read()
-    target.write_bytes(data)
-    print(f"  {len(data)} bytes -> {target}")
-    return utc_now()
+    last_error: Exception | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            with urllib.request.urlopen(url, timeout=60) as response:
+                data = response.read()
+            target.write_bytes(data)
+            print(f"  {len(data)} bytes -> {target}")
+            return utc_now()
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            last_error = exc
+            print(f"  intento {attempt}/{attempts} falló: {exc}")
+    raise SystemExit(
+        f"no se pudo descargar {url}: {last_error}. "
+        "Vuelva a intentarlo o use --offline si el archivo ya está en disco."
+    )
+
+
+def file_mtime_utc(path: Path) -> str:
+    stamp = dt.datetime.fromtimestamp(path.stat().st_mtime, dt.timezone.utc)
+    return stamp.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def previous_items() -> dict[str, dict]:
@@ -110,6 +126,16 @@ def main() -> int:
             if prior and prior.get("sha256") == actual_sha:
                 downloaded_at = prior.get("downloaded_at_utc")
 
+        downloaded_source = "download"
+        if downloaded_at is None:
+            if spec["kind"] == "real" and path.exists():
+                # El archivo ya estaba en disco y el manifiesto no guardaba la
+                # fecha: se usa la mtime UTC y se declara el origen.
+                downloaded_at = file_mtime_utc(path)
+                downloaded_source = "mtime"
+            else:
+                downloaded_source = "generado"
+
         item = {
             "id": spec["id"],
             "kind": spec["kind"],
@@ -121,6 +147,7 @@ def main() -> int:
             "path": spec["path"],
             "source_url": spec.get("source_url"),
             "downloaded_at_utc": downloaded_at,
+            "downloaded_at_source": downloaded_source,
             "bytes": size,
             "sha256": actual_sha,
             "profile": spec.get("profile"),
