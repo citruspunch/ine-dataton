@@ -1,0 +1,175 @@
+{
+  "snapshot_id": "snap-2026-11-23",
+  "prepared_at_utc": "2026-11-24T05:51:05Z",
+  "note": "Lista cerrada. Ninguna URL libre en tiempo de ejecución: esta lista es la única fuente de rutas.",
+  "items": [
+    {
+      "id": "ine-ipc-empalme",
+      "kind": "real",
+      "synthetic": false,
+      "source_id": "ine-ckan-ipc-empalme-rep",
+      "dataset_id": "4243818d-b479-4bc1-aae6-2735e2b51265",
+      "resource_id": "6b2cb40a-188c-47c9-9288-ba11c40b5910",
+      "title": "Índice de Precios al Consumidor, serie empalmada, República",
+      "path": "data/ipc_emprepu_es25.xlsx",
+      "source_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/6b2cb40a-188c-47c9-9288-ba11c40b5910/download/ipc_emprepu_es25.xlsx",
+      "downloaded_at_utc": "2026-11-24T05:41:54Z",
+      "bytes": 68016,
+      "sha256": "d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4",
+      "profile": "ipc-empalme-rep@1.0.0",
+      "license": {
+        "id": "cc-by",
+        "verified": true,
+        "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
+        "evidence": "Metadatos CKAN (package_show) de los conjuntos IPC 2024 y 2025-2026 declaran cc-by."
+      }
+    },
+    {
+      "id": "fix-contrato-ok",
+      "kind": "synthetic",
+      "synthetic": true,
+      "source_id": null,
+      "dataset_id": null,
+      "resource_id": null,
+      "title": "Fixture sintético: CSV mensual correcto",
+      "path": "review_store/fixtures/contrato_ok.csv",
+      "source_url": null,
+      "downloaded_at_utc": null,
+      "bytes": 167,
+      "sha256": "6e013fa3e3cc701ad6d435acbeccb96582be7599df99b6b5ed88d67caec4ba52",
+      "profile": "contrato-mensual@1.0.0",
+      "license": {
+        "id": "interno-fixture",
+        "verified": true,
+        "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+        "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista."
+      }
+    },
+    {
+      "id": "fix-contrato-columna-faltante",
+      "kind": "synthetic",
+      "synthetic": true,
+      "source_id": null,
+      "dataset_id": null,
+      "resource_id": null,
+      "title": "Fixture sintético: CSV con columna requerida ausente",
+      "path": "review_store/fixtures/contrato_columna_faltante.csv",
+      "source_url": null,
+      "downloaded_at_utc": null,
+      "bytes": 139,
+      "sha256": "92ad9347dad1b84c4d1e2faa4b3a6def0e93f1da90ad0b869c72d6297b94d38a",
+      "profile": "contrato-mensual@1.0.0",
+      "license": {
+        "id": "interno-fixture",
+        "verified": true,
+        "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+        "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista."
+      }
+    },
+    {
+      "id": "fix-contrato-grano-duplicado",
+      "kind": "synthetic",
+      "synthetic": true,
+      "source_id": null,
+      "dataset_id": null,
+      "resource_id": null,
+      "title": "Fixture sintético: CSV con grano duplicado",
+      "path": "review_store/fixtures/contrato_grano_duplicado.csv",
+      "source_url": null,
+      "downloaded_at_utc": null,
+      "bytes": 212,
+      "sha256": "ad1a974a5250c49f3f9bef0ecdb38413de0687d0186a76738103bd85cd5e434e",
+      "profile": "contrato-mensual@1.0.0",
+      "license": {
+        "id": "interno-fixture",
+        "verified": true,
+        "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+        "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista."
+      }
+    },
+    {
+      "id": "fix-contrato-xlsx-ok",
+      "kind": "synthetic",
+      "synthetic": true,
+      "source_id": null,
+      "dataset_id": null,
+      "resource_id": null,
+      "title": "Fixture sintético: XLSX de una hoja, hoja declarada 'Datos'",
+      "path": "review_store/fixtures/contrato_ok.xlsx",
+      "source_url": null,
+      "downloaded_at_utc": null,
+      "bytes": 5025,
+      "sha256": "269560077a204ab8eac77803fc84001cf6e366f0c41a7764d6e73812bc1495cf",
+      "profile": "contrato-mensual-xlsx@1.0.0",
+      "license": {
+        "id": "interno-fixture",
+        "verified": true,
+        "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+        "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista."
+      }
+    },
+    {
+      "id": "fix-contrato-xlsx-hoja-inesperada",
+      "kind": "synthetic",
+      "synthetic": true,
+      "source_id": null,
+      "dataset_id": null,
+      "resource_id": null,
+      "title": "Fixture sintético: XLSX con hoja distinta a la declarada",
+      "path": "review_store/fixtures/contrato_hoja_inesperada.xlsx",
+      "source_url": null,
+      "downloaded_at_utc": null,
+      "bytes": 5026,
+      "sha256": "05b1bcc2d64702410289d69cdd0ddebaede55ad56df412c99dc221301102ea1f",
+      "profile": "contrato-mensual-xlsx@1.0.0",
+      "license": {
+        "id": "interno-fixture",
+        "verified": true,
+        "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+        "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista."
+      }
+    },
+    {
+      "id": "fix-identidad-a",
+      "kind": "synthetic",
+      "synthetic": true,
+      "source_id": null,
+      "dataset_id": null,
+      "resource_id": null,
+      "title": "Fixture sintético: recurso con bytes idénticos al recurso B",
+      "path": "review_store/fixtures/identidad_a.csv",
+      "source_url": null,
+      "downloaded_at_utc": null,
+      "bytes": 87,
+      "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6",
+      "profile": null,
+      "license": {
+        "id": "interno-fixture",
+        "verified": true,
+        "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+        "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista."
+      }
+    },
+    {
+      "id": "fix-identidad-b",
+      "kind": "synthetic",
+      "synthetic": true,
+      "source_id": null,
+      "dataset_id": null,
+      "resource_id": null,
+      "title": "Fixture sintético: recurso con bytes idénticos al recurso A",
+      "path": "review_store/fixtures/identidad_b.csv",
+      "source_url": null,
+      "downloaded_at_utc": null,
+      "bytes": 87,
+      "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6",
+      "profile": null,
+      "license": {
+        "id": "interno-fixture",
+        "verified": true,
+        "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+        "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista."
+      }
+    }
+  ]
+}

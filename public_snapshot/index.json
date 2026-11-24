@@ -1,0 +1,33 @@
+{
+  "aggregates": [
+    {
+      "case_id": "csv_ok",
+      "digest": "ef98a73d6e1c33ef642a4388b33ca634005ba7ce51997980d5f5a8123b854b71",
+      "file": "aggregates/csv_ok.json",
+      "label": "CSV sintético correcto",
+      "state": "habilitado_para_consulta",
+      "state_text": "Habilitado para consulta en el prototipo",
+      "synthetic": true
+    },
+    {
+      "case_id": "dup_identidad_excepcion",
+      "digest": "e7a8a16d4a24efb95b44fc8209fe1d3becb0f52c45f9886fdd6f05006b82a1f9",
+      "file": "aggregates/dup_identidad_excepcion.json",
+      "label": "Mismo par de bytes con política de reutilización documentada",
+      "state": "habilitado_para_consulta",
+      "state_text": "Habilitado para consulta en el prototipo",
+      "synthetic": true
+    },
+    {
+      "case_id": "ipc_empalme",
+      "digest": "a5429f674471736ee719dd9315016129ae3d574591777a8e4d7eb4efc558351b",
+      "file": "aggregates/ipc_empalme.json",
+      "label": "IPC empalme República: Hoja2, filas 503 y 504",
+      "state": "habilitado_para_consulta",
+      "state_text": "Habilitado para consulta en el prototipo",
+      "synthetic": false
+    }
+  ],
+  "generated_at_utc": "2026-11-24T05:51:06Z",
+  "snapshot_id": "snap-2026-11-23"
+}

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dos recursos con el mismo SHA-256 y etiquetas distintas · revisión</title>
+<style>
+:root {
+  --ink: #14181f; --muted: #5b6573; --line: #d8dee7; --bg: #f6f7f9;
+  --ok: #1c6b3f; --ok-bg: #e6f3ea;
+  --warn: #8a5a00; --warn-bg: #fdf2da;
+  --fail: #96231f; --fail-bg: #fbe9e7;
+  --none: #4a4f57; --none-bg: #eceef1;
+  --accent: #1d3f6e;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+header.top {
+  background: var(--accent); color: #fff; padding: 18px 24px;
+  border-bottom: 4px solid #0d2244;
+}
+header.top .brand { font-size: 19px; font-weight: 650; letter-spacing: .2px; }
+header.top .brand .tag {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  background: rgba(255,255,255,.18); padding: 2px 7px; border-radius: 3px;
+  margin-left: 8px; vertical-align: 2px;
+}
+header.top .sub { color: #c9d6ea; font-size: 13px; margin-top: 3px; }
+main { max-width: 1000px; margin: 0 auto; padding: 26px 24px 60px; }
+h1 { font-size: 24px; margin: 0 0 6px; letter-spacing: -.2px; }
+h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .07em;
+     color: var(--muted); margin: 30px 0 10px; }
+p.lead { color: var(--muted); margin: 0 0 18px; }
+a { color: var(--accent); }
+table { width: 100%; border-collapse: collapse; background: #fff;
+        border: 1px solid var(--line); }
+th, td { text-align: left; padding: 8px 11px; border-bottom: 1px solid var(--line);
+         vertical-align: top; font-size: 14px; }
+th { background: #eef1f5; font-size: 12px; text-transform: uppercase;
+     letter-spacing: .05em; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: none; }
+code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+              font-size: 12.5px; }
+td.mono { word-break: break-all; }
+td.nw, th.nw { white-space: nowrap; }
+td.ev { max-width: 380px; word-break: break-word; }
+td.ev .mono { font-size: 12px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px;
+         font-size: 12px; font-weight: 600; white-space: nowrap; }
+.b-ok { color: var(--ok); background: var(--ok-bg); }
+.b-warn { color: var(--warn); background: var(--warn-bg); }
+.b-fail { color: var(--fail); background: var(--fail-bg); }
+.b-none { color: var(--none); background: var(--none-bg); }
+.b-syn { color: #5b2e86; background: #f0e7fa; }
+dl.ficha { display: grid; grid-template-columns: 220px 1fr; gap: 0;
+           background: #fff; border: 1px solid var(--line); margin: 0; }
+dl.ficha dt, dl.ficha dd { margin: 0; padding: 8px 11px;
+                            border-bottom: 1px solid var(--line); font-size: 14px; }
+dl.ficha dt { color: var(--muted); background: #fafbfc; font-size: 13px; }
+dl.ficha dd { word-break: break-word; }
+dl.ficha dt:last-of-type, dl.ficha dd:last-of-type { border-bottom: none; }
+.note { background: #fff; border-left: 3px solid var(--accent);
+        padding: 10px 14px; margin: 16px 0; font-size: 14px; }
+.warnbox { background: var(--warn-bg); border-left: 3px solid var(--warn);
+           padding: 10px 14px; margin: 16px 0; font-size: 14px; }
+footer { max-width: 1000px; margin: 0 auto; padding: 0 24px 40px;
+         color: var(--muted); font-size: 12.5px; }
+.cards { display: grid; gap: 10px; }
+.card { background: #fff; border: 1px solid var(--line); padding: 13px 15px;
+        display: flex; justify-content: space-between; gap: 14px; align-items: center; }
+.card .t { font-weight: 600; }
+.card .m { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">INE Data Trust <span class="tag">prototipo</span></div>
+  <div class="sub">Pantalla privada de revisión</div>
+</header>
+<main>
+
+<p><a href="index.html">← Volver a la bandeja</a></p>
+<h1>Dos recursos con el mismo SHA-256 y etiquetas distintas</h1>
+<p class="lead"><span class="badge b-fail">No habilitado para consulta</span></p>
+<dl class="ficha"><dt>Caso</dt><dd><span class="mono">dup_identidad</span></dd><dt>SHA-256 (ambos)</dt><dd><span class="mono">dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6</span></dd><dt>Mismos bytes</dt><dd>True</dd><dt>Recursos</dt><dd>fix-identidad-a · {&#x27;dataset&#x27;: &#x27;Divorcios (sintético)&#x27;, &#x27;title&#x27;: &#x27;Eventos vitales, serie A&#x27;, &#x27;period&#x27;: &#x27;2024&#x27;, &#x27;base&#x27;: None, &#x27;unit&#x27;: &#x27;registro&#x27;, &#x27;grain&#x27;: &#x27;anio-mes&#x27;}<br>fix-identidad-b · {&#x27;dataset&#x27;: &#x27;Matrimonios (sintético)&#x27;, &#x27;title&#x27;: &#x27;Eventos vitales, serie B&#x27;, &#x27;period&#x27;: &#x27;2024&#x27;, &#x27;base&#x27;: None, &#x27;unit&#x27;: &#x27;registro&#x27;, &#x27;grain&#x27;: &#x27;anio-mes&#x27;}</dd><dt>Estado</dt><dd><span class="badge b-fail">No habilitado para consulta</span></dd></dl>
+<h2>Hallazgos</h2>
+<table>
+<thead><tr><th>Regla</th><th>Título</th><th>Estado</th><th>Crítica</th>
+<th>Mensaje</th><th>Evidencia</th></tr></thead>
+<tbody><tr><td class='mono nw'>ID-01</td><td>Identidad por SHA-256</td><td class='nw'><span class="badge b-fail">falla</span></td><td class='nw'>sí</td><td>Mismos bytes con identidad semántica incompatible: requiere revisión.</td><td class='mono ev'>{&quot;identities&quot;: [{&quot;base&quot;: null, &quot;dataset&quot;: &quot;Divorcios (sintético)&quot;, &quot;grain&quot;: &quot;anio-mes&quot;, &quot;period&quot;: &quot;2024&quot;, &quot;title&quot;: &quot;Eventos vitales, serie A&quot;, &quot;unit&quot;: &quot;registro&quot;}, {&quot;base&quot;: null, &quot;dataset&quot;: &quot;Matrimonios (sintético)&quot;, &quot;grain&quot;: &quot;anio-mes&quot;, &quot;period&quot;: &quot;2024&quot;, &quot;title&quot;: &quot;Eventos vitales, serie B&quot;, &quot;unit&quot;: &quot;registro&quot;}], &quot;mismatched_fields&quot;: [&quot;dataset&quot;, &quot;title&quot;], &quot;sha256&quot;: &quot;dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6&quot;}</td></tr></tbody>
+</table>
+
+<h2>Bitácora de decisiones</h2>
+<table>
+<thead><tr><th>Decisión</th><th>Fecha UTC</th><th>Responsable</th><th>Motivo</th>
+<th>Resultado</th><th>Digest</th></tr></thead>
+<tbody><tr><td colspan='6'>Sin decisión registrada.</td></tr></tbody>
+</table>
+<div class="note">Cobertura: 1 de
+1 reglas críticas evaluadas. Digest de
+validación <span class="mono">a7f4b1aed0c28a5005cc662f6bad94375320a7c31953a317ba2f5c55ac95fcae</span>.</div>
+
+</main>
+<footer><p>Recibo privado: review_store/receipts/dup_identidad.json</p></footer>
+</body>
+</html>

@@ -1,0 +1,102 @@
+{
+  "rules_version": "1.0.0",
+  "note": "Reglas declarativas versionadas. El motor no se modifica al añadir un perfil: solo se declara otro perfil. La severidad observada y la cobertura se muestran sin puntaje.",
+  "rules": [
+    {
+      "id": "SNAP-01",
+      "title": "Integridad del snapshot",
+      "severity": "falla",
+      "critical": true,
+      "scope": "agregado",
+      "message": "El archivo debe coincidir con los bytes y el SHA-256 registrados en el manifiesto."
+    },
+    {
+      "id": "LIC-01",
+      "title": "Licencia verificada",
+      "severity": "falla",
+      "critical": true,
+      "scope": "agregado",
+      "message": "Sin licencia verificada el recurso se cierra por defecto; no se asume redistribución."
+    },
+    {
+      "id": "CONT-01",
+      "title": "Hoja declarada presente",
+      "severity": "falla",
+      "critical": true,
+      "scope": "xlsx",
+      "message": "La hoja observada debe ser la declarada en el perfil; se informan expected_sheet y observed_sheets."
+    },
+    {
+      "id": "CONT-02",
+      "title": "Columnas requeridas",
+      "severity": "falla",
+      "critical": true,
+      "scope": "contrato",
+      "message": "Cada columna declarada en el perfil debe existir con su encabezado y, en XLSX, en su letra."
+    },
+    {
+      "id": "CONT-03",
+      "title": "Tipos parseables",
+      "severity": "falla",
+      "critical": true,
+      "scope": "contrato",
+      "message": "Cada valor declarado debe parsear al tipo del perfil."
+    },
+    {
+      "id": "CONT-04",
+      "title": "Grano único",
+      "severity": "falla",
+      "critical": true,
+      "scope": "contrato",
+      "message": "La combinación de columnas de grano no puede repetirse."
+    },
+    {
+      "id": "CONT-05",
+      "title": "Periodo declarado presente",
+      "severity": "falla",
+      "critical": true,
+      "scope": "contrato",
+      "message": "Los periodos declarados deben existir en el archivo y no mezclarse."
+    },
+    {
+      "id": "CONT-06",
+      "title": "Unidad y base declaradas",
+      "severity": "falla",
+      "critical": true,
+      "scope": "contrato",
+      "message": "La unidad observada debe coincidir con la declarada y cada serie debe declarar su base."
+    },
+    {
+      "id": "ID-01",
+      "title": "Identidad por SHA-256",
+      "severity": "falla",
+      "critical": true,
+      "scope": "par",
+      "message": "Mismos bytes con identidad incompatible requieren revisión; una excepción documentada pasa a advertencia."
+    },
+    {
+      "id": "IPC-01",
+      "title": "Misma base para una variación",
+      "severity": "falla",
+      "critical": false,
+      "scope": "comparación",
+      "message": "El cociente entre índices de bases distintas no es una variación."
+    },
+    {
+      "id": "IPC-02",
+      "title": "Periodos contiguos",
+      "severity": "falla",
+      "critical": false,
+      "scope": "comparación",
+      "message": "Una variación mes a mes exige meses consecutivos."
+    },
+    {
+      "id": "IPC-03",
+      "title": "Variación publicada coincide",
+      "severity": "advertencia",
+      "critical": false,
+      "scope": "comparación",
+      "message": "La variación calculada debe coincidir con la publicada dentro de la tolerancia declarada."
+    }
+  ]
+}

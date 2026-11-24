@@ -49,3 +49,9 @@ next-env.d.ts
 
 # Descubrimiento INE (datos crudos, temporales)
 /discovery_ine/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/

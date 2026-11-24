@@ -1,0 +1,108 @@
+{
+  "note": "Lista cerrada de casos evaluables. No hay URL libre, SQL ni carga de archivos.",
+  "cases": [
+    {
+      "id": "ipc_empalme",
+      "method": "contract",
+      "manifest_item": "ine-ipc-empalme",
+      "profile": "ipc-empalme-rep",
+      "label": "IPC empalme República: Hoja2, filas 503 y 504",
+      "requested_comparisons": ["F504/F503", "F504/E503"]
+    },
+    {
+      "id": "csv_ok",
+      "method": "contract",
+      "manifest_item": "fix-contrato-ok",
+      "profile": "contrato-mensual",
+      "label": "CSV sintético correcto"
+    },
+    {
+      "id": "csv_columna_faltante",
+      "method": "contract",
+      "manifest_item": "fix-contrato-columna-faltante",
+      "profile": "contrato-mensual",
+      "label": "CSV sintético con columna requerida ausente"
+    },
+    {
+      "id": "csv_grano_duplicado",
+      "method": "contract",
+      "manifest_item": "fix-contrato-grano-duplicado",
+      "profile": "contrato-mensual",
+      "label": "CSV sintético con grano duplicado"
+    },
+    {
+      "id": "xlsx_ok",
+      "method": "contract",
+      "manifest_item": "fix-contrato-xlsx-ok",
+      "profile": "contrato-mensual-xlsx",
+      "label": "XLSX sintético con la hoja declarada"
+    },
+    {
+      "id": "xlsx_hoja_inesperada",
+      "method": "contract",
+      "manifest_item": "fix-contrato-xlsx-hoja-inesperada",
+      "profile": "contrato-mensual-xlsx",
+      "label": "XLSX sintético con hoja distinta a la declarada"
+    },
+    {
+      "id": "dup_identidad",
+      "method": "identity_pair",
+      "profile": "identidad-recursos",
+      "label": "Dos recursos con el mismo SHA-256 y etiquetas distintas",
+      "resources": [
+        {
+          "manifest_item": "fix-identidad-a",
+          "identity": {
+            "dataset": "Divorcios (sintético)",
+            "title": "Eventos vitales, serie A",
+            "period": "2024",
+            "base": null,
+            "unit": "registro",
+            "grain": "anio-mes"
+          }
+        },
+        {
+          "manifest_item": "fix-identidad-b",
+          "identity": {
+            "dataset": "Matrimonios (sintético)",
+            "title": "Eventos vitales, serie B",
+            "period": "2024",
+            "base": null,
+            "unit": "registro",
+            "grain": "anio-mes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "dup_identidad_excepcion",
+      "method": "identity_pair",
+      "profile": "identidad-recursos",
+      "label": "Mismo par de bytes con política de reutilización documentada",
+      "resources": [
+        {
+          "manifest_item": "fix-identidad-a",
+          "identity": {
+            "dataset": "Divorcios (sintético)",
+            "title": "Eventos vitales, serie A",
+            "period": "2024",
+            "base": null,
+            "unit": "registro",
+            "grain": "anio-mes"
+          }
+        },
+        {
+          "manifest_item": "fix-identidad-b",
+          "identity": {
+            "dataset": "Matrimonios (sintético)",
+            "title": "Eventos vitales, serie B",
+            "period": "2024",
+            "base": null,
+            "unit": "registro",
+            "grain": "anio-mes"
+          }
+        }
+      ]
+    }
+  ]
+}

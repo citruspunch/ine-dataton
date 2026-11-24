@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSV sintético correcto · revisión</title>
+<style>
+:root {
+  --ink: #14181f; --muted: #5b6573; --line: #d8dee7; --bg: #f6f7f9;
+  --ok: #1c6b3f; --ok-bg: #e6f3ea;
+  --warn: #8a5a00; --warn-bg: #fdf2da;
+  --fail: #96231f; --fail-bg: #fbe9e7;
+  --none: #4a4f57; --none-bg: #eceef1;
+  --accent: #1d3f6e;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.55 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+header.top {
+  background: var(--accent); color: #fff; padding: 18px 24px;
+  border-bottom: 4px solid #0d2244;
+}
+header.top .brand { font-size: 19px; font-weight: 650; letter-spacing: .2px; }
+header.top .brand .tag {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  background: rgba(255,255,255,.18); padding: 2px 7px; border-radius: 3px;
+  margin-left: 8px; vertical-align: 2px;
+}
+header.top .sub { color: #c9d6ea; font-size: 13px; margin-top: 3px; }
+main { max-width: 1000px; margin: 0 auto; padding: 26px 24px 60px; }
+h1 { font-size: 24px; margin: 0 0 6px; letter-spacing: -.2px; }
+h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .07em;
+     color: var(--muted); margin: 30px 0 10px; }
+p.lead { color: var(--muted); margin: 0 0 18px; }
+a { color: var(--accent); }
+table { width: 100%; border-collapse: collapse; background: #fff;
+        border: 1px solid var(--line); }
+th, td { text-align: left; padding: 8px 11px; border-bottom: 1px solid var(--line);
+         vertical-align: top; font-size: 14px; }
+th { background: #eef1f5; font-size: 12px; text-transform: uppercase;
+     letter-spacing: .05em; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: none; }
+code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+              font-size: 12.5px; }
+td.mono { word-break: break-all; }
+td.nw, th.nw { white-space: nowrap; }
+td.ev { max-width: 380px; word-break: break-word; }
+td.ev .mono { font-size: 12px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 999px;
+         font-size: 12px; font-weight: 600; white-space: nowrap; }
+.b-ok { color: var(--ok); background: var(--ok-bg); }
+.b-warn { color: var(--warn); background: var(--warn-bg); }
+.b-fail { color: var(--fail); background: var(--fail-bg); }
+.b-none { color: var(--none); background: var(--none-bg); }
+.b-syn { color: #5b2e86; background: #f0e7fa; }
+dl.ficha { display: grid; grid-template-columns: 220px 1fr; gap: 0;
+           background: #fff; border: 1px solid var(--line); margin: 0; }
+dl.ficha dt, dl.ficha dd { margin: 0; padding: 8px 11px;
+                            border-bottom: 1px solid var(--line); font-size: 14px; }
+dl.ficha dt { color: var(--muted); background: #fafbfc; font-size: 13px; }
+dl.ficha dd { word-break: break-word; }
+dl.ficha dt:last-of-type, dl.ficha dd:last-of-type { border-bottom: none; }
+.note { background: #fff; border-left: 3px solid var(--accent);
+        padding: 10px 14px; margin: 16px 0; font-size: 14px; }
+.warnbox { background: var(--warn-bg); border-left: 3px solid var(--warn);
+           padding: 10px 14px; margin: 16px 0; font-size: 14px; }
+footer { max-width: 1000px; margin: 0 auto; padding: 0 24px 40px;
+         color: var(--muted); font-size: 12.5px; }
+.cards { display: grid; gap: 10px; }
+.card { background: #fff; border: 1px solid var(--line); padding: 13px 15px;
+        display: flex; justify-content: space-between; gap: 14px; align-items: center; }
+.card .t { font-weight: 600; }
+.card .m { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">INE Data Trust <span class="tag">prototipo</span></div>
+  <div class="sub">Pantalla privada de revisión</div>
+</header>
+<main>
+
+<p><a href="index.html">← Volver a la bandeja</a></p>
+<h1>CSV sintético correcto</h1>
+<p class="lead"><span class="badge b-ok">Habilitado para consulta en el prototipo</span></p>
+<dl class="ficha"><dt>Caso</dt><dd><span class="mono">csv_ok</span></dd><dt>Fuente</dt><dd>Fixture sintético: CSV mensual correcto</dd><dt>Periodo</dt><dd>enero a marzo de 2025</dd><dt>Base</dt><dd>2025=100 (serie sintética, no es una base oficial)</dd><dt>Unidad</dt><dd>índice</dd><dt>URL</dt><dd>—</dd><dt>Descargado (UTC)</dt><dd>—</dd><dt>SHA-256</dt><dd><span class="mono">6e013fa3e3cc701ad6d435acbeccb96582be7599df99b6b5ed88d67caec4ba52</span></dd><dt>Perfil</dt><dd><span class="mono">contrato-mensual@1.0.0</span></dd><dt>Estado</dt><dd><span class="badge b-ok">Habilitado para consulta en el prototipo</span></dd></dl>
+<h2>Hallazgos</h2>
+<table>
+<thead><tr><th>Regla</th><th>Título</th><th>Estado</th><th>Crítica</th>
+<th>Mensaje</th><th>Evidencia</th></tr></thead>
+<tbody><tr><td class='mono nw'>SNAP-01</td><td>Integridad del snapshot</td><td class='nw'><span class="badge b-ok">ok</span></td><td class='nw'>sí</td><td>Bytes y SHA-256 coinciden con el manifiesto del snapshot.</td><td class='mono ev'>{&quot;bytes&quot;: 167, &quot;manifest_item&quot;: &quot;fix-contrato-ok&quot;, &quot;sha256&quot;: &quot;6e013fa3e3cc701ad6d435acbeccb96582be7599df99b6b5ed88d67caec4ba52&quot;}</td></tr><tr><td class='mono nw'>LIC-01</td><td>Licencia verificada</td><td class='nw'><span class="badge b-ok">ok</span></td><td class='nw'>sí</td><td>Licencia verificada en los metadatos del recurso.</td><td class='mono ev'>{&quot;attribution&quot;: &quot;Fixture sintético del equipo. No es un dato oficial del INE.&quot;, &quot;evidence&quot;: &quot;tools/prepare_snapshot.py genera el archivo de forma determinista.&quot;, &quot;id&quot;: &quot;interno-fixture&quot;}</td></tr><tr><td class='mono nw'>CONT-02</td><td>Columnas requeridas</td><td class='nw'><span class="badge b-ok">ok</span></td><td class='nw'>sí</td><td>Todas las columnas declaradas están presentes en su posición.</td><td class='mono ev'>{&quot;columns&quot;: [&quot;anio&quot;, &quot;mes&quot;, &quot;indicador&quot;, &quot;valor&quot;, &quot;unidad&quot;]}</td></tr><tr><td class='mono nw'>CONT-03</td><td>Tipos parseables</td><td class='nw'><span class="badge b-ok">ok</span></td><td class='nw'>sí</td><td>Los 5 campos declarados parsean a su tipo.</td><td class='mono ev'>{&quot;rows_checked&quot;: 3}</td></tr><tr><td class='mono nw'>CONT-04</td><td>Grano único</td><td class='nw'><span class="badge b-ok">ok</span></td><td class='nw'>sí</td><td>El grano declarado es único en todas las filas.</td><td class='mono ev'>{&quot;grain&quot;: [&quot;year&quot;, &quot;month&quot;, &quot;indicator&quot;], &quot;rows&quot;: 3}</td></tr><tr><td class='mono nw'>CONT-05</td><td>Periodo declarado presente</td><td class='nw'><span class="badge b-ok">ok</span></td><td class='nw'>sí</td><td>Los periodos declarados están presentes y son válidos.</td><td class='mono ev'>{&quot;expected_periods&quot;: [{&quot;month&quot;: 1, &quot;year&quot;: 2025}, {&quot;month&quot;: 2, &quot;year&quot;: 2025}, {&quot;month&quot;: 3, &quot;year&quot;: 2025}]}</td></tr><tr><td class='mono nw'>CONT-06</td><td>Unidad y base declaradas</td><td class='nw'><span class="badge b-ok">ok</span></td><td class='nw'>sí</td><td>Unidad y base coinciden con lo declarado en el perfil.</td><td class='mono ev'>{&quot;declared_bases&quot;: {&quot;value&quot;: &quot;2025=100&quot;}, &quot;declared_unit&quot;: &quot;indice&quot;}</td></tr></tbody>
+</table>
+
+<h2>Bitácora de decisiones</h2>
+<table>
+<thead><tr><th>Decisión</th><th>Fecha UTC</th><th>Responsable</th><th>Motivo</th>
+<th>Resultado</th><th>Digest</th></tr></thead>
+<tbody><tr><td class="mono">dec-csv_ok-001</td>
+<td>2026-11-24T05:51:06Z</td><td>Técnico de publicaciones (prototipo)</td>
+<td>Contrato sintético correcto; se usa para demostrar el flujo de habilitación.</td><td>habilitado</td>
+<td class="mono">ef98a73d6e1c33ef642a4388…</td></tr></tbody>
+</table>
+<div class="note">Cobertura: 7 de
+7 reglas críticas evaluadas. Digest de
+validación <span class="mono">ef98a73d6e1c33ef642a4388b33ca634005ba7ce51997980d5f5a8123b854b71</span>.</div>
+
+</main>
+<footer><p>Recibo privado: review_store/receipts/csv_ok.json</p></footer>
+</body>
+</html>

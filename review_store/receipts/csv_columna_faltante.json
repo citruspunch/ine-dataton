@@ -1,0 +1,123 @@
+{
+  "decision_log": null,
+  "generated_at_utc": "2026-11-24T05:51:05Z",
+  "receipt_id": "rec-snap-2026-11-23-csv_columna_faltante",
+  "technical_payload": {
+    "base": "2025=100 (serie sintética, no es una base oficial)",
+    "comparisons": [],
+    "coverage": {
+      "by_status": {
+        "falla": 1,
+        "no_evaluado": 4,
+        "ok": 2
+      },
+      "complete": false,
+      "critical_evaluated": 3,
+      "critical_not_evaluated": 4,
+      "critical_total": 7,
+      "rules_total": 7
+    },
+    "digest": "2590751e7884c5bcad7ab37e10121189c0492c85bfe5972d0f4f692546afcb49",
+    "downloaded_at_utc": null,
+    "findings": [
+      {
+        "critical": true,
+        "evidence": {
+          "bytes": 139,
+          "manifest_item": "fix-contrato-columna-faltante",
+          "sha256": "92ad9347dad1b84c4d1e2faa4b3a6def0e93f1da90ad0b869c72d6297b94d38a"
+        },
+        "justified": false,
+        "message": "Bytes y SHA-256 coinciden con el manifiesto del snapshot.",
+        "rule_id": "SNAP-01",
+        "status": "ok",
+        "title": "Integridad del snapshot"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+          "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista.",
+          "id": "interno-fixture"
+        },
+        "justified": false,
+        "message": "Licencia verificada en los metadatos del recurso.",
+        "rule_id": "LIC-01",
+        "status": "ok",
+        "title": "Licencia verificada"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "expected_header": [
+            "anio",
+            "mes",
+            "indicador",
+            "valor",
+            "unidad"
+          ],
+          "missing_columns": [
+            "unidad"
+          ],
+          "observed_header": [
+            "anio",
+            "mes",
+            "indicador",
+            "valor"
+          ]
+        },
+        "justified": false,
+        "message": "Faltan 1 columna(s) declaradas en el perfil.",
+        "rule_id": "CONT-02",
+        "status": "falla",
+        "title": "Columnas requeridas"
+      },
+      {
+        "critical": true,
+        "evidence": {},
+        "justified": false,
+        "message": "No evaluado: faltan columnas requeridas.",
+        "rule_id": "CONT-03",
+        "status": "no_evaluado",
+        "title": "Tipos parseables"
+      },
+      {
+        "critical": true,
+        "evidence": {},
+        "justified": false,
+        "message": "No evaluado: faltan columnas requeridas.",
+        "rule_id": "CONT-04",
+        "status": "no_evaluado",
+        "title": "Grano único"
+      },
+      {
+        "critical": true,
+        "evidence": {},
+        "justified": false,
+        "message": "No evaluado: faltan columnas requeridas.",
+        "rule_id": "CONT-05",
+        "status": "no_evaluado",
+        "title": "Periodo declarado presente"
+      },
+      {
+        "critical": true,
+        "evidence": {},
+        "justified": false,
+        "message": "No evaluado: faltan columnas requeridas.",
+        "rule_id": "CONT-06",
+        "status": "no_evaluado",
+        "title": "Unidad y base declaradas"
+      }
+    ],
+    "period": "enero a marzo de 2025",
+    "profile_version": "contrato-mensual@1.0.0",
+    "resource_id": null,
+    "rules_version": "1.0.0",
+    "sha256": "92ad9347dad1b84c4d1e2faa4b3a6def0e93f1da90ad0b869c72d6297b94d38a",
+    "snapshot_id": "snap-2026-11-23",
+    "source_id": null,
+    "source_url": null,
+    "state": "no_habilitado",
+    "unit": "índice"
+  }
+}

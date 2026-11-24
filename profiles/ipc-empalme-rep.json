@@ -1,0 +1,82 @@
+{
+  "profile_id": "ipc-empalme-rep",
+  "version": "1.0.0",
+  "kind": "xlsx",
+  "description": "Contrato del XLSX oficial de empalme del IPC, serie República, hoja Hoja2. Solo se declaran las columnas que el prototipo usa: periodo, índice base 2023, índice base 2024 y variación mensual publicada.",
+  "expected_sheet": "Hoja2",
+  "columns": [
+    {
+      "key": "year",
+      "header": "Año",
+      "letter": "A",
+      "type": "integer",
+      "role": "period_year"
+    },
+    {
+      "key": "month",
+      "header": "Mes",
+      "letter": "B",
+      "type": "month_name",
+      "role": "period_month"
+    },
+    {
+      "key": "e_index",
+      "header": "Índice Base Diciembre 2023=100.00 c/",
+      "letter": "E",
+      "type": "number",
+      "role": "index",
+      "base": "Diciembre 2023=100",
+      "unit": "índice"
+    },
+    {
+      "key": "f_index",
+      "header": "Índice año Base  2024=100.00 d/",
+      "letter": "F",
+      "type": "number",
+      "role": "index",
+      "base": "2024=100",
+      "unit": "índice"
+    },
+    {
+      "key": "g_monthly",
+      "header": "Variación Mensual e/",
+      "letter": "G",
+      "type": "number",
+      "role": "published_variation",
+      "unit": "porcentaje",
+      "nullable": true
+    }
+  ],
+  "grain": ["year", "month"],
+  "unit": "índice",
+  "period": {
+    "year_column": "year",
+    "month_column": "month",
+    "expected": [
+      { "year": 2024, "month": 12 },
+      { "year": 2025, "month": 1 }
+    ]
+  },
+  "comparisons": [
+    {
+      "id": "F504/F503",
+      "label": "Variación mensual de enero 2025, serie base 2024=100",
+      "numerator": { "column": "f_index", "row": 504 },
+      "denominator": { "column": "f_index", "row": 503 },
+      "published": { "column": "g_monthly", "row": 504 },
+      "tolerance_pp": 0.005,
+      "unit": "porcentaje"
+    },
+    {
+      "id": "F504/E503",
+      "label": "Solicitud inválida: cociente entre base 2024=100 (F504) y base Diciembre 2023=100 (E503)",
+      "numerator": { "column": "f_index", "row": 504 },
+      "denominator": { "column": "e_index", "row": 503 }
+    }
+  ],
+  "display": {
+    "period": "diciembre 2024 y enero 2025",
+    "base": "Cada columna declara su propia base; la serie de trabajo es F, base 2024=100",
+    "unit": "índice (F) y porcentaje (G)"
+  }
+}
