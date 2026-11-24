@@ -1,4 +1,8 @@
-"""CLI del prototipo. Sin login, sin URL libre, sin SQL."""
+"""CLI del prototipo. Sin login, sin URL libre, sin SQL.
+
+La interfaz principal es la aplicación web (`python app.py`); la CLI existe para
+demostrar que el motor y el gate no dependen de la interfaz.
+"""
 
 from __future__ import annotations
 
@@ -10,7 +14,6 @@ from typing import Any
 from . import config, gate
 from .engine import validate
 from .model import ADVERTENCIA, FALLA, NO_EVALUADO, OK
-from .site import build_public_site, build_review_site, fmt_pct
 
 STATUS_LABEL = {
     OK: "ok",
@@ -34,19 +37,37 @@ def _table(headers: list[str], rows: list[list[str]], indent: str = "") -> str:
     return "\n".join(out)
 
 
+def _fmt_pct(value: Any) -> str:
+    if value is None:
+        return "—"
+    try:
+        return f"{float(value):+.2f}%".replace(".", ",")
+    except (TypeError, ValueError):
+        return str(value)
+
+
+def _subject_ids() -> list[str]:
+    from . import store
+
+    return [case["id"] for case in config.load_cases()] + [
+        upload["id"] for upload in store.list_uploads()
+    ]
+
+
 def cmd_list(args: argparse.Namespace) -> int:
     rows = []
-    for case in config.load_cases():
-        result = validate(case["id"], write_receipt=False)
+    for subject_id in _subject_ids():
+        result = validate(subject_id, write_receipt=False)
         rows.append(
             [
-                case["id"],
+                subject_id,
                 result.state,
-                f"{result.coverage.get('critical_evaluated', 0)}/{result.coverage.get('critical_total', 0)}",
-                case["label"],
+                f"{result.coverage.get('critical_evaluated', 0)}/"
+                f"{result.coverage.get('critical_total', 0)}",
+                result.label,
             ]
         )
-    print(_table(["caso", "estado", "críticas", "etiqueta"], rows))
+    print(_table(["sujeto", "estado", "críticas", "etiqueta"], rows))
     return 0
 
 
@@ -55,11 +76,9 @@ def _print_result(result: Any, verbose: bool = True) -> None:
     print(f"caso      {result.case_id}")
     print(f"etiqueta  {result.label}")
     print(f"estado    {result.state}  ·  {result.state_text}")
-    coverage = result.coverage
     print(
-        "cobertura "
-        f"{coverage.get('critical_evaluated')}/{coverage.get('critical_total')} "
-        "reglas críticas evaluadas"
+        f"cobertura {result.coverage.get('critical_evaluated')}/"
+        f"{result.coverage.get('critical_total')} reglas críticas evaluadas"
     )
     print(f"digest    {result.digests.get('validation_digest')}")
     if not verbose:
@@ -83,26 +102,24 @@ def _print_result(result: Any, verbose: bool = True) -> None:
         for c in result.comparisons:
             if c.status == "ok":
                 detail = (
-                    f"calculado {fmt_pct(c.public_evidence.get('computed_pct'))} · "
-                    f"publicado {fmt_pct(c.public_evidence.get('published_pct'))} "
+                    f"publicado {_fmt_pct(c.public_evidence.get('published_pct'))} "
                     f"({c.public_evidence.get('published_cell')})"
                 )
             elif c.private_evidence.get("computed_pct") is not None:
                 detail = (
-                    f"{fmt_pct(c.private_evidence['computed_pct'])} solo en revisión, "
-                    "no se exporta"
+                    f"{_fmt_pct(c.private_evidence['computed_pct'])} solo en revisión"
                 )
             else:
                 detail = "sin valor calculado"
-            print(f"    {c.comparison_id:14s} {c.status:10s} {detail}")
-            print(f"    {'':14s} {c.reason}")
+            print(f"    {c.comparison_id:22s} {c.status:10s} {detail}")
+            print(f"    {'':22s} {c.reason}")
 
 
 def cmd_validate(args: argparse.Namespace) -> int:
-    case_ids = args.cases or [case["id"] for case in config.load_cases()]
-    for case_id in case_ids:
+    ids = args.cases or _subject_ids()
+    for subject_id in ids:
         try:
-            result = validate(case_id)
+            result = validate(subject_id)
         except config.ConfigError as exc:
             print(f"ERROR: {exc}", file=sys.stderr)
             return 2
@@ -144,7 +161,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
         elif entry["decision_valid"]:
             valid = "válida"
         else:
-            valid = "INVALIDADA (cambió el basis)"
+            valid = "INVALIDADA"
         rows.append(
             [
                 entry["case_id"],
@@ -157,19 +174,15 @@ def cmd_verify(args: argparse.Namespace) -> int:
     print(_table(["caso", "estado", "decisión", "en snapshot", "digest"], rows))
     invalid = [e for e in report if e["decision"] and not e["decision_valid"]]
     quarantined = [e for e in report if e.get("quarantined")]
-    if quarantined:
-        print("")
-        for entry in quarantined:
-            print(
-                f"Retirado del snapshot público: {entry['case_id']} "
-                "(la decisión ya no sostiene el agregado; ver review_store/quarantine/)",
-                file=sys.stderr,
-            )
-    if invalid:
-        print("")
+    for entry in quarantined:
         print(
-            "Atención: "
-            f"{len(invalid)} decisión(es) invalidada(s). Cambió un archivo, "
+            f"Retirado del snapshot público: {entry['case_id']} "
+            "(la decisión ya no sostiene el agregado)",
+            file=sys.stderr,
+        )
+    if invalid:
+        print(
+            f"Atención: {len(invalid)} decisión(es) invalidada(s). Cambió un archivo, "
             "el perfil, la versión de reglas o un hallazgo.",
             file=sys.stderr,
         )
@@ -197,11 +210,13 @@ def cmd_export(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_site(args: argparse.Namespace) -> int:
-    public = build_public_site()
-    review = build_review_site()
-    print(f"sitio público   {public}/index.html")
-    print(f"sitio de revisión {review}/index.html")
+def cmd_serve(args: argparse.Namespace) -> int:
+    import uvicorn
+
+    from .web.app import app
+
+    print(f"INE Data Trust · http://{args.host}:{args.port}")
+    uvicorn.run(app, host=args.host, port=args.port)
     return 0
 
 
@@ -212,14 +227,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_list = sub.add_parser("list", help="lista la bandeja cerrada con su estado")
+    p_list = sub.add_parser("list", help="lista la bandeja con su estado")
     p_list.set_defaults(func=cmd_list)
 
-    p_validate = sub.add_parser("validate", help="evalúa uno o todos los casos")
-    p_validate.add_argument("cases", nargs="*", help="ids de caso; vacío = todos")
-    p_validate.add_argument(
-        "--summary", action="store_true", help="solo estado, cobertura y digest"
-    )
+    p_validate = sub.add_parser("validate", help="evalúa uno o todos los sujetos")
+    p_validate.add_argument("cases", nargs="*", help="ids; vacío = todos")
+    p_validate.add_argument("--summary", action="store_true", help="solo resumen")
     p_validate.set_defaults(func=cmd_validate)
 
     p_promote = sub.add_parser("promote", help="registra el visto bueno y publica")
@@ -242,8 +255,10 @@ def build_parser() -> argparse.ArgumentParser:
     p_export.add_argument("--out", help="ruta de salida; vacío = stdout")
     p_export.set_defaults(func=cmd_export)
 
-    p_site = sub.add_parser("site", help="genera los dos sitios estáticos")
-    p_site.set_defaults(func=cmd_site)
+    p_serve = sub.add_parser("serve", help="arranca la aplicación web local")
+    p_serve.add_argument("--host", default="127.0.0.1")
+    p_serve.add_argument("--port", type=int, default=8000)
+    p_serve.set_defaults(func=cmd_serve)
 
     return parser
 

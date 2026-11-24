@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}{{ result.label }} · revisión{% endblock %}
+
+{% block content %}
+<p class="small"><a href="/review">← Volver a la bandeja</a></p>
+
+<h1>{{ result.label }}</h1>
+<div class="taglist">
+  <span class="badge {{ state_class.get(result.state, 'is-none') }}">{{ result.state_text }}</span>
+  {% if in_public %}
+  <span class="badge is-ok">publicado en consulta</span>
+  {% else %}
+  <span class="badge is-none">no publicado</span>
+  {% endif %}
+  {% if has_override %}<span class="badge is-warn">simulación activa</span>{% endif %}
+  <span class="badge is-info">{{ result.coverage.get('critical_evaluated') }}/{{ result.coverage.get('critical_total') }} críticas evaluadas</span>
+</div>
+
+<div class="spacer"></div>
+
+<div class="grid-2">
+  <div class="stack">
+    <h2 style="margin-top:0">Ficha</h2>
+    {% if entity.kind == 'par de recursos' %}
+    <dl class="ficha">
+      <dt>Recursos</dt>
+      <dd>
+        {% for r in entity.resources %}
+        <div><span class="mono">{{ r.manifest_item }}</span> · {{ r.identity.dataset }} · {{ r.identity.period }}</div>
+        {% endfor %}
+      </dd>
+      <dt>Mismos bytes</dt><dd>{{ 'sí' if entity.same_bytes else 'no' }}</dd>
+      <dt>SHA-256</dt><dd class="mono">{{ entity.sha256 }}</dd>
+      <dt>Perfil</dt><dd class="mono">{{ entity.profile }}</dd>
+      <dt>Digest de validación</dt><dd class="mono">{{ result.digests.validation_digest }}</dd>
+    </dl>
+    {% else %}
+    <dl class="ficha">
+      <dt>Fuente</dt><dd>{{ entity.title }}</dd>
+      <dt>Origen</dt>
+      <dd>{{ 'archivo cargado en la sesión' if entity.origin == 'upload' else 'snapshot del repositorio' }}</dd>
+      <dt>Periodo</dt><dd>{{ entity.display.period }}</dd>
+      <dt>Base</dt><dd>{{ entity.display.base }}</dd>
+      <dt>Unidad</dt><dd>{{ entity.display.unit }}</dd>
+      <dt>URL de origen</dt><dd class="mono small">{{ entity.source_url or '—' }}</dd>
+      <dt>Descargado (UTC)</dt><dd class="mono">{{ entity.downloaded_at_utc or '—' }}</dd>
+      <dt>SHA-256</dt><dd class="mono">{{ entity.sha256 }}</dd>
+      <dt>Perfil</dt><dd class="mono">{{ entity.profile }}</dd>
+      <dt>Licencia</dt>
+      <dd>{{ entity.license.id or 'sin licencia verificada' }} · {{ entity.license.attribution or '—' }}</dd>
+      <dt>Digest de validación</dt><dd class="mono">{{ result.digests.validation_digest }}</dd>
+    </dl>
+    {% endif %}
+  </div>
+
+  <div class="stack">
+    <h2 style="margin-top:0">Gate humano</h2>
+    <div class="card">
+      {% if decision %}
+      <p class="small muted">Última decisión</p>
+      <div class="taglist" style="margin-bottom:8px">
+        <span class="badge {{ 'is-ok' if decision.gate_decision in ('habilitado', 'aprobar_con_excepcion') else 'is-fail' }}">
+          {{ decision_label or decision.gate_decision }}
+        </span>
+      </div>
+      <p class="small"><strong>{{ decision.operator }}</strong> · <span class="mono">{{ decision.decided_at_utc }}</span></p>
+      <p class="small">{{ decision.rationale }}</p>
+      <p class="small muted mono hex">basis {{ decision.decision_basis_digest }}</p>
+      <div class="divider"></div>
+      {% endif %}
+
+      {% if blocking %}
+      <h3>No habilitable todavía</h3>
+      <ul class="small" style="margin:6px 0 14px; padding-left:18px">
+        {% for reason in blocking %}<li>{{ reason }}</li>{% endfor %}
+      </ul>
+      <p class="small muted">El botón de habilitar queda bloqueado por las reglas, no por la interfaz.</p>
+      <div class="divider"></div>
+      <form method="post" action="/review/{{ result.case_id }}/gate">
+        <input type="hidden" name="decision" value="rechazar">
+        <label class="field"><span>Responsable</span><input type="text" name="operator" required placeholder="Nombre y rol"></label>
+        <label class="field"><span>Motivo del rechazo</span><textarea name="rationale" required minlength="10"></textarea></label>
+        <button class="danger" type="submit">Registrar rechazo</button>
+      </form>
+      {% else %}
+      <form method="post" action="/review/{{ result.case_id }}/gate">
+        {% if warnings %}
+        <h3>Advertencias por justificar</h3>
+        {% for w in warnings %}
+        <div class="card" style="padding:12px 14px; margin-bottom:12px; background:#fdfbf5">
+          <div class="taglist" style="margin-bottom:6px">
+            <span class="badge is-warn">advertencia</span>
+            <span class="mono small">{{ w.rule_id }}</span>
+            {% if w.justified %}<span class="badge is-ok">justificada</span>{% endif %}
+          </div>
+          <p class="small" style="margin:0 0 8px">{{ w.message }}</p>
+          {% if not w.justified %}
+          <label class="field"><span>Dueño / responsable</span>
+            <input type="text" name="just_owner__{{ w.rule_id }}" required placeholder="Quién responde"></label>
+          <label class="field"><span>Motivo de la excepción</span>
+            <textarea name="just_reason__{{ w.rule_id }}" required placeholder="Por qué se acepta esta advertencia"></textarea></label>
+          <label class="field"><span>Referencia de política (opcional)</span>
+            <input type="text" name="just_policy__{{ w.rule_id }}" placeholder="POL-..."></label>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <label class="field"><span>Responsable del gate</span>
+          <input type="text" name="operator" required placeholder="Nombre y rol"></label>
+        <label class="field"><span>Motivo de la decisión</span>
+          <textarea name="rationale" required minlength="10" placeholder="Qué se cotejó y por qué se habilita"></textarea></label>
+        <label class="field"><span>Decisión</span>
+          <select name="decision">
+            {% if warnings %}<option value="aprobar_con_excepcion">Aprobar con excepción</option>{% endif %}
+            <option value="aprobar">Habilitar para consulta</option>
+            <option value="rechazar">Rechazar</option>
+          </select>
+        </label>
+        <button type="submit">Registrar decisión</button>
+      </form>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h3>Invalidación en vivo</h3>
+      <p class="small muted">Enmienda la versión del perfil sin tocar el archivo. El
+      digest cambia, la decisión se invalida y el agregado se retira del portal.</p>
+      {% if has_override %}
+      <form method="post" action="/review/{{ result.case_id }}/simulate/undo">
+        <button class="secondary" type="submit">Retirar simulación</button>
+      </form>
+      {% else %}
+      <form method="post" action="/review/{{ result.case_id }}/simulate">
+        <button class="secondary" type="submit">Simular cambio en el perfil</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<h2>Hallazgos por regla</h2>
+<table>
+  <thead>
+    <tr><th>Regla</th><th>Título</th><th>Estado</th><th>Crítica</th><th>Mensaje</th><th>Evidencia</th></tr>
+  </thead>
+  <tbody>
+    {% for f in result.findings %}
+    <tr>
+      <td class="mono nowrap">{{ f.rule_id }}</td>
+      <td>{{ f.title }}</td>
+      <td class="nowrap"><span class="badge {{ severity_class.get(f.status, 'is-none') }}">{{ severity_label.get(f.status, f.status) }}</span></td>
+      <td class="nowrap">{{ 'sí' if f.critical else 'no' }}</td>
+      <td>{{ f.message }}</td>
+      <td class="evidence"><details><summary class="small muted">ver</summary><div class="mono">{{ f.evidence | tojson }}</div></details></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if result.comparisons %}
+<h2>Comparaciones</h2>
+<table>
+  <thead><tr><th>Solicitud</th><th>Resultado</th><th>Motivo</th><th>Valor</th><th>Evidencia privada</th></tr></thead>
+  <tbody>
+    {% for c in result.comparisons %}
+    <tr>
+      <td>{{ c.label }}</td>
+      <td class="nowrap"><span class="badge {{ 'is-ok' if c.status == 'ok' else 'is-fail' }}">{{ c.status }}</span></td>
+      <td>{{ c.reason }}</td>
+      <td class="nowrap">
+        {% if c.status == 'ok' %}
+        {{ fmt_pct(c.public_evidence.get('published_pct')) }}
+        <div class="small muted mono">{{ c.public_evidence.get('published_cell') }}</div>
+        {% elif c.private_evidence.get('computed_pct') is not none %}
+        <strong>{{ fmt_pct(c.private_evidence.get('computed_pct')) }}</strong>
+        <div class="small muted">solo revisión</div>
+        {% else %}—{% endif %}
+      </td>
+      <td class="evidence"><div class="mono">{{ c.public_evidence | tojson }}<br>{{ c.private_evidence | tojson }}</div></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<p class="small muted">El valor de una comparación bloqueada se ve aquí y no se copia
+al snapshot público, al export ni a la ficha de consulta.</p>
+{% endif %}
+
+<h2>Recibo</h2>
+<div class="actions">
+  <a class="button secondary" href="/review/{{ result.case_id }}/receipt.json">Descargar recibo.json</a>
+  <span class="small muted">Separa <span class="mono">technical_payload</span> y
+  <span class="mono">decision_log</span>. El digest no incluye timestamps.</span>
+</div>
+{% endblock %}

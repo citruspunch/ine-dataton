@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}{{ entity.title or result_label }} · consulta{% endblock %}
+
+{% block content %}
+<p class="small"><a href="/">← Volver al índice de consulta</a></p>
+
+<h1>{{ entity.title or aggregate.label }}</h1>
+<div class="taglist">
+  <span class="badge {{ state_class.get(aggregate.state, 'is-none') }}">{{ aggregate.state_text }}</span>
+  {% if entity.topic == 'ipc' %}<span class="badge is-info">IPC</span>{% endif %}
+  <span class="badge is-none">no certifica</span>
+</div>
+
+<h2>Ficha técnica</h2>
+<dl class="ficha">
+  <dt>Fuente</dt><dd>{{ entity.title }} · Instituto Nacional de Estadística (INE)</dd>
+  <dt>Periodo</dt><dd>{{ entity.display.period }}</dd>
+  <dt>Base</dt><dd>{{ entity.display.base }}</dd>
+  <dt>Unidad</dt><dd>{{ entity.display.unit }}</dd>
+  <dt>URL de origen</dt><dd class="mono small">{{ entity.source_url or '—' }}</dd>
+  <dt>Descargado (UTC)</dt><dd class="mono">{{ entity.downloaded_at_utc or '—' }}</dd>
+  <dt>SHA-256</dt><dd class="mono">{{ entity.sha256 }}</dd>
+  <dt>Licencia</dt><dd>{{ entity.license.id or '—' }} · {{ entity.license.attribution or '—' }}</dd>
+  <dt>Perfil</dt><dd class="mono">{{ entity.profile }}</dd>
+  <dt>Digest de validación</dt><dd class="mono">{{ aggregate.digest }}</dd>
+</dl>
+
+{% if series %}
+<h2>Comparador seguro de periodos</h2>
+<div class="grid-2">
+  <div class="card">
+    <p class="small muted">Elija una serie y dos meses. Si son consecutivos y de la
+    misma base, se muestra la variación <strong>publicada</strong> por el INE. Si el
+    cruce no es válido, se bloquea y no se muestra ningún número calculado.</p>
+    <form method="post" action="/a/{{ aggregate.case_id }}/compare">
+      <div class="field-row">
+        <label class="field"><span>Serie A (numerador)</span>
+          <select name="series_a">
+            {% for s in series %}
+            <option value="{{ s.series_id }}" {{ 'selected' if s.series_id == sel.series_a else '' }}>
+              {{ s.label }}
+            </option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="field"><span>Periodo A</span>
+          <select name="period_a">
+            {% for p in periods %}
+            <option value="{{ p }}" {{ 'selected' if p == sel.period_a else '' }}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field"><span>Serie B (denominador)</span>
+          <select name="series_b">
+            {% for s in series %}
+            <option value="{{ s.series_id }}" {{ 'selected' if s.series_id == sel.series_b else '' }}>
+              {{ s.label }}
+            </option>
+            {% endfor %}
+          </select>
+        </label>
+        <label class="field"><span>Periodo B</span>
+          <select name="period_b">
+            {% for p in periods %}
+            <option value="{{ p }}" {{ 'selected' if p == sel.period_b else '' }}>{{ p }}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+      <button type="submit">Comparar</button>
+      {% if back_url %}<a class="button secondary mini" href="{{ back_url }}">Reiniciar</a>{% endif %}
+    </form>
+  </div>
+
+  <div>
+    {% if comparison %}
+      {% if comparison.status == 'ok' %}
+      <div class="result ok">
+        <div class="small muted">Variación mensual publicada</div>
+        <div class="figure">{{ fmt_pct(comparison.published_pct) }}</div>
+        <div class="headline">{{ comparison.period }} respecto a {{ comparison.previous_period }}</div>
+        <p class="small" style="margin:8px 0 0">
+          Serie {{ comparison.series_label }} · base {{ comparison.base }}<br>
+          Índice {{ fmt_index(comparison.index_value) }} ({{ comparison.index_cell }})
+          sobre {{ fmt_index(comparison.previous_index_value) }} ·
+          variación publicada en <span class="mono">{{ comparison.published_cell }}</span>
+        </p>
+        <p class="small muted" style="margin:8px 0 0">Regla {{ comparison.rule }}. El prototipo
+        muestra la cifra publicada; no la calcula.</p>
+      </div>
+      {% else %}
+      <div class="result bloqueada">
+        <div class="small muted">Comparación bloqueada · regla {{ comparison.rule }}</div>
+        <div class="headline" style="margin-top:6px">{{ comparison.message }}</div>
+        {% if comparison.detail %}
+        <p class="small" style="margin:8px 0 0">
+          {% set labels = {'base_a': 'Base de la serie A', 'base_b': 'Base de la serie B',
+                           'guidance': 'Qué hacer', 'months_between': 'Meses entre periodos',
+                           'missing_periods': 'Periodos no publicados'} %}
+          {% for k, v in comparison.detail.items() %}<span class="muted">{{ labels.get(k, k) }}:</span> {{ v }}<br>{% endfor %}
+        </p>
+        {% endif %}
+        <p class="small muted" style="margin:8px 0 0">No se muestra ningún valor: el
+        prototipo no calcula una cifra que no esté publicada.</p>
+      </div>
+      {% endif %}
+    {% else %}
+    <div class="card">
+      <h3>Sin comparación todavía</h3>
+      <p class="small muted">Elija las series y los periodos y pulse Comparar. Por
+      defecto está precargado el par válido de la serie base 2024=100.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<h2>Series publicadas</h2>
+<table>
+  <thead><tr><th>Serie</th><th>Etiqueta</th><th>Base</th><th>Periodos</th><th>Comparable</th></tr></thead>
+  <tbody>
+    {% for s in series %}
+    <tr>
+      <td class="mono nowrap">{{ s.series_id }}</td>
+      <td>{{ s.label }}</td>
+      <td class="nowrap">{{ s.base }}</td>
+      <td class="nowrap">{{ s.periods | length }}</td>
+      <td>
+        {% if s.comparable and s.has_published_variation %}
+        <span class="badge is-ok">sí</span>
+        {% else %}
+        <span class="badge is-fail">no</span>
+        <div class="small muted">{{ s.not_comparable_reason or 'sin variación publicada en este recurso' }}</div>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<h2>Reglas evaluadas</h2>
+<table>
+  <thead><tr><th>Regla</th><th>Título</th><th>Estado</th><th>Mensaje</th></tr></thead>
+  <tbody>
+    {% for f in aggregate.findings %}
+    <tr>
+      <td class="mono nowrap">{{ f.rule_id }}</td>
+      <td>{{ f.title }}</td>
+      <td class="nowrap"><span class="badge {{ severity_class.get(f.status, 'is-none') }}">{{ severity_label.get(f.status, f.status) }}</span></td>
+      <td>{{ f.message }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h2>Recibo y ficha</h2>
+<div class="actions">
+  <a class="button" href="/a/{{ aggregate.case_id }}/ficha">Ficha técnica imprimible</a>
+  <a class="button secondary" href="/a/{{ aggregate.case_id }}/receipt.json">Descargar recibo.json</a>
+</div>
+<p class="small muted">El recibo separa <span class="mono">technical_payload</span> y
+<span class="mono">decision_log</span>; el digest no incluye timestamps de ejecución ni
+de decisión.</p>
+{% endblock %}

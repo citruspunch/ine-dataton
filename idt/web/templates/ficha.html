@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Ficha técnica · {{ entity.title }}{% endblock %}
+
+{% block content %}
+<div class="no-print actions" style="margin-bottom:14px">
+  <a class="button secondary" href="/a/{{ aggregate.case_id }}">← Volver a la consulta</a>
+  <button type="button" onclick="window.print()">Imprimir o guardar en PDF</button>
+  <a class="button secondary" href="/a/{{ aggregate.case_id }}/receipt.json">recibo.json</a>
+</div>
+
+<h1>Ficha técnica de validación</h1>
+<p class="small muted">Documento para adjuntar al ticket de publicación (procedimiento 18,
+pasos 4 a 6, como propuesta). No certifica el dato ni sustituye la revisión del productor.</p>
+
+<dl class="ficha">
+  <dt>Agregado</dt><dd>{{ entity.title }}</dd>
+  <dt>Identificador</dt><dd class="mono">{{ aggregate.case_id }}</dd>
+  <dt>Snapshot</dt><dd class="mono">{{ receipt.technical_payload.snapshot_id if receipt else '—' }}</dd>
+  <dt>Periodo</dt><dd>{{ entity.display.period }}</dd>
+  <dt>Base</dt><dd>{{ entity.display.base }}</dd>
+  <dt>Unidad</dt><dd>{{ entity.display.unit }}</dd>
+  <dt>URL oficial</dt><dd class="mono small">{{ entity.source_url or '—' }}</dd>
+  <dt>Descargado (UTC)</dt><dd class="mono">{{ entity.downloaded_at_utc or '—' }}</dd>
+  <dt>SHA-256 del archivo</dt><dd class="mono">{{ entity.sha256 }}</dd>
+  <dt>Licencia</dt><dd>{{ entity.license.id or '—' }} · {{ entity.license.attribution or '—' }}</dd>
+  <dt>Perfil declarativo</dt><dd class="mono">{{ entity.profile }}</dd>
+  <dt>Versión de reglas</dt><dd class="mono">{{ receipt.technical_payload.rules_version if receipt else '—' }}</dd>
+  <dt>Digest de validación</dt><dd class="mono">{{ aggregate.digest }}</dd>
+  <dt>Estado</dt>
+  <dd><span class="badge {{ state_class.get(aggregate.state, 'is-none') }}">{{ aggregate.state_text }}</span></dd>
+</dl>
+
+<h2>Resultado por regla</h2>
+<table>
+  <thead><tr><th>Regla</th><th>Título</th><th>Estado</th><th>Crítica</th><th>Mensaje</th></tr></thead>
+  <tbody>
+    {% for f in aggregate.findings %}
+    <tr>
+      <td class="mono nowrap">{{ f.rule_id }}</td>
+      <td>{{ f.title }}</td>
+      <td class="nowrap"><span class="badge {{ severity_class.get(f.status, 'is-none') }}">{{ severity_label.get(f.status, f.status) }}</span></td>
+      <td class="nowrap">{{ 'sí' if f.critical else 'no' }}</td>
+      <td>{{ f.message }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if aggregate.comparisons %}
+<h2>Comparaciones evaluadas</h2>
+<table>
+  <thead><tr><th>Solicitud</th><th>Resultado</th><th>Motivo</th><th>Dato mostrado</th></tr></thead>
+  <tbody>
+    {% for c in aggregate.comparisons %}
+    <tr>
+      <td>{{ c.label }}</td>
+      <td class="nowrap"><span class="badge {{ 'is-ok' if c.status == 'ok' else 'is-fail' }}">{{ c.status }}</span></td>
+      <td>{{ c.reason }}</td>
+      <td class="nowrap">
+        {% if c.status == 'ok' %}
+        {{ fmt_pct(c.evidence.get('published_pct')) }} <span class="small muted mono">{{ c.evidence.get('published_cell') }}</span>
+        {% else %}no se muestra valor{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<h2>Decisión registrada</h2>
+{% if receipt and receipt.decision_log %}
+<dl class="ficha">
+  <dt>Resultado del gate</dt><dd>{{ receipt.decision_log.gate_decision }}</dd>
+  <dt>Responsable</dt><dd>{{ receipt.decision_log.operator }}</dd>
+  <dt>Fecha (UTC)</dt><dd class="mono">{{ receipt.decision_log.decided_at_utc }}</dd>
+  <dt>Motivo</dt><dd>{{ receipt.decision_log.rationale }}</dd>
+  <dt>Digest de la decisión</dt><dd class="mono">{{ receipt.decision_log.decision_basis_digest }}</dd>
+</dl>
+{% else %}
+<p class="small muted">Sin decisión registrada en el recibo público.</p>
+{% endif %}
+
+<div class="divider"></div>
+
+<div class="grid-2">
+  <div>
+    <p class="small muted" style="margin-bottom:26px">Revisado por (publicaciones)</p>
+    <div style="border-top:1px solid #999; padding-top:5px" class="small">Nombre y firma</div>
+  </div>
+  <div>
+    <p class="small muted" style="margin-bottom:26px">Aprobado por (producción)</p>
+    <div style="border-top:1px solid #999; padding-top:5px" class="small">Nombre y firma</div>
+  </div>
+</div>
+
+<p class="small muted" style="margin-top:24px">
+  La habilitación es del prototipo, no del INE. Este documento no certifica. El digest
+  no incluye timestamps de ejecución ni de decisión. Los datos conservan su licencia
+  {{ entity.license.id or 'original' }}.
+</p>
+{% endblock %}
