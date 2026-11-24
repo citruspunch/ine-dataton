@@ -1,0 +1,100 @@
+profile_id: ipc_empalme_republica
+version: "1.2.0"
+kind: xlsx
+topic: ipc
+title: IPC, empalme República
+description: >
+  Contrato del XLSX oficial de empalme del IPC por República, hoja Hoja2.
+  Las columnas se resuelven por encabezado y los periodos por año y mes: no hay
+  coordenadas de fila ni de columna escritas en el perfil. Las celdas que
+  aparecen en la evidencia se descubren al leer el archivo y son solo metadato
+  informativo.
+
+expected_sheet: Hoja2
+
+columns:
+  - key: year
+    header: "Año"
+    type: integer
+    role: period_year
+
+  - key: month
+    header: "Mes"
+    type: month_name
+    role: period_month
+
+  - key: e_index
+    header: "Índice Base Diciembre 2023=100.00 c/"
+    type: number
+    role: index
+    base: "Diciembre 2023=100"
+    unit: índice
+
+  - key: f_index
+    header: "Índice año Base  2024=100.00 d/"
+    type: number
+    role: index
+    base: "2024=100"
+    unit: índice
+
+  - key: g_monthly
+    header: "Variación Mensual e/"
+    type: number
+    role: published_variation
+    unit: porcentaje
+    nullable: true
+
+grain: [year, month]
+unit: índice
+
+period:
+  year_column: year
+  month_column: month
+  expected:
+    - "2024-12"
+    - "2025-01"
+
+series:
+  - id: f
+    label: "Serie F · base 2024=100"
+    index_column: f_index
+    variation_column: g_monthly
+    comparable: true
+    summary: "Serie de trabajo del empalme vigente."
+
+  - id: e
+    label: "Serie E · base dic-2023=100"
+    index_column: e_index
+    comparable: false
+    not_comparable_reason: >
+      Base distinta. Un cociente entre índices de bases distintas no es una
+      variación y no se puede comparar directamente.
+
+comparisons:
+  - id: mensual_ene_2025
+    label: "Variación mensual de enero 2025, serie base 2024=100"
+    numerator:
+      column: f_index
+      period: "2025-01"
+    denominator:
+      column: f_index
+      period: "2024-12"
+    published:
+      column: g_monthly
+      period: "2025-01"
+    tolerance_pp: 0.005
+    unit: porcentaje
+
+  - id: cruce_bases_e_f
+    label: "Solicitud inválida: cociente entre base 2024=100 y base Diciembre 2023=100"
+    numerator:
+      column: f_index
+      period: "2025-01"
+    denominator:
+      column: e_index
+      period: "2024-12"
+
+display:
+  period: "diciembre 2024 y enero 2025"
+  base: "Cada columna declara su propia base; la serie de trabajo es F, base 2024=100"
+  unit: "índice (F y E) y porcentaje (G)"

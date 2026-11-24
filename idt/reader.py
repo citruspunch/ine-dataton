@@ -70,6 +70,15 @@ class Table:
             n = n * 26 + (ord(ch.upper()) - 64)
         return n - 1
 
+    def letter(self, index: int) -> str:
+        """0 -> A, 25 -> Z, 26 -> AA. Solo para metadato de evidencia."""
+        text = ""
+        n = index + 1
+        while n:
+            n, rest = divmod(n - 1, 26)
+            text = chr(65 + rest) + text
+        return text
+
     def row_at(self, row_number: int) -> dict[str, Any] | None:
         for num, row in zip(self.row_numbers, self.rows):
             if num == row_number:
@@ -80,11 +89,54 @@ class Table:
 def read_table(path: Path, kind: str, expected_sheet: str | None = None) -> Table:
     if not path.exists():
         raise ReadError(f"archivo no encontrado: {path.name}")
-    if kind == "xlsx":
+    suffix = path.suffix.lower()
+    if suffix == ".csv":
+        return _read_csv(path)
+    if suffix == ".xls":
+        return _read_xls(path, expected_sheet)
+    if suffix in (".xlsx", ".xlsm"):
         return _read_xlsx(path, expected_sheet)
     if kind == "delimited":
         return _read_csv(path)
+    if kind == "xlsx":
+        return _read_xlsx(path, expected_sheet)
     raise ReadError(f"tipo de archivo no soportado: {kind}")
+
+
+def _read_xls(path: Path, expected_sheet: str | None) -> Table:
+    """Formato heredado .xls (BIFF) con xlrd."""
+    try:
+        import xlrd
+    except ImportError as exc:  # pragma: no cover
+        raise ReadError("xlrd no instalado: no se puede abrir .xls") from exc
+
+    try:
+        book = xlrd.open_workbook(str(path))
+    except Exception as exc:
+        raise ReadError(f".xls ilegible: {exc}") from exc
+
+    names = book.sheet_names()
+    if not names:
+        raise ReadError(".xls sin hojas")
+    if expected_sheet is not None and expected_sheet not in names:
+        raise UnexpectedSheet(expected_sheet, names)
+
+    sheet_name = expected_sheet or names[0]
+    sheet = book.sheet_by_name(sheet_name)
+    if sheet.nrows == 0:
+        raise ReadError(".xls sin fila de encabezado")
+
+    header = [str(cell.value).strip() for cell in sheet.row(0)]
+    table = Table(path=path, sheet=sheet_name, header=header)
+    for index in range(1, sheet.nrows):
+        values = sheet.row_values(index)
+        if all(value in (None, "") for value in values):
+            continue
+        row_number = index + 1
+        table.rows.append(dict(zip(header, values)))
+        table.row_numbers.append(row_number)
+        table.cells[row_number] = values
+    return table
 
 
 def _read_csv(path: Path) -> Table:

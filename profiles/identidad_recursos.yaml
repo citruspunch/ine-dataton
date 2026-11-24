@@ -1,0 +1,12 @@
+profile_id: identidad_recursos
+version: "1.0.0"
+kind: pair
+title: Identidad entre dos recursos
+description: >
+  Perfil mínimo para el caso de identidad: no hay contrato de columnas, solo
+  comparación de bytes e identidad semántica entre dos recursos.
+
+display:
+  period: "no aplica"
+  base: "no aplica"
+  unit: "no aplica"

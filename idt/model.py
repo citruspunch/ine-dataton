@@ -61,6 +61,7 @@ class Comparison:
     reason: str
     public_evidence: dict[str, Any] = field(default_factory=dict)
     private_evidence: dict[str, Any] = field(default_factory=dict)
+    rules: list[str] = field(default_factory=list)
 
     def to_public_dict(self) -> dict[str, Any]:
         return {
@@ -69,6 +70,7 @@ class Comparison:
             "status": self.status,
             "reason": self.reason,
             "evidence": self.public_evidence,
+            "rules": self.rules,
         }
 
     def to_private_dict(self) -> dict[str, Any]:
