@@ -1,126 +1,173 @@
-# INE Data Trust · prototipo
+# INE Data Trust · prototipo interactivo
 
 Validación técnica de agregados oficiales ya publicados. El prototipo no calcula
-cifras nuevas, no corrige, no publica en CKAN y no certifica. Marca, bloquea y
-deja un recibo reproducible para que una persona decida.
+cifras nuevas, no corrige archivos, no publica en CKAN y no certifica. Marca,
+bloquea y deja un recibo reproducible para que una persona decida.
 
 > **No implica certificación, aprobación ni adopción por el INE.**
-> Estado: primera simulación funcional, 23 y 24 de noviembre de 2026.
+> Datatón INE 2026, Categoría 2. Estado: prototipo funcional.
 
 ---
 
-## 1. Qué dataset se usa y por qué
+## 1. Problema y usuarios
 
-El único dataset real es el **XLSX oficial de empalme del IPC por República** del
-INE de Guatemala:
+Un agregado candidato puede parecer correcto y no ser comparable con su versión
+oficial por **base, periodo, unidad, esquema, identidad o licencia**.
 
+- **Usuario primario:** técnico de publicaciones que revisa un agregado al lado de
+  la ficha oficial, dentro del flujo del **procedimiento 18** del Manual de
+  procesos de la Dirección de Informática del INE (recepción, verificación de
+  formato y publicación).
+- **Usuario secundario:** periodista o analista que necesita fuente, base y
+  periodo, y una negativa clara cuando pide comparar cosas que no se comparan.
+
+El producto entrega **estado, severidad, cobertura y recibo**. No entrega un
+puntaje de 0 a 100.
+
+## 2. Qué hace y qué no hace
+
+| Hace | No hace |
+|---|---|
+| Valida contrato, tipos, grano, periodo, unidad y base | No corrige ni reescribe el archivo |
+| Detecta duplicados por SHA-256 e identidad semántica | No calcula un empalme propio |
+| Bloquea comparaciones entre bases distintas | No muestra el número de una comparación inválida |
+| Exige gate humano antes de publicar | No publica en CKAN |
+| Exporta recibo JSON y ficha imprimible | No emite certificados ni scores |
+| Expone dos herramientas MCP de solo lectura | No procesa microdatos ni PII |
+
+Estados posibles: `borrador`, `no_habilitado`, `en_revision`,
+`habilitado_para_consulta`, `cerrado`. **No existe “aprobado por el INE”.**
+
+## 3. Arranque en un comando
+
+Requisitos: Python 3.11 o superior.
+
+```bash
+make demo
 ```
-data/ipc_emprepu_es25.xlsx
-https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/6b2cb40a-188c-47c9-9288-ba11c40b5910/download/ipc_emprepu_es25.xlsx
-68.016 bytes · SHA-256 d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4
-Licencia declarada en CKAN: cc-by · descargado 2026-11-24T05:41:54Z (UTC)
+
+Eso instala dependencias, prepara el snapshot sin red, valida los nueve casos,
+registra el gate de cuatro agregados y arranca la interfaz en
+**http://127.0.0.1:8000**.
+
+Otros comandos:
+
+```bash
+make seed      # solo datos y decisiones (sin servidor)
+make serve     # solo la interfaz
+make test      # pytest: 80 pruebas
+make mcp       # servidor MCP por stdio
+make verify    # recalcula digests y retira agregados insostenibles
 ```
 
-Hoja `Hoja2`, 524 filas de datos, una fila por mes desde marzo de 1983. El caso
-usable son las filas **503 y 504** (diciembre 2024 y enero 2025):
+Manual equivalente:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python tools/prepare_snapshot.py --offline   # o sin --offline la 1.ª vez
+.venv/bin/python tools/run_demo.py --reset
+.venv/bin/python app.py
+```
+
+Todo funciona **sin red** después de preparar el snapshot. El motor (`idt/`) no
+importa `urllib`, `requests` ni `socket`; hay un test que lo verifica.
+
+## 4. Recorrido de la demo (7 minutos)
+
+1. **0:00 · El bloqueo.** Portal de consulta → IPC → comparador. Serie F,
+   `2024-12` vs `2025-01` → **+0,50 %**, variación publicada en `G504`.
+2. **0:50 · El cruce inválido.** Cambiar Serie A a *E (base dic-2023)* →
+   **bloqueada**, sin ningún número calculado. Regla `IPC-01`.
+3. **1:40 · Bandeja de revisión.** Nueve casos, estados visibles. Abrir
+   `csv_grano_duplicado` → `CONT-04` en falla, gate bloqueado.
+4. **2:30 · Carga en vivo.** Subir cualquier `.csv`/`.xlsx`/`.xls`, elegir perfil y
+   licencia → SHA-256 calculado y hallazgos por regla.
+5. **3:30 · Identidad.** `dup_identidad` (mismos bytes, etiquetas distintas) en
+   falla; `dup_identidad_excepcion` en advertencia justificada.
+6. **4:30 · Gate humano.** Escribir responsable y motivo, aprobar → aparece en el
+   portal de consulta con recibo.
+7. **5:30 · Invalidación.** “Simular cambio en el perfil” → el digest cambia, la
+   decisión se invalida y el agregado **desaparece** del portal.
+8. **6:30 · Cierre.** Ficha imprimible + recibo JSON. Qué pedimos: piloto en
+   sombra con un revisor de publicaciones.
+
+## 5. Datasets reales utilizados
+
+Ambos vienen del mismo conjunto CKAN del INE, **IPC Base Anual 2024=100**
+(`dataset_id 4243818d-b479-4bc1-aae6-2735e2b51265`), licencia declarada `cc-by`.
+
+| Recurso | Archivo | URL oficial | Descarga (UTC) | Bytes | SHA-256 |
+|---|---|---|---|---|---|
+| Empalme del IPC por República | `data/ipc_emprepu_es25.xlsx` | `…/resource/6b2cb40a-188c-47c9-9288-ba11c40b5910/download/ipc_emprepu_es25.xlsx` | 2026-11-24T05:41:54Z | 68.016 | `d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4` |
+| IPC por Región | `data/ipc_porreg_es25.xlsx` | `…/resource/04f7ee06-d597-4309-9522-c70e23e00e75/download/ipc_porreg_es25.xlsx` | 2026-11-24T19:34:21Z | 12.703 | `841dada98d20bca5ec8c23755ac8d793ce76b2e06dc7c82d34fc4f48475c8c1e` |
+
+Las URL completas están en `data/sources.json` y en `data/manifest.json`; la ficha
+de cada agregado las muestra en pantalla.
+
+**Por qué el empalme.** Permite demostrar un error metodológico real y verificable:
 
 | Celda | Valor | Qué es |
 |---|---|---|
-| `E503` | 101,702855111367 | índice base diciembre 2023=100 |
-| `F503` | 100,513540673814 | índice base 2024=100 |
-| `F504` | 101,017579223309 | índice base 2024=100 |
-| `G504` | 0,5014633313243735 % | variación mensual **publicada** |
+| `E503` | 101,702855 | índice base diciembre 2023=100 |
+| `F503` | 100,513541 | índice base 2024=100 |
+| `F504` | 101,017579 | índice base 2024=100 |
+| `G504` | 0,501463 % | variación mensual **publicada** |
 
-**Por qué este dataset y no otro.** Permite demostrar el producto con un error
-metodológico real y verificable, no inventado:
+- `F504 / F503` es válido: misma base, meses contiguos → **+0,501463 %**, que
+  coincide con la variación publicada en `G504`. La ficha muestra la cifra
+  publicada, no una calculada.
+- `F504 / E503` es **inválido**: mezcla bases. Da `−0,673802 %`. Ese número solo
+  aparece en la pantalla privada de revisión: **no entra** al snapshot público,
+  ni al export, ni a la ficha. Hay tests que lo verifican.
 
-- `F504 / F503` es válido: misma serie, misma base, meses contiguos. Da
-  `+0,501463 %`, que coincide con la variación publicada en `G504`. El prototipo
-  **muestra la cifra publicada**, no la usa como función de difusión.
-- `F504 / E503` es **inválido**: mezcla base 2024=100 con base diciembre 2023=100.
-  Da `−0,673802 %`. La regla lo bloquea y ese número **solo** aparece en la
-  pantalla privada de revisión: no entra al snapshot público, ni al export, ni a
-  la ficha.
-
-Los otros datasets del descubrimiento (`Canasta Viva`, `DINESE`, `+21`, `HBA`)
-quedaron fuera por riesgo de interpretación, no por falta de atractivo visual: son
-simulaciones o cambios de conteo que se leen como otra cosa. Ver PRD §4.
+**Por qué el regional.** Es un segundo recurso real con **otra forma**: tabla
+ancha (una columna por región), hoja `Hoja1`, sin columna de variación publicada y
+con un rango de periodos (2025-01 a 2026-10). Se evalúa y publica **sin tocar el
+motor** (FR-13).
 
 Todo lo demás son **fixtures sintéticos** generados por
 `tools/prepare_snapshot.py`, rotulados como tales en el manifiesto, en la ficha y
-en el sitio. No hay microdatos, ni PII, ni datos de personas, hogares o empresas.
+en la interfaz. No hay microdatos, PII ni datos de personas u hogares.
 
----
-
-## 2. Qué hace
-
-Ocho casos de una **lista cerrada**. No hay URL libre, SQL, carga de archivos ni
-agregación libre.
+### Los nueve casos precargados
 
 | Caso | Qué demuestra | Estado esperado |
 |---|---|---|
-| `ipc_empalme` | contrato XLSX real, grano, periodo, base, comparabilidad | habilitado |
-| `csv_ok` | contrato CSV correcto | habilitado |
+| `ipc_empalme` | recurso real, comparabilidad, bloqueo entre bases | habilitado |
+| `ipc_regional` | segundo perfil real, tabla ancha, rango de periodos | habilitado |
+| `csv_ok` | contrato sintético correcto | habilitado |
 | `csv_columna_faltante` | falta `unidad` → falla crítica | no habilitado |
-| `csv_grano_duplicado` | `(año, mes, indicador)` repetido → falla | no habilitado |
-| `xlsx_ok` | segundo perfil declarativo, mismo motor | en revisión |
-| `xlsx_hoja_inesperada` | hoja `Resumen` ≠ `Datos` → falla con `expected_sheet` y `observed_sheets` | no habilitado |
-| `dup_identidad` | mismos bytes, etiquetas distintas → falla | no habilitado |
-| `dup_identidad_excepcion` | misma duplicación con política documentada → advertencia justificada | habilitado |
+| `csv_grano_duplicado` | `(año, mes, indicador)` repetido | no habilitado |
+| `xlsx_ok` | mismo contrato en XLSX | en revisión |
+| `xlsx_hoja_inesperada` | hoja `Resumen` ≠ `Datos` | no habilitado |
+| `dup_identidad` | mismos bytes, etiquetas distintas | no habilitado |
+| `dup_identidad_excepcion` | con política documentada | habilitado |
 
-Reglas (`rules/rules.json`, versión `1.0.0`): `SNAP-01` integridad de bytes,
-`LIC-01` licencia verificada, `CONT-01` a `CONT-06` contrato, `ID-01` identidad
-por SHA-256 y `IPC-01` a `IPC-03` comparabilidad.
-
-### Lo que el prototipo no hace
-
-No certifica, no corrige, no publica en CKAN, no procesa microdatos, no ofrece SQL
-ni URL libre, no produce un score de 0 a 100, no es un chatbot, no es un monitor y
-no promete tiempos de respuesta. No existe el estado "aprobado por el INE".
-
----
-
-## 3. Arquitectura
+## 6. Arquitectura
 
 ```
-review_store/                     public_snapshot/
-  cases.json      lista cerrada      index.json
-  fixtures/        sintéticos        aggregates/<caso>.json   solo habilitados
-  receipts/        recibos privados  site/                    ficha de consulta
-  decisions/       bitácora
-  site/            revisión privada
-        \__________________________/
+review_store/                       public_snapshot/
+  cases.json      lista cerrada        index.json
+  fixtures/       sintéticos           aggregates/<caso>.json
+  uploads/        archivos cargados    receipts/<caso>.json
+  receipts/       recibos privados     (solo habilitados)
+  decisions/      bitácora
+  overrides/      simulación
+  quarantine/     retirados
+        \____________________________/
                  gate humano
 ```
 
-- `review_store/` es local y privado: candidatos, fixtures, recibos y decisiones.
-- `public_snapshot/` solo recibe agregados habilitados después del visto bueno.
-- El sitio público **solo** lee `public_snapshot/`. Los tests verifican que el
-  snapshot no contenga evidencia privada ni la ruta de revisión.
-- Sin red después de preparar el snapshot. `idt/` no importa `urllib`, `requests`
-  ni `socket`; hay un test que lo comprueba.
-
-### Estados
-
-| Estado | Condición | Texto visible |
-|---|---|---|
-| `borrador` | snapshot o ficha incompletos | Borrador, no consultable |
-| `no_habilitado` | falla crítica o crítica no evaluada | No habilitado para consulta |
-| `en_revision` | sin fallas críticas; advertencias o gate pendiente | En revisión |
-| `habilitado_para_consulta` | críticas sin falla, licencia y gate | Habilitado para consulta en el prototipo |
-| `cerrado` | licencia o permiso insuficiente | Cerrado por defecto |
-
-No es un puntaje: se muestran estado, severidad y cobertura
-(`critical_evaluated / critical_total`).
-
-### Gate humano y digest
-
-El gate exige: ninguna regla crítica en `falla` o `no_evaluado`, licencia
-verificada, y **toda advertencia justificada** con política, dueño, fecha y motivo
-(`review_store/justifications.json`). Una advertencia justificada sobre una regla
-crítica puede pasar — es el camino de la excepción documentada de `ID-01`.
-
-El digest es reproducible y no incluye timestamps:
+- **Aislamiento estructural.** `idt/public_api.py` es la única puerta del portal y
+  del MCP; solo abre rutas dentro de `public_snapshot/` y rechaza cualquier ruta
+  que salga de ahí (`acceso_denegado`). El sitio público no contiene evidencia
+  privada: hay tests que recorren todos los JSON publicados.
+- **Gate humano.** Exige: ninguna regla crítica en `falla` o `no_evaluado`,
+  licencia verificada, y toda advertencia justificada con dueño, motivo y fecha.
+  Una advertencia justificada sobre una regla crítica puede pasar: es el camino de
+  la excepción documentada de `ID-01`.
+- **Digest reproducible.**
 
 ```
 validation_digest = SHA-256(canonical(
@@ -128,122 +175,165 @@ validation_digest = SHA-256(canonical(
 ))
 ```
 
-`decision_basis_digest` usa el mismo valor. Si cambia un archivo, el perfil, la
-versión de reglas o un hallazgo, el digest cambia y la decisión queda invalidada.
-`idt verify` lo informa y **retira el agregado del snapshot público**, moviéndolo a
-`review_store/quarantine/` con el motivo: un agregado sin decisión vigente no se
-sirve. Volver a habilitarlo exige un nuevo `promote`. Los timestamps de ejecución y
-de decisión viven en el recibo y en la bitácora, fuera del digest. La fecha de
-descarga tampoco entra al digest: un nuevo snapshot con los mismos bytes no
-invalida una decisión.
+  `decision_basis_digest` usa el mismo valor. No incluye timestamps de ejecución
+  ni de decisión, ni la fecha de descarga. Dos ejecuciones dan el mismo digest; un
+  cambio de archivo, perfil, reglas o hallazgo lo cambia y **invalida la decisión**.
+- **Cierre por defecto.** `idt verify` retira del portal público cualquier agregado
+  cuya decisión ya no sostenga el digest actual y lo mueve a `review_store/quarantine/`.
+  Para republicarlo hace falta un nuevo gate.
 
----
+## 7. Perfiles declarativos y reglas
 
-## 4. Instalación y uso
+Los perfiles son YAML editables (`profiles/*.yaml`) y **no declaran coordenadas**:
 
-Requisitos: Python 3.11 o superior. Dependencia única: `openpyxl`.
+```yaml
+period:
+  year_column: year
+  month_column: month
+  expected: ["2024-12", "2025-01"]
+
+comparisons:
+  - id: mensual_ene_2025
+    numerator:   { column: f_index, period: "2025-01" }
+    denominator: { column: f_index, period: "2024-12" }
+    published:   { column: g_monthly, period: "2025-01" }
+    tolerance_pp: 0.005
+```
+
+Las columnas se resuelven por **encabezado** y los periodos por **año y mes**. Las
+celdas (`F504`, `G504`) se descubren al leer el archivo y aparecen solo como
+metadato informativo en la evidencia. Un test recorre los YAML y falla si alguien
+vuelve a escribir `letter`, `row` o `cell`.
+
+Reglas versionadas en `rules/rules.json` (`1.0.0`): `SNAP-01` integridad,
+`LIC-01` licencia, `CONT-01`…`CONT-06` contrato, `ID-01` identidad y `IPC-01`…`IPC-03`
+comparabilidad. Añadir un perfil no toca el motor.
+
+## 8. Servidor MCP (P1)
+
+Dos herramientas tipadas, deterministicas, de **solo lectura** sobre
+`public_snapshot/`. Sin LLM dentro del servidor, sin escritura, sin acceso a
+`review_store/`.
+
+| Herramienta | Devuelve |
+|---|---|
+| `listar_agregados_habilitados()` | agregados con fuente, URL, fecha UTC, licencia, base, series y `decision_basis_digest` |
+| `consultar_serie_ipc(periodo_inicio, periodo_fin)` | puntos del IPC con la variación **publicada**; bloqueo estructurado si el rango cruza bases o sale del snapshot |
+
+Configuración para Claude Desktop (o cualquier cliente MCP local). Reemplace
+`/ruta/a/ine-dataton` por la ruta real del repositorio:
+
+```json
+{
+  "mcpServers": {
+    "ine-data-trust": {
+      "command": "/ruta/a/ine-dataton/.venv/bin/python",
+      "args": ["/ruta/a/ine-dataton/mcp_server.py"],
+      "cwd": "/ruta/a/ine-dataton"
+    }
+  }
+}
+```
+
+Prueba rápida por stdio:
 
 ```bash
-make setup            # crea .venv e instala requirements.txt
-make demo             # prepara offline, valida, habilita 3 casos, genera sitios
-make test             # 33 tests
+make mcp     # queda escuchando en stdio
 ```
 
-Manual:
+## 9. Pruebas
 
 ```bash
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-
-.venv/bin/python tools/prepare_snapshot.py            # primera vez: descarga
-.venv/bin/python tools/prepare_snapshot.py --offline  # sin red
-
-.venv/bin/python -m idt list
-.venv/bin/python -m idt validate ipc_empalme
-.venv/bin/python -m idt validate --summary
-.venv/bin/python -m idt promote ipc_empalme \
-    --operator "Técnico de publicaciones" \
-    --rationale "Ficha oficial cotejada contra G504."
-.venv/bin/python -m idt export ipc_empalme
-.venv/bin/python -m idt site
-.venv/bin/python -m idt verify
+make test
 ```
 
-Sitios generados (abrir con el navegador, funcionan sin red):
+80 pruebas con `pytest`, sin servicios externos. Cubren:
 
-- `public_snapshot/site/index.html` — ficha de consulta.
-- `review_store/site/index.html` — pantalla privada de revisión, con la evidencia
-  privada de las comparaciones bloqueadas.
+- **Contrato:** caso positivo, columna faltante, grano duplicado, hoja inesperada,
+  archivo ilegible, `.xls` heredado y ausencia de coordenadas en los perfiles.
+- **Identidad:** mismos bytes con identidad incompatible y excepción documentada.
+- **IPC:** par válido, cruce entre bases bloqueado, ausencia del número inválido en
+  la evidencia pública, comparador del portal y consulta MCP.
+- **Digest y gate:** determinismo, cambio por perfil, exclusión de timestamps,
+  rechazo de fallas, aprobación con excepción, rechazo sin publicación.
+- **Invalidación:** la simulación cambia el digest, retira el agregado y su
+  reversión lo restaura.
+- **Web:** bandeja, detalle, gate, carga en vivo, comparador, ficha y descargas.
+- **MCP:** dos herramientas, bloqueos estructurados y aislamiento del almacén
+  privado.
 
----
-
-## 5. Estructura del repositorio
+## 10. Estructura
 
 ```
-idt/                 motor: lector, reglas, estados, gate, recibos, sitios, CLI
-  canonical.py       JSON canónico y SHA-256
-  reader.py          CSV y XLSX de una hoja
-  engine.py          reglas y digest
-  gate.py            precondiciones, decisiones, snapshot público
-  site.py            dos superficies estáticas
-data/
-  sources.json       lista cerrada (URLs, licencias, perfiles)
-  manifest.json      generado: bytes, SHA-256, fecha UTC
-  ipc_emprepu_es25.xlsx
-profiles/            perfiles declarativos (IPC, contrato CSV, contrato XLSX, par)
-rules/rules.json     reglas versionadas
-review_store/        casos, fixtures, recibos, decisiones, sitio privado
-public_snapshot/     agregados habilitados y ficha de consulta
-tests/               unittest, sin dependencias externas
-tools/               prepare_snapshot.py y run_demo.py
+app.py                 arranque de la interfaz web
+mcp_server.py          servidor MCP por stdio
+idt/
+  engine.py            motor de reglas y digest
+  gate.py              gate humano, decisiones, snapshot público
+  public_api.py        puerta de solo lectura (portal y MCP)
+  store.py             registro de archivos cargados
+  config.py            perfiles YAML, manifiesto, rutas y decisiones
+  web/                 FastAPI + Jinja2 (plantillas y CSS)
+data/                  lista cerrada, manifiesto y los dos XLSX reales
+profiles/              perfiles declarativos (YAML)
+rules/                 reglas versionadas
+review_store/          casos, fixtures, cargas, recibos, decisiones
+public_snapshot/       agregados habilitados y recibos públicos
+tests/                 pytest
+tools/                 preparación, demo y licencias
 ```
 
----
-
-## 6. Limitaciones declaradas
+## 11. Limitaciones
 
 - **No hay piloto en sombra ni prueba de usabilidad ejecutada.** No se reportan
   resultados que no se midieron.
-- La habilitación es del prototipo. No hay firma criptográfica ni autenticación:
-  el visto bueno es una constancia local con responsable y motivo.
+- La habilitación es del prototipo. No hay firma criptográfica ni autenticación: el
+  visto bueno es una constancia local con responsable y motivo.
 - `n<5` no se usa como garantía legal. No se afirma que el prototipo garantice
   secreto estadístico: los subtotales y distintos cortes permiten inferencias.
 - El hash prueba igualdad de bytes del par observado. No prueba autoría, origen,
   licencia, causalidad ni calidad.
 - El caso de duplicados usa un fixture sintético. El par real de divorcios y
   matrimonios es microdato y no se muestra.
-- La cobertura es la del perfil declarado: 5 columnas del IPC, no las 9 de la
-  hoja. `CONT-01` no aplica a CSV.
-- No se implementó MCP (P1): la decisión del PRD dependía de tener las P0 verdes
-  y tiempo, y no es requisito de entrega.
-- El XLSX se lee con `openpyxl` en modo `data_only`; si el archivo trae fórmulas
-  sin caché, el valor no está disponible y la regla lo reporta.
+- La cobertura es la del perfil declarado: 5 columnas del empalme, 11 del regional,
+  no las 9 o 22 de cada hoja.
+- **`.xls` heredado**: se lee con `xlrd` y se valida igual que un `.xlsx`, pero
+  solo se extraen valores de la primera fila de datos en adelante; estilos,
+  fórmulas y formato no se interpretan.
+- El comparador público solo opera sobre los periodos publicados en el snapshot
+  (2 en el empalme, 22 en el regional), no sobre la serie histórica completa.
+- El regional publica **índices**, no variaciones: el comparador lo dice y no
+  calcula una variación que el INE no publicó.
+- La fecha de descarga del archivo regional proviene de la mtime del archivo
+  (`downloaded_at_source: "mtime"` en el manifiesto), no de un registro de
+  descarga, porque se incorporó al repositorio antes de que el manifiesto
+  guardara ese campo.
 
----
+## 12. Licencias
 
-## 7. Licencias
-
-- **Código:** MIT, ver `LICENSE`. Esa licencia no cubre los datos.
-- **Datos INE:** el XLSX conserva su licencia `cc-by`; se atribuye al Instituto
-  Nacional de Estadística (INE), Guatemala. El manifiesto guarda la evidencia de
-  la licencia y la fecha de descarga.
+- **Código:** MIT (`LICENSE`). Esa licencia no cubre los datos.
+- **Datos INE:** `cc-by`. Se atribuye al Instituto Nacional de Estadística (INE),
+  Guatemala. El manifiesto y cada ficha guardan la licencia y la fecha de descarga.
 - **Fixtures:** generados por el equipo, sin licencia de terceros.
-- Sin licencia verificada, el recurso se cierra por defecto: no se asume
+- **Dependencias:** ver `LICENSES_THIRD_PARTY.md`, generado con
+  `tools/gen_licenses.py` a partir de los metadatos instalados.
+- Sin licencia verificada, el recurso **se cierra por defecto**: no se asume
   redistribución.
 
-## 8. IA, pagos y nube
+## 13. IA, pagos y nube
 
-- **IA:** no hay modelos, prompts ni servicios de IA en el producto; el motor es
-  determinista y funciona sin red. Estas herramientas de asistencia se usaron
-  para escribir código y documentación, y el resultado se verificó contra el
-  archivo oficial.
+- **IA en el producto:** ninguna. No hay modelos, prompts ni servicios de IA en
+  tiempo de ejecución; el motor es determinista y funciona sin red.
+- **IA en el desarrollo:** se usaron asistentes de código (OpenCode con modelos
+  DeepSeek y otros) para escribir y revisar código, pruebas y documentación. Todo
+  resultado se verificó contra los archivos oficiales y la suite de pruebas.
 - **Pagos:** ninguno.
 - **Nube:** ninguna. Todo corre local; el único uso de red es la descarga inicial
   del snapshot.
 
-## 9. Repositorio y elegibilidad
+## 14. Repositorio y elegibilidad
 
 Repositorio nuevo creado para la Datatón. El historial de Git es la evidencia del
-desarrollo durante el evento; no se reescribe ni se importa trabajo previo. El
-descubrimiento de datos (carpeta `discovery_ine/`) está en `.gitignore` porque no
-forma parte de la entrega.
+desarrollo durante el evento; no se reescribe ni se importa trabajo previo. La
+carpeta de descubrimiento de datos (`discovery_ine/`) está en `.gitignore` porque
+no forma parte de la entrega.
