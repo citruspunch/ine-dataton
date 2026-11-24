@@ -1,6 +1,6 @@
 {
   "decision_log": null,
-  "generated_at_utc": "2026-11-24T05:51:05Z",
+  "generated_at_utc": "2026-11-24T23:44:27Z",
   "receipt_id": "rec-snap-2026-11-23-xlsx_hoja_inesperada",
   "technical_payload": {
     "base": "2025=100 (serie sintética, no es una base oficial)",
@@ -17,7 +17,7 @@
       "critical_total": 8,
       "rules_total": 8
     },
-    "digest": "93497d2964635fc2555afbff8026bb1144e71a04bc2c9b894d8df48ebe9aabba",
+    "digest": "31ca86425f2bbca116a220d22c06fcbd25d22497b9f099679f5d232f6af820c4",
     "downloaded_at_utc": null,
     "findings": [
       {
@@ -25,6 +25,7 @@
         "evidence": {
           "bytes": 5026,
           "manifest_item": "fix-contrato-xlsx-hoja-inesperada",
+          "origin": "snapshot",
           "sha256": "05b1bcc2d64702410289d69cdd0ddebaede55ad56df412c99dc221301102ea1f"
         },
         "justified": false,
@@ -41,7 +42,7 @@
           "id": "interno-fixture"
         },
         "justified": false,
-        "message": "Licencia verificada en los metadatos del recurso.",
+        "message": "Licencia verificada.",
         "rule_id": "LIC-01",
         "status": "ok",
         "title": "Licencia verificada"
@@ -106,8 +107,9 @@
         "title": "Unidad y base declaradas"
       }
     ],
+    "origin": "snapshot",
     "period": "enero a marzo de 2025",
-    "profile_version": "contrato-mensual-xlsx@1.0.0",
+    "profile_version": "contrato_mensual_xlsx@1.1.0",
     "resource_id": null,
     "rules_version": "1.0.0",
     "sha256": "05b1bcc2d64702410289d69cdd0ddebaede55ad56df412c99dc221301102ea1f",

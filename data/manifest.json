@@ -1,6 +1,6 @@
 {
   "snapshot_id": "snap-2026-11-23",
-  "prepared_at_utc": "2026-11-24T05:51:05Z",
+  "prepared_at_utc": "2026-11-24T23:44:27Z",
   "note": "Lista cerrada. Ninguna URL libre en tiempo de ejecución: esta lista es la única fuente de rutas.",
   "items": [
     {
@@ -14,14 +14,37 @@
       "path": "data/ipc_emprepu_es25.xlsx",
       "source_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/6b2cb40a-188c-47c9-9288-ba11c40b5910/download/ipc_emprepu_es25.xlsx",
       "downloaded_at_utc": "2026-11-24T05:41:54Z",
+      "downloaded_at_source": "download",
       "bytes": 68016,
       "sha256": "d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4",
-      "profile": "ipc-empalme-rep@1.0.0",
+      "profile": "ipc_empalme_republica@1.2.0",
       "license": {
         "id": "cc-by",
         "verified": true,
         "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
-        "evidence": "Metadatos CKAN (package_show) de los conjuntos IPC 2024 y 2025-2026 declaran cc-by."
+        "evidence": "Metadatos CKAN (package_show) del conjunto IPC Base Anual 2024=100: license_id cc-by."
+      }
+    },
+    {
+      "id": "ine-ipc-regional",
+      "kind": "real",
+      "synthetic": false,
+      "source_id": "ine-ckan-ipc-regional",
+      "dataset_id": "4243818d-b479-4bc1-aae6-2735e2b51265",
+      "resource_id": "04f7ee06-d597-4309-9522-c70e23e00e75",
+      "title": "Índice de Precios al Consumidor por Región",
+      "path": "data/ipc_porreg_es25.xlsx",
+      "source_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/04f7ee06-d597-4309-9522-c70e23e00e75/download/ipc_porreg_es25.xlsx",
+      "downloaded_at_utc": "2026-11-24T19:34:21Z",
+      "downloaded_at_source": "download",
+      "bytes": 12703,
+      "sha256": "841dada98d20bca5ec8c23755ac8d793ce76b2e06dc7c82d34fc4f48475c8c1e",
+      "profile": "ipc_regional@1.0.0",
+      "license": {
+        "id": "cc-by",
+        "verified": true,
+        "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
+        "evidence": "Mismo conjunto CKAN (IPC Base Anual 2024=100), license_id cc-by."
       }
     },
     {
@@ -35,9 +58,10 @@
       "path": "review_store/fixtures/contrato_ok.csv",
       "source_url": null,
       "downloaded_at_utc": null,
+      "downloaded_at_source": "generado",
       "bytes": 167,
       "sha256": "6e013fa3e3cc701ad6d435acbeccb96582be7599df99b6b5ed88d67caec4ba52",
-      "profile": "contrato-mensual@1.0.0",
+      "profile": "contrato_mensual@1.1.0",
       "license": {
         "id": "interno-fixture",
         "verified": true,
@@ -56,9 +80,10 @@
       "path": "review_store/fixtures/contrato_columna_faltante.csv",
       "source_url": null,
       "downloaded_at_utc": null,
+      "downloaded_at_source": "generado",
       "bytes": 139,
       "sha256": "92ad9347dad1b84c4d1e2faa4b3a6def0e93f1da90ad0b869c72d6297b94d38a",
-      "profile": "contrato-mensual@1.0.0",
+      "profile": "contrato_mensual@1.1.0",
       "license": {
         "id": "interno-fixture",
         "verified": true,
@@ -77,9 +102,10 @@
       "path": "review_store/fixtures/contrato_grano_duplicado.csv",
       "source_url": null,
       "downloaded_at_utc": null,
+      "downloaded_at_source": "generado",
       "bytes": 212,
       "sha256": "ad1a974a5250c49f3f9bef0ecdb38413de0687d0186a76738103bd85cd5e434e",
-      "profile": "contrato-mensual@1.0.0",
+      "profile": "contrato_mensual@1.1.0",
       "license": {
         "id": "interno-fixture",
         "verified": true,
@@ -98,9 +124,10 @@
       "path": "review_store/fixtures/contrato_ok.xlsx",
       "source_url": null,
       "downloaded_at_utc": null,
+      "downloaded_at_source": "generado",
       "bytes": 5025,
       "sha256": "269560077a204ab8eac77803fc84001cf6e366f0c41a7764d6e73812bc1495cf",
-      "profile": "contrato-mensual-xlsx@1.0.0",
+      "profile": "contrato_mensual_xlsx@1.1.0",
       "license": {
         "id": "interno-fixture",
         "verified": true,
@@ -119,9 +146,10 @@
       "path": "review_store/fixtures/contrato_hoja_inesperada.xlsx",
       "source_url": null,
       "downloaded_at_utc": null,
+      "downloaded_at_source": "generado",
       "bytes": 5026,
       "sha256": "05b1bcc2d64702410289d69cdd0ddebaede55ad56df412c99dc221301102ea1f",
-      "profile": "contrato-mensual-xlsx@1.0.0",
+      "profile": "contrato_mensual_xlsx@1.1.0",
       "license": {
         "id": "interno-fixture",
         "verified": true,
@@ -140,6 +168,7 @@
       "path": "review_store/fixtures/identidad_a.csv",
       "source_url": null,
       "downloaded_at_utc": null,
+      "downloaded_at_source": "generado",
       "bytes": 87,
       "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6",
       "profile": null,
@@ -161,6 +190,7 @@
       "path": "review_store/fixtures/identidad_b.csv",
       "source_url": null,
       "downloaded_at_utc": null,
+      "downloaded_at_source": "generado",
       "bytes": 87,
       "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6",
       "profile": null,

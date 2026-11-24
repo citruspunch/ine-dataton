@@ -1,13 +1,15 @@
 {
   "decision_log": {
-    "decided_at_utc": "2026-11-24T05:51:06Z",
-    "decision_basis_digest": "e7a8a16d4a24efb95b44fc8209fe1d3becb0f52c45f9886fdd6f05006b82a1f9",
+    "decided_at_utc": "2026-11-24T23:44:28Z",
+    "decision_basis_digest": "efae1c2c10b6475e8ed2cebdeba002e167dfe65b06b071cf1ab3c4a72ad28b8f",
+    "decision_id": "dec-dup_identidad_excepcion-001",
     "gate_decision": "habilitado",
+    "justifications": {},
     "operator": "Revisor de publicaciones (prototipo)",
     "rationale": "POL-DUP-2026-01 aplicada: reutilización intencional del mismo archivo, documentada con dueño, fecha y motivo.",
     "still_valid": true
   },
-  "generated_at_utc": "2026-11-24T05:51:06Z",
+  "generated_at_utc": "2026-11-24T23:44:28Z",
   "receipt_id": "rec-snap-2026-11-23-dup_identidad_excepcion",
   "technical_payload": {
     "base": "no aplica",
@@ -22,7 +24,7 @@
       "critical_total": 1,
       "rules_total": 1
     },
-    "digest": "e7a8a16d4a24efb95b44fc8209fe1d3becb0f52c45f9886fdd6f05006b82a1f9",
+    "digest": "efae1c2c10b6475e8ed2cebdeba002e167dfe65b06b071cf1ab3c4a72ad28b8f",
     "downloaded_at_utc": null,
     "findings": [
       {
@@ -52,7 +54,7 @@
           ],
           "policy": {
             "date": "2026-11-24",
-            "gate": "requiere visto bueno humano registrado en la bitácora local de decisiones",
+            "gate": "requiere visto bueno humano registrado en la bitácora local",
             "owner": "Revisor de publicaciones (rol del prototipo)",
             "policy": "POL-DUP-2026-01",
             "reason": "El mismo archivo se reutiliza de forma intencional como plantilla de dos series de eventos vitales. La reutilización no se publica y queda sujeta al gate humano."
@@ -66,11 +68,12 @@
         "title": "Identidad por SHA-256"
       }
     ],
+    "origin": "snapshot",
     "period": "no aplica",
-    "profile_version": "identidad-recursos@1.0.0",
+    "profile_version": "identidad_recursos@1.0.0",
     "resource_id": null,
     "rules_version": "1.0.0",
-    "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6",
+    "sha256": null,
     "snapshot_id": "snap-2026-11-23",
     "source_id": null,
     "source_url": null,

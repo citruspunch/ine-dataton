@@ -1,0 +1,202 @@
+{
+  "decision_log": {
+    "decided_at_utc": "2026-11-24T23:44:28Z",
+    "decision_basis_digest": "5cb53a760acedd6dae859dab8d9e0c9893b13f03499059ce7afef027493ea1f1",
+    "decision_id": "dec-ipc_regional-001",
+    "gate_decision": "habilitado",
+    "justifications": {},
+    "operator": "Técnico de publicaciones (prototipo)",
+    "rationale": "Segundo recurso real evaluado con un perfil distinto sin tocar el motor. Publica índices por región; no publica variación mensual.",
+    "still_valid": true
+  },
+  "generated_at_utc": "2026-11-24T23:44:28Z",
+  "receipt_id": "rec-snap-2026-11-23-ipc_regional",
+  "technical_payload": {
+    "base": "2024=100 en todas las columnas",
+    "comparisons": [],
+    "coverage": {
+      "by_status": {
+        "ok": 8
+      },
+      "complete": true,
+      "critical_evaluated": 8,
+      "critical_not_evaluated": 0,
+      "critical_total": 8,
+      "rules_total": 8
+    },
+    "digest": "5cb53a760acedd6dae859dab8d9e0c9893b13f03499059ce7afef027493ea1f1",
+    "downloaded_at_utc": "2026-11-24T19:34:21Z",
+    "findings": [
+      {
+        "critical": true,
+        "evidence": {
+          "bytes": 12703,
+          "manifest_item": "ine-ipc-regional",
+          "origin": "snapshot",
+          "sha256": "841dada98d20bca5ec8c23755ac8d793ce76b2e06dc7c82d34fc4f48475c8c1e"
+        },
+        "justified": false,
+        "message": "Bytes y SHA-256 coinciden con el manifiesto del snapshot.",
+        "rule_id": "SNAP-01",
+        "status": "ok",
+        "title": "Integridad del snapshot"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
+          "evidence": "Mismo conjunto CKAN (IPC Base Anual 2024=100), license_id cc-by.",
+          "id": "cc-by"
+        },
+        "justified": false,
+        "message": "Licencia verificada.",
+        "rule_id": "LIC-01",
+        "status": "ok",
+        "title": "Licencia verificada"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "expected_sheet": "Hoja1",
+          "observed_sheets": [
+            "Hoja1"
+          ]
+        },
+        "justified": false,
+        "message": "La hoja declarada está presente.",
+        "rule_id": "CONT-01",
+        "status": "ok",
+        "title": "Hoja declarada presente"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "columns": [
+            {
+              "cell_column": "A",
+              "header": "Año"
+            },
+            {
+              "cell_column": "B",
+              "header": "Mes"
+            },
+            {
+              "cell_column": "C",
+              "header": "República"
+            },
+            {
+              "cell_column": "D",
+              "header": "Región I"
+            },
+            {
+              "cell_column": "E",
+              "header": "Región II"
+            },
+            {
+              "cell_column": "F",
+              "header": "Región III"
+            },
+            {
+              "cell_column": "G",
+              "header": "Región IV"
+            },
+            {
+              "cell_column": "H",
+              "header": "Región V"
+            },
+            {
+              "cell_column": "I",
+              "header": "Región VI"
+            },
+            {
+              "cell_column": "J",
+              "header": "Región VII"
+            },
+            {
+              "cell_column": "K",
+              "header": "Región VIII"
+            }
+          ]
+        },
+        "justified": false,
+        "message": "Todas las columnas declaradas están presentes con su encabezado.",
+        "rule_id": "CONT-02",
+        "status": "ok",
+        "title": "Columnas requeridas"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "rows_checked": 22
+        },
+        "justified": false,
+        "message": "Los 11 campos declarados parsean a su tipo.",
+        "rule_id": "CONT-03",
+        "status": "ok",
+        "title": "Tipos parseables"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "grain": [
+            "year",
+            "month"
+          ],
+          "rows": 22
+        },
+        "justified": false,
+        "message": "El grano declarado es único en todas las filas.",
+        "rule_id": "CONT-04",
+        "status": "ok",
+        "title": "Grano único"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "declared_periods": 22,
+          "first": "2025-01",
+          "last": "2026-10",
+          "mode": "rango"
+        },
+        "justified": false,
+        "message": "Los periodos declarados están presentes y son válidos.",
+        "rule_id": "CONT-05",
+        "status": "ok",
+        "title": "Periodo declarado presente"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "declared_bases": {
+            "region_1": "2024=100",
+            "region_2": "2024=100",
+            "region_3": "2024=100",
+            "region_4": "2024=100",
+            "region_5": "2024=100",
+            "region_6": "2024=100",
+            "region_7": "2024=100",
+            "region_8": "2024=100",
+            "republica": "2024=100"
+          },
+          "declared_unit": "índice"
+        },
+        "justified": false,
+        "message": "Unidad y base coinciden con lo declarado en el perfil.",
+        "rule_id": "CONT-06",
+        "status": "ok",
+        "title": "Unidad y base declaradas"
+      }
+    ],
+    "origin": "snapshot",
+    "period": "enero 2025 a octubre 2026",
+    "profile_version": "ipc_regional@1.0.0",
+    "resource_id": "04f7ee06-d597-4309-9522-c70e23e00e75",
+    "rules_version": "1.0.0",
+    "sha256": "841dada98d20bca5ec8c23755ac8d793ce76b2e06dc7c82d34fc4f48475c8c1e",
+    "snapshot_id": "snap-2026-11-23",
+    "source_id": "ine-ckan-ipc-regional",
+    "source_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/04f7ee06-d597-4309-9522-c70e23e00e75/download/ipc_porreg_es25.xlsx",
+    "state": "habilitado_para_consulta",
+    "unit": "índice"
+  }
+}

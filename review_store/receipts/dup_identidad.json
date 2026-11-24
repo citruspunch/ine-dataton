@@ -1,6 +1,6 @@
 {
   "decision_log": null,
-  "generated_at_utc": "2026-11-24T05:51:05Z",
+  "generated_at_utc": "2026-11-24T23:44:27Z",
   "receipt_id": "rec-snap-2026-11-23-dup_identidad",
   "technical_payload": {
     "base": "no aplica",
@@ -15,7 +15,7 @@
       "critical_total": 1,
       "rules_total": 1
     },
-    "digest": "a7f4b1aed0c28a5005cc662f6bad94375320a7c31953a317ba2f5c55ac95fcae",
+    "digest": "59c49b54842cbdd7029b0cd84fc8da08035d32935ee051d89067e02cfe66e66d",
     "downloaded_at_utc": null,
     "findings": [
       {
@@ -52,11 +52,12 @@
         "title": "Identidad por SHA-256"
       }
     ],
+    "origin": "snapshot",
     "period": "no aplica",
-    "profile_version": "identidad-recursos@1.0.0",
+    "profile_version": "identidad_recursos@1.0.0",
     "resource_id": null,
     "rules_version": "1.0.0",
-    "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6",
+    "sha256": null,
     "snapshot_id": "snap-2026-11-23",
     "source_id": null,
     "source_url": null,

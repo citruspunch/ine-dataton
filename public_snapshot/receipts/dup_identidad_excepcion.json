@@ -1,0 +1,79 @@
+{
+  "decision_log": {
+    "decided_at_utc": "2026-11-24T23:44:28Z",
+    "decision_basis_digest": "efae1c2c10b6475e8ed2cebdeba002e167dfe65b06b071cf1ab3c4a72ad28b8f",
+    "gate_decision": "habilitado",
+    "operator": "Revisor de publicaciones (prototipo)",
+    "rationale": "POL-DUP-2026-01 aplicada: reutilización intencional del mismo archivo, documentada con dueño, fecha y motivo."
+  },
+  "generated_at_utc": "2026-11-24T23:44:28Z",
+  "receipt_id": "rec-snap-2026-11-23-dup_identidad_excepcion",
+  "technical_payload": {
+    "base": "no aplica",
+    "comparisons": [],
+    "coverage": {
+      "by_status": {
+        "advertencia": 1
+      },
+      "complete": true,
+      "critical_evaluated": 1,
+      "critical_not_evaluated": 0,
+      "critical_total": 1,
+      "rules_total": 1
+    },
+    "digest": "efae1c2c10b6475e8ed2cebdeba002e167dfe65b06b071cf1ab3c4a72ad28b8f",
+    "downloaded_at_utc": null,
+    "findings": [
+      {
+        "critical": true,
+        "evidence": {
+          "identities": [
+            {
+              "base": null,
+              "dataset": "Divorcios (sintético)",
+              "grain": "anio-mes",
+              "period": "2024",
+              "title": "Eventos vitales, serie A",
+              "unit": "registro"
+            },
+            {
+              "base": null,
+              "dataset": "Matrimonios (sintético)",
+              "grain": "anio-mes",
+              "period": "2024",
+              "title": "Eventos vitales, serie B",
+              "unit": "registro"
+            }
+          ],
+          "mismatched_fields": [
+            "dataset",
+            "title"
+          ],
+          "policy": {
+            "date": "2026-11-24",
+            "gate": "requiere visto bueno humano registrado en la bitácora local",
+            "owner": "Revisor de publicaciones (rol del prototipo)",
+            "policy": "POL-DUP-2026-01",
+            "reason": "El mismo archivo se reutiliza de forma intencional como plantilla de dos series de eventos vitales. La reutilización no se publica y queda sujeta al gate humano."
+          },
+          "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6"
+        },
+        "justified": true,
+        "message": "Mismos bytes con identidad distinta, cubierto por una política de reutilización documentada.",
+        "rule_id": "ID-01",
+        "status": "advertencia",
+        "title": "Identidad por SHA-256"
+      }
+    ],
+    "period": "no aplica",
+    "profile_version": "identidad_recursos@1.0.0",
+    "resource_id": null,
+    "rules_version": "1.0.0",
+    "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6",
+    "snapshot_id": "snap-2026-11-23",
+    "source_id": null,
+    "source_url": null,
+    "state": "habilitado_para_consulta",
+    "unit": "no aplica"
+  }
+}

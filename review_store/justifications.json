@@ -7,7 +7,7 @@
         "owner": "Revisor de publicaciones (rol del prototipo)",
         "date": "2026-11-24",
         "reason": "El mismo archivo se reutiliza de forma intencional como plantilla de dos series de eventos vitales. La reutilización no se publica y queda sujeta al gate humano.",
-        "gate": "requiere visto bueno humano registrado en la bitácora local de decisiones"
+        "gate": "requiere visto bueno humano registrado en la bitácora local"
       }
     }
   }

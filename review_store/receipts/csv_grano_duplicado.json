@@ -1,6 +1,6 @@
 {
   "decision_log": null,
-  "generated_at_utc": "2026-11-24T05:51:05Z",
+  "generated_at_utc": "2026-11-24T23:44:27Z",
   "receipt_id": "rec-snap-2026-11-23-csv_grano_duplicado",
   "technical_payload": {
     "base": "2025=100 (serie sintética, no es una base oficial)",
@@ -16,7 +16,7 @@
       "critical_total": 7,
       "rules_total": 7
     },
-    "digest": "66c98c3eefde689985ce086533ec5468ae666e89c45a2e9886571e535ccf8225",
+    "digest": "7be672913b9ed3f594db89d09891700a55b3ae15c5cbe8120a376ffb7bcbf05c",
     "downloaded_at_utc": null,
     "findings": [
       {
@@ -24,6 +24,7 @@
         "evidence": {
           "bytes": 212,
           "manifest_item": "fix-contrato-grano-duplicado",
+          "origin": "snapshot",
           "sha256": "ad1a974a5250c49f3f9bef0ecdb38413de0687d0186a76738103bd85cd5e434e"
         },
         "justified": false,
@@ -40,7 +41,7 @@
           "id": "interno-fixture"
         },
         "justified": false,
-        "message": "Licencia verificada en los metadatos del recurso.",
+        "message": "Licencia verificada.",
         "rule_id": "LIC-01",
         "status": "ok",
         "title": "Licencia verificada"
@@ -49,15 +50,30 @@
         "critical": true,
         "evidence": {
           "columns": [
-            "anio",
-            "mes",
-            "indicador",
-            "valor",
-            "unidad"
+            {
+              "cell_column": "A",
+              "header": "anio"
+            },
+            {
+              "cell_column": "B",
+              "header": "mes"
+            },
+            {
+              "cell_column": "C",
+              "header": "indicador"
+            },
+            {
+              "cell_column": "D",
+              "header": "valor"
+            },
+            {
+              "cell_column": "E",
+              "header": "unidad"
+            }
           ]
         },
         "justified": false,
-        "message": "Todas las columnas declaradas están presentes en su posición.",
+        "message": "Todas las columnas declaradas están presentes con su encabezado.",
         "rule_id": "CONT-02",
         "status": "ok",
         "title": "Columnas requeridas"
@@ -104,20 +120,10 @@
       {
         "critical": true,
         "evidence": {
-          "expected_periods": [
-            {
-              "month": 1,
-              "year": 2025
-            },
-            {
-              "month": 2,
-              "year": 2025
-            },
-            {
-              "month": 3,
-              "year": 2025
-            }
-          ]
+          "declared_periods": 3,
+          "first": "2025-01",
+          "last": "2025-03",
+          "mode": "lista"
         },
         "justified": false,
         "message": "Los periodos declarados están presentes y son válidos.",
@@ -140,8 +146,9 @@
         "title": "Unidad y base declaradas"
       }
     ],
+    "origin": "snapshot",
     "period": "enero a marzo de 2025",
-    "profile_version": "contrato-mensual@1.0.0",
+    "profile_version": "contrato_mensual@1.1.0",
     "resource_id": null,
     "rules_version": "1.0.0",
     "sha256": "ad1a974a5250c49f3f9bef0ecdb38413de0687d0186a76738103bd85cd5e434e",

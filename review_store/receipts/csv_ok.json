@@ -1,13 +1,15 @@
 {
   "decision_log": {
-    "decided_at_utc": "2026-11-24T05:51:06Z",
-    "decision_basis_digest": "ef98a73d6e1c33ef642a4388b33ca634005ba7ce51997980d5f5a8123b854b71",
+    "decided_at_utc": "2026-11-24T23:44:28Z",
+    "decision_basis_digest": "a29401c0c3118d9bb8ea6e47b8dcd00402755e5fa70083c51170392319d4a1ff",
+    "decision_id": "dec-csv_ok-001",
     "gate_decision": "habilitado",
+    "justifications": {},
     "operator": "Técnico de publicaciones (prototipo)",
     "rationale": "Contrato sintético correcto; se usa para demostrar el flujo de habilitación.",
     "still_valid": true
   },
-  "generated_at_utc": "2026-11-24T05:51:06Z",
+  "generated_at_utc": "2026-11-24T23:44:28Z",
   "receipt_id": "rec-snap-2026-11-23-csv_ok",
   "technical_payload": {
     "base": "2025=100 (serie sintética, no es una base oficial)",
@@ -22,7 +24,7 @@
       "critical_total": 7,
       "rules_total": 7
     },
-    "digest": "ef98a73d6e1c33ef642a4388b33ca634005ba7ce51997980d5f5a8123b854b71",
+    "digest": "a29401c0c3118d9bb8ea6e47b8dcd00402755e5fa70083c51170392319d4a1ff",
     "downloaded_at_utc": null,
     "findings": [
       {
@@ -30,6 +32,7 @@
         "evidence": {
           "bytes": 167,
           "manifest_item": "fix-contrato-ok",
+          "origin": "snapshot",
           "sha256": "6e013fa3e3cc701ad6d435acbeccb96582be7599df99b6b5ed88d67caec4ba52"
         },
         "justified": false,
@@ -46,7 +49,7 @@
           "id": "interno-fixture"
         },
         "justified": false,
-        "message": "Licencia verificada en los metadatos del recurso.",
+        "message": "Licencia verificada.",
         "rule_id": "LIC-01",
         "status": "ok",
         "title": "Licencia verificada"
@@ -55,15 +58,30 @@
         "critical": true,
         "evidence": {
           "columns": [
-            "anio",
-            "mes",
-            "indicador",
-            "valor",
-            "unidad"
+            {
+              "cell_column": "A",
+              "header": "anio"
+            },
+            {
+              "cell_column": "B",
+              "header": "mes"
+            },
+            {
+              "cell_column": "C",
+              "header": "indicador"
+            },
+            {
+              "cell_column": "D",
+              "header": "valor"
+            },
+            {
+              "cell_column": "E",
+              "header": "unidad"
+            }
           ]
         },
         "justified": false,
-        "message": "Todas las columnas declaradas están presentes en su posición.",
+        "message": "Todas las columnas declaradas están presentes con su encabezado.",
         "rule_id": "CONT-02",
         "status": "ok",
         "title": "Columnas requeridas"
@@ -98,20 +116,10 @@
       {
         "critical": true,
         "evidence": {
-          "expected_periods": [
-            {
-              "month": 1,
-              "year": 2025
-            },
-            {
-              "month": 2,
-              "year": 2025
-            },
-            {
-              "month": 3,
-              "year": 2025
-            }
-          ]
+          "declared_periods": 3,
+          "first": "2025-01",
+          "last": "2025-03",
+          "mode": "lista"
         },
         "justified": false,
         "message": "Los periodos declarados están presentes y son válidos.",
@@ -134,8 +142,9 @@
         "title": "Unidad y base declaradas"
       }
     ],
+    "origin": "snapshot",
     "period": "enero a marzo de 2025",
-    "profile_version": "contrato-mensual@1.0.0",
+    "profile_version": "contrato_mensual@1.1.0",
     "resource_id": null,
     "rules_version": "1.0.0",
     "sha256": "6e013fa3e3cc701ad6d435acbeccb96582be7599df99b6b5ed88d67caec4ba52",
