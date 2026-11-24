@@ -1,7 +1,7 @@
-"""CLI del prototipo. Sin login, sin URL libre, sin SQL.
+"""Prototype CLI. No login, no free URLs, no SQL.
 
-La interfaz principal es la aplicación web (`python app.py`); la CLI existe para
-demostrar que el motor y el gate no dependen de la interfaz.
+The main interface is the web app (`python app.py`); the CLI exists to show that
+the engine and the gate do not depend on the interface.
 """
 
 from __future__ import annotations
@@ -13,13 +13,13 @@ from typing import Any
 
 from . import config, gate
 from .engine import validate
-from .model import ADVERTENCIA, FALLA, NO_EVALUADO, OK
+from .model import WARNING, FAILURE, NOT_EVALUATED, OK
 
 STATUS_LABEL = {
     OK: "ok",
-    FALLA: "falla",
-    ADVERTENCIA: "advertencia",
-    NO_EVALUADO: "no evaluado",
+    FAILURE: "falla",
+    WARNING: "advertencia",
+    NOT_EVALUATED: "no evaluado",
 }
 
 

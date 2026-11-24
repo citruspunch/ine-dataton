@@ -1,31 +1,31 @@
-"""P0.1: contrato de esquema, tipo, grano, periodo, unidad y base."""
+"""P0.1: contract of schema, type, grain, period, unit and base."""
 
 from __future__ import annotations
 
 import pytest
 
 from idt import config, engine
-from idt.model import ADVERTENCIA, FALLA, NO_EVALUADO, OK
+from idt.model import WARNING, FAILURE, NOT_EVALUATED, OK
 
 
-def test_csv_correcto_pasa():
+def test_valid_csv_passes():
     result = engine.validate("csv_ok", write_receipt=False)
     assert [f.status for f in result.findings] == [OK] * len(result.findings)
     assert result.coverage["complete"]
 
 
-def test_columna_faltante_falla():
+def test_missing_column_fails():
     result = engine.validate("csv_columna_faltante", write_receipt=False)
     finding = next(f for f in result.findings if f.rule_id == "CONT-02")
-    assert finding.status == FALLA
+    assert finding.status == FAILURE
     assert finding.evidence["missing_columns"] == ["unidad"]
     assert result.state == "no_habilitado"
 
 
-def test_grano_duplicado_falla():
+def test_duplicate_grain_fails():
     result = engine.validate("csv_grano_duplicado", write_receipt=False)
     finding = next(f for f in result.findings if f.rule_id == "CONT-04")
-    assert finding.status == FALLA
+    assert finding.status == FAILURE
     assert finding.evidence["duplicates"][0]["grain"] == [
         2025,
         2,
@@ -33,22 +33,22 @@ def test_grano_duplicado_falla():
     ]
 
 
-def test_hoja_inesperada_falla_y_no_es_no_evaluado():
+def test_unexpected_sheet_fails_and_is_not_not_evaluated():
     result = engine.validate("xlsx_hoja_inesperada", write_receipt=False)
     finding = next(f for f in result.findings if f.rule_id == "CONT-01")
-    assert finding.status == FALLA
+    assert finding.status == FAILURE
     assert finding.evidence["expected_sheet"] == "Datos"
     assert "Resumen" in finding.evidence["observed_sheets"]
 
 
-def test_critica_no_evaluada_bloquea():
+def test_not_evaluated_critical_blocks():
     result = engine.validate("xlsx_hoja_inesperada", write_receipt=False)
     assert not result.coverage["complete"]
     assert result.state == "no_habilitado"
-    assert any(f.status == NO_EVALUADO for f in result.findings)
+    assert any(f.status == NOT_EVALUATED for f in result.findings)
 
 
-def test_segundo_perfil_declarativo_sin_tocar_el_motor():
+def test_second_declarative_profile_without_touching_engine():
     csv_result = engine.validate("csv_ok", write_receipt=False)
     xlsx_result = engine.validate("xlsx_ok", write_receipt=False)
     assert csv_result.method == xlsx_result.method == "contract"
@@ -56,8 +56,8 @@ def test_segundo_perfil_declarativo_sin_tocar_el_motor():
     assert xlsx_result.entity["profile"] == "contrato_mensual_xlsx@1.1.0"
 
 
-def test_segundo_recurso_real_con_forma_distinta():
-    """El perfil regional usa una tabla ancha y un rango de periodos."""
+def test_second_real_resource_with_different_shape():
+    """The regional profile uses a wide table and a period range."""
     result = engine.validate("ipc_regional", write_receipt=False)
     assert result.coverage["complete"]
     assert [f.status for f in result.findings] == [OK] * len(result.findings)
@@ -67,8 +67,8 @@ def test_segundo_recurso_real_con_forma_distinta():
     assert series[0]["points"][0]["period"] == "2025-01"
 
 
-def test_los_perfiles_no_declaran_coordenadas_fijas():
-    """Desacople: ni filas ni letras de columna en los perfiles."""
+def test_profiles_declare_no_fixed_coordinates():
+    """Decoupling: neither rows nor column letters in the profiles."""
     import yaml
 
     forbidden = {"letter", "row", "row_number", "cell"}
@@ -87,7 +87,7 @@ def test_los_perfiles_no_declaran_coordenadas_fijas():
         walk(data)
 
 
-def test_la_evidencia_registra_la_celda_como_metadato():
+def test_evidence_records_cell_as_metadata():
     result = engine.validate("ipc_empalme", write_receipt=False)
     comp = next(c for c in result.comparisons if c.comparison_id == "mensual_ene_2025")
     assert comp.public_evidence["published_cell"] == "G504"
@@ -95,7 +95,7 @@ def test_la_evidencia_registra_la_celda_como_metadato():
     assert comp.public_evidence["denominator_cell"] == "F503"
 
 
-def test_csv_ilegible_queda_no_evaluado(sandbox):
+def test_unreadable_csv_is_not_evaluated(sandbox):
     from idt import store
 
     entry = store.register_upload(
@@ -105,12 +105,12 @@ def test_csv_ilegible_queda_no_evaluado(sandbox):
     assert result.state == "no_habilitado"
     assert not result.coverage["complete"]
     assert all(
-        f.status == NO_EVALUADO for f in result.findings if f.rule_id.startswith("CONT")
+        f.status == NOT_EVALUATED for f in result.findings if f.rule_id.startswith("CONT")
     )
 
 
-def test_xls_heredado_se_lee_y_valida(tmp_path, sandbox):
-    """El formato heredado .xls se lee con xlrd, no se rechaza."""
+def test_legacy_xls_is_read_and_validated(tmp_path, sandbox):
+    """The legacy .xls format is read with xlrd, not rejected."""
     import xlwt
 
     from idt import store
@@ -139,7 +139,7 @@ def test_xls_heredado_se_lee_y_valida(tmp_path, sandbox):
     assert [f.status for f in result.findings] == [OK] * len(result.findings)
 
 
-def test_xls_con_hoja_inesperada_falla(tmp_path, sandbox):
+def test_xls_with_unexpected_sheet_fails(tmp_path, sandbox):
     import xlwt
 
     from idt import store
@@ -156,11 +156,11 @@ def test_xls_con_hoja_inesperada_falla(tmp_path, sandbox):
     )
     result = engine.validate(entry["id"], write_receipt=False)
     finding = next(f for f in result.findings if f.rule_id == "CONT-01")
-    assert finding.status == FALLA
+    assert finding.status == FAILURE
     assert finding.evidence["observed_sheets"] == ["Resumen"]
 
 
-def test_csv_contra_perfil_de_libro_se_reporta(tmp_path, sandbox):
+def test_csv_against_workbook_profile_is_reported(tmp_path, sandbox):
     from idt import store
 
     entry = store.register_upload(
@@ -171,5 +171,5 @@ def test_csv_contra_perfil_de_libro_se_reporta(tmp_path, sandbox):
     )
     result = engine.validate(entry["id"], write_receipt=False)
     finding = next(f for f in result.findings if f.rule_id == "CONT-01")
-    assert finding.status == FALLA
+    assert finding.status == FAILURE
     assert finding.evidence["observed_sheets"] == []

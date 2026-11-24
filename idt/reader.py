@@ -1,7 +1,7 @@
-"""Lectura de las dos formas permitidas: CSV delimitado y XLSX de una hoja.
+"""Reading of the three accepted shapes: delimited CSV, XLSX and legacy XLS.
 
-Nada de URL libre: la ruta viene del manifiesto de lista cerrada y se resuelve
-dentro del repositorio.
+No free URLs: the path comes from the closed-list manifest and is resolved
+inside the repository.
 """
 
 from __future__ import annotations
@@ -14,11 +14,12 @@ from typing import Any
 
 
 class ReadError(Exception):
-    """El archivo no se puede leer: la regla queda no_evaluada, no fallida."""
+    """The file cannot be read: the rule stays not evaluated, not failed."""
 
 
 class UnexpectedSheet(Exception):
-    """La hoja observada no es la declarada. Discrepancia clara, no ilegible."""
+    """The observed sheet is not the declared one. A clear discrepancy, not an
+    unreadable file."""
 
     def __init__(self, expected: str, observed: list[str]) -> None:
         super().__init__(f"hoja declarada {expected!r}; hojas observadas {observed!r}")
@@ -26,7 +27,7 @@ class UnexpectedSheet(Exception):
         self.observed = observed
 
 
-MESES = {
+MONTH_NAMES = {
     "enero": 1,
     "febrero": 2,
     "marzo": 3,
@@ -59,7 +60,7 @@ class Table:
             return None
 
     def cell(self, row_number: int, index: int) -> Any:
-        """Valor crudo por posición de columna, sin depender del nombre."""
+        """Raw value by column position, independent of the header name."""
         values = self.cells.get(row_number, [])
         return values[index] if index < len(values) else None
 
@@ -71,7 +72,7 @@ class Table:
         return n - 1
 
     def letter(self, index: int) -> str:
-        """0 -> A, 25 -> Z, 26 -> AA. Solo para metadato de evidencia."""
+        """0 -> A, 25 -> Z, 26 -> AA. Evidence metadata only."""
         text = ""
         n = index + 1
         while n:
@@ -104,7 +105,7 @@ def read_table(path: Path, kind: str, expected_sheet: str | None = None) -> Tabl
 
 
 def _read_xls(path: Path, expected_sheet: str | None) -> Table:
-    """Formato heredado .xls (BIFF) con xlrd."""
+    """Legacy .xls (BIFF) format, read with xlrd."""
     try:
         import xlrd
     except ImportError as exc:  # pragma: no cover
@@ -199,7 +200,8 @@ def _read_xlsx(path: Path, expected_sheet: str | None) -> Table:
 
 
 def coerce(value: Any, type_name: str) -> Any:
-    """Convierte un valor crudo al tipo declarado. Lanza ValueError si no parsea."""
+    """Coerce a raw value to the declared type. Raises ValueError if it does not
+    parse."""
     if value is None:
         raise ValueError("valor vacío")
     if isinstance(value, str):
@@ -228,9 +230,9 @@ def coerce(value: Any, type_name: str) -> Any:
 
     if type_name == "month_name":
         key = str(value).strip().lower()
-        if key not in MESES:
+        if key not in MONTH_NAMES:
             raise ValueError(f"{value!r} no es un mes en español")
-        return MESES[key]
+        return MONTH_NAMES[key]
 
     if type_name == "date":
         if isinstance(value, dt.datetime):

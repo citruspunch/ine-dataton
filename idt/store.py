@@ -1,8 +1,8 @@
-"""Registro de archivos cargados en la sesión de revisión.
+"""Registry of files uploaded during the review session.
 
-Un archivo subido no está en la lista cerrada del manifiesto, así que al
-recibirlo se le crea su propia entrada de manifiesto (bytes, SHA-256, fecha UTC).
-Así SNAP-01 sigue significando lo mismo y detecta un cambio posterior al archivo.
+An uploaded file is not in the closed-list manifest, so on receipt it gets its
+own manifest entry (bytes, SHA-256, UTC date). That way SNAP-01 keeps meaning
+the same thing and still detects a later change to the file.
 """
 
 from __future__ import annotations
@@ -54,7 +54,7 @@ def _utc_now() -> str:
 
 def _slug(text: str) -> str:
     cleaned = re.sub(r"[^a-zA-Z0-9._-]+", "-", text).strip("-")
-    return cleaned[:60] or "archivo"
+    return cleaned[:60] or "file"
 
 
 def _registry() -> dict[str, Any]:

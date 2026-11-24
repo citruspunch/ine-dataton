@@ -1,12 +1,12 @@
-"""Motor de reglas del prototipo.
+"""Rule engine of the prototype.
 
-Las reglas se resuelven por esquema semántico: columnas por encabezado y
-periodos por año y mes. Ningún perfil declara filas ni letras de columna; las
-celdas que aparecen en la evidencia se descubren al leer el archivo y son solo
-metadato informativo.
+Rules are resolved by semantic schema: columns by header, periods by year and
+month. No profile declares rows or column letters; the cells that appear in the
+evidence are discovered while reading the file and are only informational
+metadata.
 
-El motor no corrige, no rellena y no decide: emite estado, severidad, cobertura
-y evidencia.
+The engine does not correct, does not fill in and does not decide: it emits
+state, severity, coverage and evidence.
 """
 
 from __future__ import annotations
@@ -19,9 +19,9 @@ from typing import Any
 from . import config
 from .canonical import digest, file_sha256
 from .model import (
-    ADVERTENCIA,
-    FALLA,
-    NO_EVALUADO,
+    WARNING,
+    FAILURE,
+    NOT_EVALUATED,
     OK,
     Comparison,
     Finding,
@@ -38,7 +38,7 @@ ALL_CONTRACT_RULES = ["CONT-02", "CONT-03", "CONT-04", "CONT-05", "CONT-06"]
 
 
 # --------------------------------------------------------------------------
-# Sujeto: lo que se evalúa (un caso de la lista o un archivo cargado)
+# Subject: what is evaluated (a closed-list case or an uploaded file)
 # --------------------------------------------------------------------------
 
 
@@ -85,7 +85,7 @@ def resolve_subject(subject_id: str) -> Subject:
 
 
 # --------------------------------------------------------------------------
-# Lectura tipada
+# Typed reading
 # --------------------------------------------------------------------------
 
 
@@ -130,7 +130,7 @@ def declared_periods(profile: dict[str, Any]) -> list[str]:
 
 
 def _cell_ref(table: Table, row: int, index: int | None) -> dict[str, Any]:
-    """Metadato informativo: la celda se descubre, nunca se declara."""
+    """Informational metadata: the cell is discovered, never declared."""
     ref: dict[str, Any] = {"row": row}
     if index is not None and table.sheet is not None:
         ref["cell"] = f"{table.letter(index)}{row}"
@@ -202,12 +202,12 @@ def _not_evaluated(
     meta: dict[str, dict[str, Any]], rule_ids: list[str], reason: str
 ) -> list[Finding]:
     return [
-        _finding(meta, rid, NO_EVALUADO, f"No evaluado: {reason}.") for rid in rule_ids
+        _finding(meta, rid, NOT_EVALUATED, f"No evaluado: {reason}.") for rid in rule_ids
     ]
 
 
 # --------------------------------------------------------------------------
-# P0.1 contrato
+# P0.1 contract
 # --------------------------------------------------------------------------
 
 
@@ -224,7 +224,7 @@ def _eval_contract(
             _finding(
                 meta,
                 "CONT-02",
-                FALLA,
+                FAILURE,
                 f"Faltan {len(missing)} columna(s) declaradas en el perfil.",
                 {
                     "missing_columns": missing,
@@ -255,7 +255,7 @@ def _eval_contract(
         )
     )
 
-    # CONT-03 tipos
+    # CONT-03 types
     errors: list[dict[str, Any]] = []
     for spec in columns:
         index = _column_index(table, spec)
@@ -282,7 +282,7 @@ def _eval_contract(
             _finding(
                 meta,
                 "CONT-03",
-                FALLA,
+                FAILURE,
                 "Hay valores que no parsean al tipo declarado.",
                 {"errors": errors},
             )
@@ -301,7 +301,7 @@ def _eval_contract(
         )
     )
 
-    # CONT-04 grano
+    # CONT-04 grain
     grain = profile["grain"]
     seen: dict[tuple[Any, ...], list[int]] = {}
     for row_number in table.row_numbers:
@@ -319,7 +319,7 @@ def _eval_contract(
             _finding(
                 meta,
                 "CONT-04",
-                FALLA,
+                FAILURE,
                 f"El grano declarado se repite en {len(duplicates)} combinación(es).",
                 {"grain": grain, "duplicates": duplicates[:MAX_EVIDENCE_ITEMS]},
             )
@@ -335,11 +335,11 @@ def _eval_contract(
             )
         )
 
-    # CONT-05 periodos
+    # CONT-05 periods
     period = profile.get("period") or {}
     if not period:
         findings.append(
-            _finding(meta, "CONT-05", NO_EVALUADO, "El perfil no declara periodo.", {})
+            _finding(meta, "CONT-05", NOT_EVALUATED, "El perfil no declara periodo.", {})
         )
     else:
         expected = declared_periods(profile)
@@ -355,7 +355,7 @@ def _eval_contract(
                 _finding(
                     meta,
                     "CONT-05",
-                    FALLA,
+                    FAILURE,
                     "El perfil declara periodos con formato inválido.",
                     {"invalid_periods": invalid_dates},
                 )
@@ -365,7 +365,7 @@ def _eval_contract(
                 _finding(
                     meta,
                     "CONT-05",
-                    FALLA,
+                    FAILURE,
                     "El periodo declarado no está presente en el archivo.",
                     {
                         "missing_periods": missing_periods[:MAX_EVIDENCE_ITEMS],
@@ -394,7 +394,7 @@ def _eval_contract(
                 )
             )
 
-    # CONT-06 unidad y base
+    # CONT-06 unit and base
     unit = profile.get("unit")
     bases = {
         c["key"]: c["base"]
@@ -418,7 +418,7 @@ def _eval_contract(
             _finding(
                 meta,
                 "CONT-06",
-                FALLA,
+                FAILURE,
                 "La unidad observada no coincide con la declarada.",
                 {"declared_unit": unit, "issues": unit_issues},
             )
@@ -428,7 +428,7 @@ def _eval_contract(
             _finding(
                 meta,
                 "CONT-06",
-                NO_EVALUADO,
+                NOT_EVALUATED,
                 "El perfil no declara unidad o base.",
                 {"declared_unit": unit, "declared_bases": bases},
             )
@@ -448,7 +448,7 @@ def _eval_contract(
 
 
 # --------------------------------------------------------------------------
-# P0.3 comparabilidad
+# P0.3 comparability
 # --------------------------------------------------------------------------
 
 
@@ -637,7 +637,7 @@ def _eval_comparisons(
 
 
 # --------------------------------------------------------------------------
-# Serie publicable
+# Publishable series
 # --------------------------------------------------------------------------
 
 
@@ -689,7 +689,7 @@ def build_series(parsed: Parsed, profile: dict[str, Any]) -> list[dict[str, Any]
 
 
 # --------------------------------------------------------------------------
-# P0.2 identidad
+# P0.2 identity
 # --------------------------------------------------------------------------
 
 
@@ -705,7 +705,7 @@ def _eval_identity(
         path = config.ROOT / item["path"]
         if not path.exists():
             findings.append(
-                _finding(meta, "ID-01", NO_EVALUADO, "Archivo de identidad ausente.")
+                _finding(meta, "ID-01", NOT_EVALUATED, "Archivo de identidad ausente.")
             )
             return findings, evidence, files
         actual = file_sha256(path)
@@ -762,7 +762,7 @@ def _eval_identity(
             _finding(
                 meta,
                 "ID-01",
-                ADVERTENCIA,
+                WARNING,
                 "Mismos bytes con identidad distinta, cubierto por una política "
                 "de reutilización documentada.",
                 {
@@ -779,7 +779,7 @@ def _eval_identity(
             _finding(
                 meta,
                 "ID-01",
-                FALLA,
+                FAILURE,
                 "Mismos bytes con identidad semántica incompatible: requiere revisión.",
                 {
                     "sha256": a["sha256"],
@@ -792,7 +792,7 @@ def _eval_identity(
 
 
 # --------------------------------------------------------------------------
-# Digest y orquestación
+# Digest and orchestration
 # --------------------------------------------------------------------------
 
 
@@ -802,7 +802,7 @@ def _basis_digest(
     rules_doc: dict[str, Any],
     findings: list[Finding],
 ) -> str:
-    """Sin timestamps: datos, contrato, perfil, reglas y hallazgos."""
+    """No timestamps: data, contract, profile, rules and findings."""
     clean = {k: v for k, v in profile.items() if not k.startswith("_")}
     return digest(
         {
@@ -877,13 +877,13 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
         path = config.ROOT / item["path"]
         display = profile.get("display", {})
 
-        # SNAP-01 integridad
+        # SNAP-01 integrity
         if not path.exists():
             findings.append(
                 _finding(
                     meta,
                     "SNAP-01",
-                    FALLA,
+                    FAILURE,
                     "El archivo declarado no existe.",
                     {"path": item["path"]},
                 )
@@ -913,7 +913,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
                     _finding(
                         meta,
                         "SNAP-01",
-                        FALLA,
+                        FAILURE,
                         "El archivo no coincide con los bytes o el hash registrados.",
                         {
                             "expected_sha256": item.get("sha256"),
@@ -924,7 +924,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
                     )
                 )
 
-        # LIC-01 licencia
+        # LIC-01 license
         license_info = item.get("license", {})
         if license_info.get("verified"):
             findings.append(
@@ -945,7 +945,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
                 _finding(
                     meta,
                     "LIC-01",
-                    FALLA,
+                    FAILURE,
                     "Sin licencia verificada: el recurso se cierra por defecto.",
                     {
                         "id": license_info.get("id"),
@@ -967,7 +967,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
                 _finding(
                     meta,
                     "CONT-01",
-                    FALLA,
+                    FAILURE,
                     "La hoja observada no es la declarada en el perfil.",
                     {
                         "expected_sheet": exc.expected,
@@ -983,7 +983,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
                     _finding(
                         meta,
                         "CONT-01",
-                        NO_EVALUADO,
+                        NOT_EVALUATED,
                         f"Archivo ilegible: {exc}.",
                         {"path": item["path"]},
                     )
@@ -995,7 +995,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
                     _finding(
                         meta,
                         "CONT-01",
-                        FALLA,
+                        FAILURE,
                         "El perfil espera un libro con hojas y el archivo no tiene hojas.",
                         {
                             "expected_sheet": profile.get("expected_sheet"),
@@ -1052,13 +1052,13 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
         }
 
     for finding in findings:
-        if finding.status == ADVERTENCIA and not finding.justified:
+        if finding.status == WARNING and not finding.justified:
             record = config.justification_for(subject.case_id, finding.rule_id)
             if record:
                 finding.justified = True
                 finding.evidence.setdefault("justification", record)
 
-    warnings_justified = all(f.justified for f in findings if f.status == ADVERTENCIA)
+    warnings_justified = all(f.justified for f in findings if f.status == WARNING)
     result = ValidationResult(
         case_id=subject.case_id,
         label=subject.label,

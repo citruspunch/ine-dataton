@@ -1,6 +1,10 @@
-"""Objetos de dominio del prototipo.
+"""Domain objects of the prototype.
 
-Estados (PRD 7.4) y textos visibles. No existe "aprobado por el INE".
+States (PRD 7.4) and their visible labels. There is no "approved by INE".
+
+The string values of states, severities and labels are the Spanish contract
+from the PRD: they are persisted in rules, receipts, decisions and the public
+snapshot. Only the Python names are English.
 """
 
 from __future__ import annotations
@@ -16,13 +20,13 @@ STATE_TEXT = {
     "cerrado": "Cerrado por defecto",
 }
 
-# Severidades admitidas. `no_evaluado` nunca se usa para una discrepancia clara.
+# Allowed severities. `no_evaluado` is never used for a clear discrepancy.
 OK = "ok"
-FALLA = "falla"
-ADVERTENCIA = "advertencia"
-NO_EVALUADO = "no_evaluado"
+FAILURE = "falla"
+WARNING = "advertencia"
+NOT_EVALUATED = "no_evaluado"
 
-SEVERITIES = (OK, FALLA, ADVERTENCIA, NO_EVALUADO)
+SEVERITIES = (OK, FAILURE, WARNING, NOT_EVALUATED)
 
 
 @dataclass
@@ -49,10 +53,10 @@ class Finding:
 
 @dataclass
 class Comparison:
-    """Resultado de una solicitud de comparación (P0.3).
+    """Outcome of a comparison request (P0.3).
 
-    `private_evidence` puede contener el número inválido: se muestra en la
-    pantalla de revisión y nunca en la ficha pública.
+    `private_evidence` may hold the invalid number: it is shown on the review
+    screen and never on the public sheet.
     """
 
     comparison_id: str
@@ -133,19 +137,19 @@ def derive_state(
     gate_approved: bool,
     warnings_justified: bool,
 ) -> str:
-    """Máquina de estados del PRD 7.4, en el orden documentado.
+    """State machine from PRD 7.4, in the documented order.
 
-    Sin permiso o licencia el recurso se cierra por defecto: ese es el mensaje
-    institucionalmente seguro, aunque además haya fallas técnicas visibles.
+    Without a verified license the resource closes by default: that is the
+    institutionally safe message, even when technical failures are also visible.
     """
     if not license_verified:
         return "cerrado"
     crit = [f for f in findings if f.critical]
     if not crit:
         return "borrador"
-    if any(f.status in (FALLA, NO_EVALUADO) for f in crit):
+    if any(f.status in (FAILURE, NOT_EVALUATED) for f in crit):
         return "no_habilitado"
-    if any(f.status == ADVERTENCIA for f in findings) and not warnings_justified:
+    if any(f.status == WARNING for f in findings) and not warnings_justified:
         return "en_revision"
     if not gate_approved:
         return "en_revision"
@@ -155,7 +159,7 @@ def derive_state(
 def summarize_coverage(findings: list[Finding]) -> dict[str, Any]:
     total = len(findings)
     crit = [f for f in findings if f.critical]
-    evaluated = [f for f in crit if f.status != NO_EVALUADO]
+    evaluated = [f for f in crit if f.status != NOT_EVALUATED]
     by_status: dict[str, int] = {}
     for f in findings:
         by_status[f.status] = by_status.get(f.status, 0) + 1

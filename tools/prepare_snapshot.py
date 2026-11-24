@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Prepara el snapshot: descarga el recurso real, genera fixtures y escribe el
-manifiesto con URL, fecha UTC, bytes, SHA-256 y perfil.
+"""Prepare the snapshot: download the real resource, generate fixtures and write
+the manifest with URL, UTC date, bytes, SHA-256 and profile.
 
-Este es el único paso que puede usar red. Después de preparar el snapshot, todo
-el prototipo funciona offline.
+This is the only step allowed to use the network. Once the snapshot is prepared,
+the whole prototype works offline.
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ def utc_now() -> str:
 
 
 def download(url: str, target: Path, attempts: int = 3) -> str:
-    """Descarga con reintentos y mensaje claro. Devuelve la fecha UTC."""
+    """Download with retries and a clear message. Returns the UTC date."""
     target.parent.mkdir(parents=True, exist_ok=True)
     print(f"descargando {url}")
     last_error: Exception | None = None
@@ -129,8 +129,8 @@ def main() -> int:
         downloaded_source = "download"
         if downloaded_at is None:
             if spec["kind"] == "real" and path.exists():
-                # El archivo ya estaba en disco y el manifiesto no guardaba la
-                # fecha: se usa la mtime UTC y se declara el origen.
+                # The file was already on disk and the manifest did not record
+                # the date: the UTC mtime is used and the source is declared.
                 downloaded_at = file_mtime_utc(path)
                 downloaded_source = "mtime"
             else:

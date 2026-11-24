@@ -1,4 +1,4 @@
-# --- Entorno local de Python ---
+# --- Local Python environment ---
 .venv/
 venv/
 __pycache__/
@@ -12,7 +12,7 @@ htmlcov/
 .mypy_cache/
 .ruff_cache/
 
-# --- Sistema operativo y ofimática ---
+# --- Operating system and office suites ---
 .DS_Store
 *.log
 ~$*
@@ -20,18 +20,18 @@ htmlcov/
 *.tmp
 *.swp
 
-# --- Configuración local y secretos ---
+# --- Local configuration and secrets ---
 .env
 .env*.local
 *.pem
 
-# --- Descubrimiento de datos: no forma parte de la entrega ---
+# --- Data discovery: not part of the submission ---
 /discovery_ine/
 
-# --- Artefactos transitorios de la demo ---
-# Las cargas de archivos, las enmiendas de simulación y los agregados
-# retirados son estado de sesión; no se versionan. Los recibos privados,
-# las decisiones y el snapshot público sí se versionan: son la evidencia.
+# --- Transient demo artifacts ---
+# Uploaded files, simulation overrides and withdrawn aggregates are session
+# state and are not versioned. Private receipts, decisions and the public
+# snapshot are: they are the evidence.
 /review_store/uploads/
 /review_store/overrides/
 /review_store/quarantine/

@@ -1,7 +1,8 @@
-"""Gate humano, bitácora de decisiones y publicación al snapshot reducido.
+"""Human gate, decision log and publication to the reduced snapshot.
 
-El gate no promete firma criptográfica ni autenticación: deja constancia local
-del visto bueno y liga la decisión a un digest del basis técnico.
+The gate promises neither a cryptographic signature nor authentication: it
+keeps a local record of the sign-off and binds the decision to a digest of the
+technical basis.
 """
 
 from __future__ import annotations
@@ -13,7 +14,7 @@ from typing import Any
 
 from . import config
 from .engine import validate
-from .model import ADVERTENCIA, FALLA, NO_EVALUADO, ValidationResult
+from .model import WARNING, FAILURE, NOT_EVALUATED, ValidationResult
 
 APPROVED = ("habilitado", "aprobar_con_excepcion")
 
@@ -34,7 +35,7 @@ def utc_now() -> str:
 
 
 # --------------------------------------------------------------------------
-# Recepción
+# Receipt
 # --------------------------------------------------------------------------
 
 
@@ -90,21 +91,21 @@ def write_receipt(
 
 
 # --------------------------------------------------------------------------
-# Precondiciones
+# Preconditions
 # --------------------------------------------------------------------------
 
 
 def blocking_reasons(result: ValidationResult) -> list[str]:
-    """Motivos por los que el gate no puede habilitar. Vacío = habilitable."""
+    """Reasons the gate cannot enable. Empty list = can be enabled."""
     problems: list[str] = []
 
     if result.state in ("borrador", "cerrado"):
         problems.append(f"estado {result.state}: no hay base para habilitar")
 
     for finding in result.findings:
-        if finding.critical and finding.status in (FALLA, NO_EVALUADO):
+        if finding.critical and finding.status in (FAILURE, NOT_EVALUATED):
             problems.append(f"{finding.rule_id} crítica en {finding.status}")
-        if finding.status == ADVERTENCIA and not finding.justified:
+        if finding.status == WARNING and not finding.justified:
             problems.append(
                 f"{finding.rule_id} es advertencia sin justificación documentada"
             )
@@ -131,12 +132,12 @@ def pending_warnings(result: ValidationResult) -> list[dict[str, Any]]:
             "justified": f.justified,
         }
         for f in result.findings
-        if f.status == ADVERTENCIA
+        if f.status == WARNING
     ]
 
 
 # --------------------------------------------------------------------------
-# Decisiones
+# Decisions
 # --------------------------------------------------------------------------
 
 
@@ -175,7 +176,10 @@ def decide(
     decision: str = "aprobar",
     justifications: dict[str, dict[str, Any]] | None = None,
 ) -> ValidationResult:
-    """Registra una decisión humana. `decision`: aprobar | aprobar_con_excepcion | rechazar."""
+    """Record a human decision. `decision`: aprobar | aprobar_con_excepcion | rechazar.
+
+    The decision values are the wire vocabulary persisted in the decision log.
+    """
     operator = (operator or "").strip()
     rationale = (rationale or "").strip()
     if not operator:
@@ -202,7 +206,7 @@ def decide(
         raise GateError("; ".join(problems))
 
     if decision == "aprobar_con_excepcion" and not pending_warnings(result):
-        # Sin advertencias no hay excepción que documentar.
+        # Without warnings there is no exception to document.
         decision = "aprobar"
 
     stored = "habilitado" if decision == "aprobar" else decision
@@ -246,7 +250,7 @@ def _record(
 
 
 def promote(case_id: str, operator: str, rationale: str) -> ValidationResult:
-    """Compatibilidad con la CLI: aprobar sin excepción."""
+    """CLI compatibility: approve without an exception."""
     return decide(case_id, operator, rationale, "aprobar")
 
 
@@ -258,7 +262,7 @@ def revoke(case_id: str, operator: str, rationale: str) -> None:
 
 
 # --------------------------------------------------------------------------
-# Snapshot público
+# Public snapshot
 # --------------------------------------------------------------------------
 
 
@@ -291,7 +295,7 @@ def public_receipt_path(case_id: str) -> Path:
 
 
 def write_public_receipt(result: ValidationResult, payload: dict[str, Any]) -> Path:
-    """Recibo público: misma estructura que el privado, sin evidencia privada."""
+    """Public receipt: same structure as the private one, without private evidence."""
     decision = config.latest_decision(result.case_id) or {}
     snapshot_id = config.load_manifest()["snapshot_id"]
     receipt = {
@@ -395,7 +399,7 @@ def _quarantine(case_id: str, reason: str) -> Path | None:
 
 
 def all_subject_ids() -> list[str]:
-    """Casos de la lista cerrada más los archivos cargados en la sesión."""
+    """Closed-list cases plus the files uploaded during the session."""
     from . import store
 
     return [case["id"] for case in config.load_cases()] + [
@@ -404,7 +408,7 @@ def all_subject_ids() -> list[str]:
 
 
 def verify() -> list[dict[str, Any]]:
-    """Recalcula digests, retira agregados insostenibles y valida decisiones."""
+    """Recompute digests, withdraw unsupported aggregates and validate decisions."""
     report = []
     for subject_id in all_subject_ids():
         result = validate(subject_id, write_receipt=False)

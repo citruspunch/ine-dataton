@@ -1,1 +1,1 @@
-"""Interfaz web local del prototipo."""
+"""Local web interface of the prototype."""

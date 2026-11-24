@@ -1,7 +1,7 @@
-"""Serialización canónica y digests reproducibles.
+"""Canonical serialization and reproducible digests.
 
-Regla del PRD (7.3 y 7.5): el digest se calcula sobre datos, contrato, perfil,
-reglas y hallazgos. Los timestamps de ejecución y de decisión nunca entran.
+PRD rule (7.3 and 7.5): the digest is computed over data, contract, profile,
+rules and findings. Execution and decision timestamps never enter it.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from typing import Any
 
 
 def canonical_bytes(obj: Any) -> bytes:
-    """JSON canónico: claves ordenadas, separadores fijos, UTF-8 sin escapar."""
+    """Canonical JSON: sorted keys, fixed separators, UTF-8 without escaping."""
     return json.dumps(
         obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False
     ).encode("utf-8")

@@ -1,7 +1,7 @@
-"""Aplicación local: bandeja de revisión, gate humano y portal de consulta.
+"""Local application: review inbox, human gate and consultation portal.
 
-Servidor único, sin build de JS y sin servicios externos. Las plantillas se
-renderizan en el servidor; los formularios usan POST + redirección.
+Single server, no JS build and no external services. Templates render on the
+server; forms use POST + redirect.
 """
 
 from __future__ import annotations
@@ -18,7 +18,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from .. import config, engine, gate, public_api, store
-from ..model import ADVERTENCIA, FALLA, NO_EVALUADO, OK
+from ..model import WARNING, FAILURE, NOT_EVALUATED, OK
 
 BASE_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
@@ -32,15 +32,15 @@ STATE_CLASS = {
 }
 SEVERITY_CLASS = {
     OK: "is-ok",
-    FALLA: "is-fail",
-    ADVERTENCIA: "is-warn",
-    NO_EVALUADO: "is-none",
+    FAILURE: "is-fail",
+    WARNING: "is-warn",
+    NOT_EVALUATED: "is-none",
 }
 SEVERITY_LABEL = {
     OK: "ok",
-    FALLA: "falla",
-    ADVERTENCIA: "advertencia",
-    NO_EVALUADO: "no evaluado",
+    FAILURE: "falla",
+    WARNING: "advertencia",
+    NOT_EVALUATED: "no evaluado",
 }
 DECISION_LABEL = gate.DECISION_LABEL
 
@@ -85,7 +85,7 @@ def create_app() -> FastAPI:
     app.state.templates = templates
 
     # ------------------------------------------------------------------
-    # Bandeja de revisión
+    # Review inbox
     # ------------------------------------------------------------------
 
     def subject_rows() -> list[dict[str, Any]]:
@@ -93,7 +93,7 @@ def create_app() -> FastAPI:
         for case in config.load_cases():
             try:
                 result = engine.validate(case["id"], write_receipt=False)
-            except Exception as exc:  # un caso roto no debe tumbar la bandeja
+            except Exception as exc:  # a broken case must not take the inbox down
                 rows.append(
                     {
                         "id": case["id"],
@@ -217,7 +217,7 @@ def create_app() -> FastAPI:
         return _redirect(f"/review/{case_id}", f"Caso cargado: {case['label']}")
 
     # ------------------------------------------------------------------
-    # Detalle de revisión y gate humano
+    # Review detail and human gate
     # ------------------------------------------------------------------
 
     def _context(case_id: str, request: Request) -> dict[str, Any]:
@@ -369,7 +369,7 @@ def create_app() -> FastAPI:
         )
 
     # ------------------------------------------------------------------
-    # Portal de consulta
+    # Consultation portal
     # ------------------------------------------------------------------
 
     def _public_context(

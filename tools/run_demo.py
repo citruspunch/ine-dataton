@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Prepara la demo sin red: snapshot, validación, gate y verificación.
+"""Prepare the demo offline: snapshot, validation, gate and verification.
 
-No arranca el servidor: eso lo hace `make demo` o `python app.py`.
+It does not start the server: that is `make demo` or `python app.py`.
 """
 
 from __future__ import annotations

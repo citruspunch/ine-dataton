@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Arranca la aplicación local.
+"""Start the local application.
 
 python app.py            # http://127.0.0.1:8000
 PORT=9000 python app.py

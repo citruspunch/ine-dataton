@@ -283,6 +283,12 @@ tests/                 pytest
 tools/                 preparación, demo y licencias
 ```
 
+> **Convención de idioma:** comentarios, docstrings e identificadores del código
+> están en inglés. La interfaz, los mensajes, los datos y esta documentación
+> conservan el vocabulario del PRD en español, que es el que lee el jurado y el
+> que aparece en recibos, decisiones y snapshot público. Las dos herramientas MCP
+> mantienen su nombre en español porque son el contrato publicado del servidor.
+
 ## 11. Limitaciones
 
 - **No hay piloto en sombra ni prueba de usabilidad ejecutada.** No se reportan

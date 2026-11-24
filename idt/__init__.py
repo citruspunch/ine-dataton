@@ -1,3 +1,3 @@
-"""INE Data Trust: prototipo de validación técnica de agregados publicados."""
+"""INE Data Trust: prototype for technical validation of published aggregates."""
 
 __version__ = "0.1.0"

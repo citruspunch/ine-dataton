@@ -1,4 +1,4 @@
-"""Interfaz web: bandeja, gate, comparador y exportaciones."""
+"""Web interface: inbox, gate, comparator and exports."""
 
 from __future__ import annotations
 
@@ -14,14 +14,14 @@ def _text(response) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", response.text))
 
 
-def test_portada_y_bandeja(client):
+def test_landing_and_inbox(client):
     assert client.get("/").status_code == 200
     inbox = client.get("/review")
     assert inbox.status_code == 200
     assert "Bandeja de revisión técnica" in inbox.text
 
 
-def test_detalle_de_revision_carga(client):
+def test_review_detail_loads(client):
     page = client.get("/review/ipc_empalme")
     assert page.status_code == 200
     assert "Gate humano" in page.text
@@ -29,20 +29,20 @@ def test_detalle_de_revision_carga(client):
     assert "F504" in page.text
 
 
-def test_la_revision_muestra_el_valor_bloqueado(client):
+def test_review_shows_blocked_value(client):
     page = _text(client.get("/review/ipc_empalme"))
     assert "-0,67%" in page
     assert "solo revisión" in page
 
 
-def test_la_consulta_publica_no_muestra_el_valor_bloqueado(client):
+def test_public_consultation_hides_blocked_value(client):
     page = client.get("/a/ipc_empalme")
     assert page.status_code == 200
     assert "0,67" not in page.text
     assert "0.6738" not in page.text
 
 
-def test_comparador_valido(client):
+def test_valid_comparator_request(client):
     response = client.post(
         "/a/ipc_empalme/compare",
         data={
@@ -59,7 +59,7 @@ def test_comparador_valido(client):
     assert "G504" in text
 
 
-def test_comparador_bloquea_bases_distintas(client):
+def test_comparator_blocks_different_bases(client):
     response = client.post(
         "/a/ipc_empalme/compare",
         data={
@@ -75,7 +75,7 @@ def test_comparador_bloquea_bases_distintas(client):
     assert "0,67" not in text
 
 
-def test_comparador_bloquea_recurso_sin_variacion(client):
+def test_comparator_blocks_resource_without_variation(client):
     response = client.post(
         "/a/ipc_regional/compare",
         data={
@@ -88,7 +88,7 @@ def test_comparador_bloquea_recurso_sin_variacion(client):
     assert "Este recurso publica índices" in _text(response)
 
 
-def test_ficha_tecnica_imprimible(client):
+def test_printable_technical_sheet(client):
     page = client.get("/a/ipc_empalme/ficha")
     assert page.status_code == 200
     assert "Ficha técnica de validación" in page.text
@@ -100,7 +100,7 @@ def test_ficha_tecnica_imprimible(client):
     assert aggregate["digest"] in page.text
 
 
-def test_descarga_de_recibo(client):
+def test_receipt_download(client):
     response = client.get("/a/ipc_empalme/receipt.json")
     assert response.status_code == 200
     assert "attachment" in response.headers["content-disposition"]
@@ -109,12 +109,12 @@ def test_descarga_de_recibo(client):
     assert "private_evidence" not in json.dumps(payload)
 
 
-def test_caso_no_publicado_no_es_consultable(client):
+def test_unpublished_case_is_not_consultable(client):
     response = client.get("/a/csv_grano_duplicado", follow_redirects=False)
     assert response.status_code == 303
 
 
-def test_flujo_completo_de_carga_y_gate(client, sandbox):
+def test_full_upload_and_gate_flow(client, sandbox):
     content = (config.ROOT / "review_store/fixtures/contrato_ok.csv").read_bytes()
     upload = client.post(
         "/review/upload",
@@ -140,7 +140,7 @@ def test_flujo_completo_de_carga_y_gate(client, sandbox):
     assert any(a["case_id"].startswith("up-") for a in index["aggregates"])
 
 
-def test_carga_con_licencia_no_verificada_cierra_el_recurso(client, sandbox):
+def test_upload_without_verified_license_closes_resource(client, sandbox):
     content = (config.ROOT / "review_store/fixtures/contrato_ok.csv").read_bytes()
     upload = client.post(
         "/review/upload",
@@ -153,7 +153,7 @@ def test_carga_con_licencia_no_verificada_cierra_el_recurso(client, sandbox):
     assert "Cerrado por defecto" in page
 
 
-def test_extension_no_aceptada(client, sandbox):
+def test_extension_not_accepted(client, sandbox):
     response = client.post(
         "/review/upload",
         files={"file": ("datos.txt", b"hola", "text/plain")},
@@ -163,7 +163,7 @@ def test_extension_no_aceptada(client, sandbox):
     assert "extensión no aceptada" in urllib.parse.unquote(response.headers["location"])
 
 
-def test_simulacion_retira_el_agregado_del_portal(client, sandbox):
+def test_simulation_withdraws_aggregate_from_portal(client, sandbox):
     assert client.get("/a/ipc_empalme").status_code == 200
     client.post("/review/ipc_empalme/simulate", follow_redirects=False)
     assert client.get("/a/ipc_empalme", follow_redirects=False).status_code == 303
@@ -174,7 +174,7 @@ def test_simulacion_retira_el_agregado_del_portal(client, sandbox):
     assert client.get("/a/ipc_empalme").status_code == 200
 
 
-def test_gate_bloqueado_en_la_interfaz(client):
+def test_gate_blocked_in_interface(client):
     page = _text(client.get("/review/csv_grano_duplicado"))
     assert "No habilitable todavía" in page
     assert "Registrar rechazo" in page

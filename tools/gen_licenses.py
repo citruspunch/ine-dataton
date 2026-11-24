@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Genera LICENSES_THIRD_PARTY.md a partir de los metadatos instalados.
+"""Generate LICENSES_THIRD_PARTY.md from the installed metadata.
 
-No inventa licencias: lee `License-Expression`, `License` y los clasificadores
-del paquete. Si un paquete no declara licencia, lo dice.
+It does not invent licenses: it reads `License-Expression`, `License` and the
+package classifiers. If a package declares none, it says so.
 """
 
 from __future__ import annotations

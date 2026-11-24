@@ -1,7 +1,10 @@
-"""Generación determinista de los fixtures sintéticos.
+"""Deterministic generation of the synthetic fixtures.
 
-Cada fixture es sintético, está rotulado como tal en el manifiesto y demuestra
-un caso concreto. Ninguno contiene microdatos, PII ni datos oficiales.
+Every fixture is synthetic, labelled as such in the manifest, and demonstrates
+one specific case. None of them contains microdata, PII or official data.
+
+Column headers and cell values are kept in Spanish because they are the data
+the declared profiles match against, not code identifiers.
 """
 
 from __future__ import annotations
@@ -11,21 +14,21 @@ import datetime as dt
 import shutil
 from pathlib import Path
 
-CONTRATO_ROWS = [
+CONTRACT_ROWS = [
     (2025, 1, "serie_mensual_sintetica", "100.00", "indice"),
     (2025, 2, "serie_mensual_sintetica", "100.42", "indice"),
     (2025, 3, "serie_mensual_sintetica", "100.91", "indice"),
 ]
 
-CONTRATO_HEADER = ["anio", "mes", "indicador", "valor", "unidad"]
+CONTRACT_HEADER = ["anio", "mes", "indicador", "valor", "unidad"]
 
-IDENTIDAD_ROWS = [
+IDENTITY_ROWS = [
     (2024, 1, "1200", "registro"),
     (2024, 2, "1180", "registro"),
     (2024, 3, "1245", "registro"),
 ]
 
-IDENTIDAD_HEADER = ["anio", "mes", "eventos", "unidad"]
+IDENTITY_HEADER = ["anio", "mes", "eventos", "unidad"]
 
 FIXED_CREATED = dt.datetime(2026, 11, 23, 12, 0, 0)
 
@@ -39,10 +42,10 @@ def _write_csv(path: Path, header: list[str], rows: list[tuple]) -> None:
 
 
 def _normalize_zip(path: Path) -> None:
-    """Reescribe el XLSX para que los bytes sean reproducibles.
+    """Rewrite the XLSX so its bytes are reproducible.
 
-    openpyxl sella el reloj en cada entrada del ZIP y vuelve a escribir la fecha
-    de modificación en docProps/core.xml al guardar. Aquí se fijan ambos.
+    openpyxl stamps the clock on every ZIP entry and rewrites the modification
+    date in docProps/core.xml on save. Both are fixed here.
     """
     import io
     import re
@@ -95,33 +98,35 @@ def _xlsx_value(value):
 
 
 def write_fixtures(directory: Path) -> list[str]:
-    """Escribe todos los fixtures y devuelve sus nombres."""
+    """Write every fixture and return their names."""
     directory.mkdir(parents=True, exist_ok=True)
 
-    _write_csv(directory / "contrato_ok.csv", CONTRATO_HEADER, CONTRATO_ROWS)
+    _write_csv(directory / "contrato_ok.csv", CONTRACT_HEADER, CONTRACT_ROWS)
 
     _write_csv(
         directory / "contrato_columna_faltante.csv",
         ["anio", "mes", "indicador", "valor"],
-        [row[:4] for row in CONTRATO_ROWS],
+        [row[:4] for row in CONTRACT_ROWS],
     )
 
-    duplicado = CONTRATO_ROWS + [
+    duplicated_rows = CONTRACT_ROWS + [
         (2025, 2, "serie_mensual_sintetica", "100.42", "indice")
     ]
-    _write_csv(directory / "contrato_grano_duplicado.csv", CONTRATO_HEADER, duplicado)
+    _write_csv(
+        directory / "contrato_grano_duplicado.csv", CONTRACT_HEADER, duplicated_rows
+    )
 
-    _write_xlsx(directory / "contrato_ok.xlsx", "Datos", CONTRATO_HEADER, CONTRATO_ROWS)
+    _write_xlsx(directory / "contrato_ok.xlsx", "Datos", CONTRACT_HEADER, CONTRACT_ROWS)
     _write_xlsx(
         directory / "contrato_hoja_inesperada.xlsx",
         "Resumen",
-        CONTRATO_HEADER,
-        CONTRATO_ROWS,
+        CONTRACT_HEADER,
+        CONTRACT_ROWS,
     )
 
-    # Mismos bytes, dos etiquetas: la copia es deliberadamente byte a byte.
-    origen = directory / "identidad_a.csv"
-    _write_csv(origen, IDENTIDAD_HEADER, IDENTIDAD_ROWS)
-    shutil.copyfile(origen, directory / "identidad_b.csv")
+    # Same bytes, two labels: the copy is deliberately byte for byte.
+    source_path = directory / "identidad_a.csv"
+    _write_csv(source_path, IDENTITY_HEADER, IDENTITY_ROWS)
+    shutil.copyfile(source_path, directory / "identidad_b.csv")
 
     return sorted(p.name for p in directory.iterdir() if p.is_file())

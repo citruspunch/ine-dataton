@@ -1,9 +1,10 @@
-"""Lectura del snapshot público.
+"""Reading of the public snapshot.
 
-Es la única puerta que usan el portal de consulta y el servidor MCP. No conoce
-`review_store/`: solo abre archivos dentro de `public_snapshot/`. Si un agregado
-no está publicado, devuelve vacío o un error estructurado, nunca una cifra
-inventada ni el número de una comparación bloqueada.
+This is the only door used by the consultation portal and the MCP server. It
+does not know about `review_store/`: it only opens files inside
+`public_snapshot/`. If an aggregate is not published it returns nothing or a
+structured error, never an invented figure or the number of a blocked
+comparison.
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ NOT_PUBLISHED = "El agregado no está en el snapshot público."
 
 
 class PublicError(Exception):
-    """Error de consulta pública. `code` es estable para clientes MCP."""
+    """Public query error. `code` is stable for MCP clients."""
 
     def __init__(
         self, code: str, message: str, detail: dict[str, Any] | None = None
@@ -42,7 +43,7 @@ def _public_dir(public_dir: Path | None = None) -> Path:
 
 
 def _safe(root: Path, *parts: str) -> Path:
-    """Resuelve una ruta y falla si sale del snapshot público."""
+    """Resolve a path and fail if it leaves the public snapshot."""
     base = Path(root).resolve()
     path = base.joinpath(*parts).resolve()
     if path != base and base not in path.parents:
@@ -150,7 +151,7 @@ def compare(
     period_b: str,
     public_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """Comparador seguro. Nunca devuelve un cociente calculado por el prototipo."""
+    """Safe comparator. It never returns a ratio computed by the prototype."""
     aggregate = require_aggregate(case_id, public_dir)
     first = _series(aggregate, series_a)
     second = _series(aggregate, series_b)
@@ -293,13 +294,13 @@ def ipc_aggregates(public_dir: Path | None = None) -> list[dict[str, Any]]:
     return out
 
 
-def consultar_serie_ipc(
-    periodo_inicio: str,
-    periodo_fin: str,
+def query_ipc_series(
+    start_period: str,
+    end_period: str,
     public_dir: Path | None = None,
     series_id: str | None = None,
 ) -> dict[str, Any]:
-    """Serie del IPC publicada entre dos periodos, con sus variaciones oficiales."""
+    """IPC series published between two periods, with its official variations."""
     aggregates = ipc_aggregates(public_dir)
     if not aggregates:
         raise PublicError(
@@ -335,13 +336,13 @@ def consultar_serie_ipc(
     points = [
         p
         for p in series.get("points", [])
-        if periodo_inicio <= p["period"] <= periodo_fin
+        if start_period <= p["period"] <= end_period
     ]
     if not points:
         raise PublicError(
             "periodo_no_publicado",
             "El rango solicitado no está en el snapshot público habilitado.",
-            {"periodo_inicio": periodo_inicio, "periodo_fin": periodo_fin},
+            {"start_period": start_period, "end_period": end_period},
         )
 
     bases = {p.get("base", series.get("base")) for p in points}
@@ -361,8 +362,8 @@ def consultar_serie_ipc(
         "series_label": series.get("label"),
         "base": series.get("base"),
         "unit": series.get("unit"),
-        "periodo_inicio": periodo_inicio,
-        "periodo_fin": periodo_fin,
+        "start_period": start_period,
+        "end_period": end_period,
         "digest": aggregate.get("digest"),
         "source_url": aggregate.get("entity", {}).get("source_url"),
         "downloaded_at_utc": aggregate.get("entity", {}).get("downloaded_at_utc"),
@@ -384,7 +385,7 @@ def consultar_serie_ipc(
     }
 
 
-def listar_agregados_habilitados(
+def list_enabled_aggregates(
     public_dir: Path | None = None,
 ) -> list[dict[str, Any]]:
     out = []

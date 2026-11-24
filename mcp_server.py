@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Servidor MCP de solo lectura sobre el snapshot público.
+"""Read-only MCP server over the public snapshot.
 
-Dos herramientas tipadas y deterministas. No hay LLM dentro del servidor, no hay
-escritura y no hay acceso a `review_store/`: todas las funciones viven en
-`idt.public_api`, que solo abre archivos dentro de `public_snapshot/`.
+Two typed, deterministic tools. No LLM inside the server, no writes and no
+access to `review_store/`: every function lives in `idt.public_api`, which only
+opens files inside `public_snapshot/`.
 
     python mcp_server.py
 """
@@ -37,7 +37,9 @@ server = MCPServer(name="ine-data-trust", instructions=INSTRUCTIONS)
     ),
 )
 def listar_agregados_habilitados() -> dict[str, Any]:
-    aggregates = public_api.listar_agregados_habilitados()
+    # Tool name kept in Spanish: it is the public MCP contract agreed for the
+    # demo. The implementation lives in the English-named library function.
+    aggregates = public_api.list_enabled_aggregates()
     index = public_api.load_index()
     return {
         "snapshot_id": index.get("snapshot_id"),
@@ -59,8 +61,9 @@ def listar_agregados_habilitados() -> dict[str, Any]:
     ),
 )
 def consultar_serie_ipc(periodo_inicio: str, periodo_fin: str) -> dict[str, Any]:
+    # Tool name and parameter names are the published MCP contract.
     try:
-        return public_api.consultar_serie_ipc(periodo_inicio, periodo_fin)
+        return public_api.query_ipc_series(periodo_inicio, periodo_fin)
     except public_api.PublicError as exc:
         return exc.to_dict()
 

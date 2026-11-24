@@ -17,10 +17,10 @@ PROMOTIONS = ["ipc_empalme", "ipc_regional", "csv_ok", "dup_identidad_excepcion"
 
 @pytest.fixture()
 def sandbox(tmp_path, monkeypatch):
-    """Redirige todo lo escribible a un directorio temporal.
+    """Redirect every writable path to a temporary directory.
 
-    Los datos de entrada (data/, profiles/, rules/, fixtures) siguen siendo los
-    del repositorio: el test nunca modifica el snapshot real.
+    Inputs (data/, profiles/, rules/, fixtures) still come from the repository,
+    so a test never modifies the real snapshot.
     """
     review = tmp_path / "review_store"
     public = tmp_path / "public_snapshot"
@@ -71,7 +71,7 @@ def sandbox(tmp_path, monkeypatch):
 
 @pytest.fixture()
 def seeded(sandbox):
-    """Sandbox con los cuatro casos habilitados, como en la demo."""
+    """Sandbox with the four enabled cases, as in the demo."""
     for case_id in PROMOTIONS:
         gate.promote(
             case_id,
