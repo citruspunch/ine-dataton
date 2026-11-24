@@ -1,12 +1,19 @@
 """Motor de reglas del prototipo.
 
-Cada regla declarada en rules/rules.json tiene un evaluador aquí. El motor no
-corrige, no rellena y no decide: emite estado, severidad, cobertura y evidencia.
+Las reglas se resuelven por esquema semántico: columnas por encabezado y
+periodos por año y mes. Ningún perfil declara filas ni letras de columna; las
+celdas que aparecen en la evidencia se descubren al leer el archivo y son solo
+metadato informativo.
+
+El motor no corrige, no rellena y no decide: emite estado, severidad, cobertura
+y evidencia.
 """
 
 from __future__ import annotations
 
 import datetime as dt
+import re
+from dataclasses import dataclass, field
 from typing import Any
 
 from . import config
@@ -25,6 +32,150 @@ from .model import (
 from .reader import ReadError, Table, UnexpectedSheet, coerce, read_table
 
 MAX_EVIDENCE_ITEMS = 8
+PERIOD_RE = re.compile(r"^(\d{4})-(\d{2})$")
+
+ALL_CONTRACT_RULES = ["CONT-02", "CONT-03", "CONT-04", "CONT-05", "CONT-06"]
+
+
+# --------------------------------------------------------------------------
+# Sujeto: lo que se evalúa (un caso de la lista o un archivo cargado)
+# --------------------------------------------------------------------------
+
+
+@dataclass
+class Subject:
+    case_id: str
+    label: str
+    method: str
+    profile_id: str
+    items: list[dict[str, Any]]
+    requested_comparisons: list[str] = field(default_factory=list)
+    resources: list[dict[str, Any]] = field(default_factory=list)
+    origin: str = "case"
+
+
+def resolve_subject(subject_id: str) -> Subject:
+    from . import store
+
+    upload = store.get_upload(subject_id)
+    if upload:
+        return Subject(
+            case_id=upload["id"],
+            label=upload["label"],
+            method="contract",
+            profile_id=upload["profile_id"],
+            items=[upload["item"]],
+            origin="upload",
+        )
+
+    case = config.load_case(subject_id)
+    items = []
+    if case.get("manifest_item"):
+        items = [config.manifest_item(case["manifest_item"])]
+    return Subject(
+        case_id=case["id"],
+        label=case["label"],
+        method=case["method"],
+        profile_id=case["profile"],
+        items=items,
+        requested_comparisons=list(case.get("requested_comparisons") or []),
+        resources=list(case.get("resources") or []),
+        origin="case",
+    )
+
+
+# --------------------------------------------------------------------------
+# Lectura tipada
+# --------------------------------------------------------------------------
+
+
+@dataclass
+class Parsed:
+    table: Table
+    values: dict[str, dict[int, Any]]
+    period_of_row: dict[int, str]
+    row_of_period: dict[str, int]
+
+
+def parse_period(value: str) -> tuple[int, int]:
+    match = PERIOD_RE.match(str(value).strip())
+    if not match:
+        raise ValueError(f"periodo inválido: {value!r}; se espera AAAA-MM")
+    year, month = int(match.group(1)), int(match.group(2))
+    if not 1 <= month <= 12:
+        raise ValueError(f"mes inválido en {value!r}")
+    return year, month
+
+
+def month_range(start: str, end: str) -> list[str]:
+    y0, m0 = parse_period(start)
+    y1, m1 = parse_period(end)
+    out = []
+    year, month = y0, m0
+    while (year, month) <= (y1, m1):
+        out.append(f"{year:04d}-{month:02d}")
+        month += 1
+        if month == 13:
+            year, month = year + 1, 1
+    return out
+
+
+def declared_periods(profile: dict[str, Any]) -> list[str]:
+    period = profile.get("period") or {}
+    if period.get("expected"):
+        return list(period["expected"])
+    if period.get("range"):
+        return month_range(period["range"]["from"], period["range"]["to"])
+    return []
+
+
+def _cell_ref(table: Table, row: int, index: int | None) -> dict[str, Any]:
+    """Metadato informativo: la celda se descubre, nunca se declara."""
+    ref: dict[str, Any] = {"row": row}
+    if index is not None and table.sheet is not None:
+        ref["cell"] = f"{table.letter(index)}{row}"
+        ref["sheet"] = table.sheet
+    return ref
+
+
+def _column_index(table: Table, spec: dict[str, Any]) -> int | None:
+    return table.column_index(spec["header"])
+
+
+def parse_table(table: Table, profile: dict[str, Any]) -> Parsed:
+    columns = profile["columns"]
+    values: dict[str, dict[int, Any]] = {c["key"]: {} for c in columns}
+    for spec in columns:
+        index = _column_index(table, spec)
+        if index is None:
+            continue
+        for row_number in table.row_numbers:
+            raw = table.cell(row_number, index)
+            if raw is None or (isinstance(raw, str) and not raw.strip()):
+                if spec.get("nullable"):
+                    values[spec["key"]][row_number] = None
+                    continue
+            try:
+                values[spec["key"]][row_number] = coerce(raw, spec["type"])
+            except ValueError:
+                continue
+
+    period_of_row: dict[int, str] = {}
+    row_of_period: dict[str, int] = {}
+    period = profile.get("period") or {}
+    year_key = period.get("year_column", "year")
+    month_key = period.get("month_column", "month")
+    if year_key in values and month_key in values:
+        for row_number in table.row_numbers:
+            year = values[year_key].get(row_number)
+            month = values[month_key].get(row_number)
+            if not isinstance(year, int) or not isinstance(month, int):
+                continue
+            text = f"{year:04d}-{month:02d}"
+            period_of_row[row_number] = text
+            row_of_period.setdefault(text, row_number)
+
+    return Parsed(table, values, period_of_row, row_of_period)
 
 
 def _finding(
@@ -48,9 +199,7 @@ def _finding(
 
 
 def _not_evaluated(
-    meta: dict[str, dict[str, Any]],
-    rule_ids: list[str],
-    reason: str,
+    meta: dict[str, dict[str, Any]], rule_ids: list[str], reason: str
 ) -> list[Finding]:
     return [
         _finding(meta, rid, NO_EVALUADO, f"No evaluado: {reason}.") for rid in rule_ids
@@ -58,34 +207,17 @@ def _not_evaluated(
 
 
 # --------------------------------------------------------------------------
-# Contrato de esquema, tipo, grano, fechas, periodo, unidad y base (P0.1)
+# P0.1 contrato
 # --------------------------------------------------------------------------
 
 
-def _is_blank(value: Any) -> bool:
-    return value is None or (isinstance(value, str) and value.strip() == "")
-
-
-def _column_index(table: Table, spec: dict[str, Any]) -> int | None:
-    """Devuelve el índice del encabezado declarado, verificando la letra."""
-    idx = table.column_index(spec["header"])
-    if idx is None:
-        return None
-    letter = spec.get("letter")
-    if letter is not None and table.letter_index(letter) != idx:
-        return None
-    return idx
-
-
 def _eval_contract(
-    table: Table,
-    profile: dict[str, Any],
-    meta: dict[str, dict[str, Any]],
+    parsed: Parsed, profile: dict[str, Any], meta: dict[str, dict[str, Any]]
 ) -> list[Finding]:
+    table = parsed.table
     findings: list[Finding] = []
-    columns: list[dict[str, Any]] = profile["columns"]
+    columns = profile["columns"]
 
-    # CONT-02 columnas requeridas
     missing = [c["header"] for c in columns if _column_index(table, c) is None]
     if missing:
         findings.append(
@@ -102,9 +234,7 @@ def _eval_contract(
             )
         )
         return findings + _not_evaluated(
-            meta,
-            ["CONT-03", "CONT-04", "CONT-05", "CONT-06"],
-            "faltan columnas requeridas",
+            meta, ["CONT-03", "CONT-04", "CONT-05", "CONT-06"], "faltan columnas"
         )
 
     findings.append(
@@ -112,46 +242,49 @@ def _eval_contract(
             meta,
             "CONT-02",
             OK,
-            "Todas las columnas declaradas están presentes en su posición.",
-            {"columns": [c["header"] for c in columns]},
+            "Todas las columnas declaradas están presentes con su encabezado.",
+            {
+                "columns": [
+                    {
+                        "header": c["header"],
+                        "cell_column": table.letter(_column_index(table, c) or 0),
+                    }
+                    for c in columns
+                ]
+            },
         )
     )
 
-    resolved = {
-        c["key"]: {"spec": c, "index": _column_index(table, c)} for c in columns
-    }
-
     # CONT-03 tipos
-    type_errors: list[dict[str, Any]] = []
-    values: dict[str, dict[int, Any]] = {key: {} for key in resolved}
-    for key, entry in resolved.items():
-        spec = entry["spec"]
-        index = entry["index"]
+    errors: list[dict[str, Any]] = []
+    for spec in columns:
+        index = _column_index(table, spec)
         for row_number in table.row_numbers:
             raw = table.cell(row_number, index)
-            if _is_blank(raw) and spec.get("nullable"):
-                values[key][row_number] = None
-                continue
+            if raw is None or (isinstance(raw, str) and not raw.strip()):
+                if spec.get("nullable"):
+                    continue
             try:
-                values[key][row_number] = coerce(raw, spec["type"])
+                coerce(raw, spec["type"])
             except ValueError as exc:
-                if len(type_errors) < MAX_EVIDENCE_ITEMS:
-                    type_errors.append(
+                if len(errors) < MAX_EVIDENCE_ITEMS:
+                    errors.append(
                         {
-                            "row": row_number,
                             "column": spec["header"],
+                            "type": spec["type"],
                             "value": None if raw is None else str(raw),
                             "error": str(exc),
+                            **_cell_ref(table, row_number, index),
                         }
                     )
-    if type_errors:
+    if errors:
         findings.append(
             _finding(
                 meta,
                 "CONT-03",
                 FALLA,
                 "Hay valores que no parsean al tipo declarado.",
-                {"errors": type_errors},
+                {"errors": errors},
             )
         )
         return findings + _not_evaluated(
@@ -163,16 +296,18 @@ def _eval_contract(
             meta,
             "CONT-03",
             OK,
-            f"Los {len(values)} campos declarados parsean a su tipo.",
+            f"Los {len(columns)} campos declarados parsean a su tipo.",
             {"rows_checked": len(table.rows)},
         )
     )
 
-    # CONT-04 grano único
-    grain_keys = profile["grain"]
+    # CONT-04 grano
+    grain = profile["grain"]
     seen: dict[tuple[Any, ...], list[int]] = {}
     for row_number in table.row_numbers:
-        combo = tuple(values[key][row_number] for key in grain_keys)
+        combo = tuple(parsed.values[key].get(row_number) for key in grain)
+        if all(value is None for value in combo):
+            continue
         seen.setdefault(combo, []).append(row_number)
     duplicates = [
         {"grain": list(combo), "rows": rows}
@@ -186,7 +321,7 @@ def _eval_contract(
                 "CONT-04",
                 FALLA,
                 f"El grano declarado se repite en {len(duplicates)} combinación(es).",
-                {"grain": grain_keys, "duplicates": duplicates[:MAX_EVIDENCE_ITEMS]},
+                {"grain": grain, "duplicates": duplicates[:MAX_EVIDENCE_ITEMS]},
             )
         )
     else:
@@ -196,39 +331,51 @@ def _eval_contract(
                 "CONT-04",
                 OK,
                 "El grano declarado es único en todas las filas.",
-                {"grain": grain_keys, "rows": len(table.rows)},
+                {"grain": grain, "rows": len(table.rows)},
             )
         )
 
-    # CONT-05 periodos esperados
-    period = profile.get("period")
+    # CONT-05 periodos
+    period = profile.get("period") or {}
     if not period:
         findings.append(
-            _finding(
-                meta,
-                "CONT-05",
-                NO_EVALUADO,
-                "El perfil no declara periodo; no se puede evaluar.",
-                {},
-            )
+            _finding(meta, "CONT-05", NO_EVALUADO, "El perfil no declara periodo.", {})
         )
     else:
-        year_key = period["year_column"]
-        month_key = period["month_column"]
-        observed = set(zip(values[year_key].values(), values[month_key].values()))
-        missing_periods = [
-            {"year": item["year"], "month": item["month"]}
-            for item in period["expected"]
-            if (item["year"], item["month"]) not in observed
-        ]
-        if missing_periods:
+        expected = declared_periods(profile)
+        missing_periods = [p for p in expected if p not in parsed.row_of_period]
+        invalid_dates: list[str] = []
+        for text in expected:
+            try:
+                parse_period(text)
+            except ValueError:
+                invalid_dates.append(text)
+        if invalid_dates:
+            findings.append(
+                _finding(
+                    meta,
+                    "CONT-05",
+                    FALLA,
+                    "El perfil declara periodos con formato inválido.",
+                    {"invalid_periods": invalid_dates},
+                )
+            )
+        elif missing_periods:
             findings.append(
                 _finding(
                     meta,
                     "CONT-05",
                     FALLA,
                     "El periodo declarado no está presente en el archivo.",
-                    {"missing_periods": missing_periods},
+                    {
+                        "missing_periods": missing_periods[:MAX_EVIDENCE_ITEMS],
+                        "observed_first": min(parsed.row_of_period)
+                        if parsed.row_of_period
+                        else None,
+                        "observed_last": max(parsed.row_of_period)
+                        if parsed.row_of_period
+                        else None,
+                    },
                 )
             )
         else:
@@ -238,27 +385,34 @@ def _eval_contract(
                     "CONT-05",
                     OK,
                     "Los periodos declarados están presentes y son válidos.",
-                    {"expected_periods": period["expected"]},
+                    {
+                        "declared_periods": len(expected),
+                        "first": expected[0],
+                        "last": expected[-1],
+                        "mode": "rango" if period.get("range") else "lista",
+                    },
                 )
             )
 
     # CONT-06 unidad y base
-    unit_issues: list[dict[str, Any]] = []
-    unit_column = profile.get("unit_column")
-    declared_unit = profile.get("unit")
-    if unit_column and declared_unit:
-        index = resolved[unit_column]["index"]
-        for row_number in table.row_numbers:
-            raw = table.cell(row_number, index)
-            observed_unit = "" if raw is None else str(raw).strip()
-            if observed_unit != declared_unit:
-                if len(unit_issues) < MAX_EVIDENCE_ITEMS:
-                    unit_issues.append({"row": row_number, "observed": observed_unit})
+    unit = profile.get("unit")
     bases = {
         c["key"]: c["base"]
         for c in columns
         if c.get("role") == "index" and c.get("base")
     }
+    unit_issues: list[dict[str, Any]] = []
+    unit_column = profile.get("unit_column")
+    if unit_column and unit and unit_column in parsed.values:
+        spec = next(c for c in columns if c["key"] == unit_column)
+        index = _column_index(table, spec)
+        for row_number in table.row_numbers:
+            raw = table.cell(row_number, index)
+            observed = "" if raw is None else str(raw).strip()
+            if observed != unit and len(unit_issues) < MAX_EVIDENCE_ITEMS:
+                unit_issues.append(
+                    {"observed": observed, **_cell_ref(table, row_number, index)}
+                )
     if unit_issues:
         findings.append(
             _finding(
@@ -266,17 +420,17 @@ def _eval_contract(
                 "CONT-06",
                 FALLA,
                 "La unidad observada no coincide con la declarada.",
-                {"declared_unit": declared_unit, "issues": unit_issues},
+                {"declared_unit": unit, "issues": unit_issues},
             )
         )
-    elif not declared_unit or not bases:
+    elif not unit or not bases:
         findings.append(
             _finding(
                 meta,
                 "CONT-06",
                 NO_EVALUADO,
-                "El perfil no declara unidad o base; no se puede evaluar.",
-                {"declared_unit": declared_unit, "declared_bases": bases},
+                "El perfil no declara unidad o base.",
+                {"declared_unit": unit, "declared_bases": bases},
             )
         )
     else:
@@ -286,7 +440,7 @@ def _eval_contract(
                 "CONT-06",
                 OK,
                 "Unidad y base coinciden con lo declarado en el perfil.",
-                {"declared_unit": declared_unit, "declared_bases": bases},
+                {"declared_unit": unit, "declared_bases": bases},
             )
         )
 
@@ -294,35 +448,33 @@ def _eval_contract(
 
 
 # --------------------------------------------------------------------------
-# Comparabilidad del IPC (P0.3)
+# P0.3 comparabilidad
 # --------------------------------------------------------------------------
 
 
-def _period_of(
-    values: dict[str, dict[int, Any]], row: int, profile: dict[str, Any]
-) -> tuple[int, int] | None:
-    period = profile.get("period")
-    if not period:
-        return None
-    year = values[period["year_column"]].get(row)
-    month = values[period["month_column"]].get(row)
-    if year is None or month is None:
-        return None
-    return int(year), int(month)
+def _column_of(profile: dict[str, Any], key: str) -> dict[str, Any]:
+    for spec in profile["columns"]:
+        if spec["key"] == key:
+            return spec
+    raise config.ConfigError(f"el perfil no declara la columna {key}")
 
 
-def _month_gap(a: tuple[int, int], b: tuple[int, int]) -> int:
-    return (b[0] - a[0]) * 12 + (b[1] - a[1])
+def _resolve_point(
+    parsed: Parsed, profile: dict[str, Any], ref: dict[str, Any]
+) -> tuple[int, Any] | None:
+    row = parsed.row_of_period.get(str(ref["period"]))
+    if row is None:
+        return None
+    value = parsed.values.get(ref["column"], {}).get(row)
+    if value is None:
+        return None
+    return row, value
 
 
 def _eval_comparisons(
-    table: Table,
-    profile: dict[str, Any],
-    values: dict[str, dict[int, Any]],
-    requested: list[str],
+    parsed: Parsed, profile: dict[str, Any], requested: list[str]
 ) -> list[Comparison]:
-    specs = {c["id"]: c for c in profile.get("comparisons", [])}
-    resolved = {c["key"]: c for c in profile["columns"]}
+    specs = {c["id"]: c for c in profile.get("comparisons") or []}
     results: list[Comparison] = []
 
     for comparison_id in requested:
@@ -338,50 +490,47 @@ def _eval_comparisons(
             )
             continue
 
-        num_spec = resolved[spec["numerator"]["column"]]
-        den_spec = resolved[spec["denominator"]["column"]]
-        num_row = int(spec["numerator"]["row"])
-        den_row = int(spec["denominator"]["row"])
+        num_col = _column_of(profile, spec["numerator"]["column"])
+        den_col = _column_of(profile, spec["denominator"]["column"])
+        num = _resolve_point(parsed, profile, spec["numerator"])
+        den = _resolve_point(parsed, profile, spec["denominator"])
 
-        num_value = values.get(num_spec["key"], {}).get(num_row)
-        den_value = values.get(den_spec["key"], {}).get(den_row)
-        if num_value is None or den_value is None:
+        base_evidence = {
+            "numerator_column": num_col["header"],
+            "denominator_column": den_col["header"],
+            "numerator_base": num_col.get("base"),
+            "denominator_base": den_col.get("base"),
+            "numerator_period": spec["numerator"]["period"],
+            "denominator_period": spec["denominator"]["period"],
+            "unit": spec.get("unit") or profile.get("unit"),
+        }
+        if num:
+            base_evidence["numerator_cell"] = _cell_ref(
+                parsed.table, num[0], _column_index(parsed.table, num_col)
+            ).get("cell")
+        if den:
+            base_evidence["denominator_cell"] = _cell_ref(
+                parsed.table, den[0], _column_index(parsed.table, den_col)
+            ).get("cell")
+
+        if num is None or den is None:
             results.append(
                 Comparison(
                     comparison_id=comparison_id,
                     label=spec["label"],
                     status="bloqueada",
-                    reason="Fila o columna no disponible en el archivo declarado.",
-                    public_evidence={
-                        "numerator_cell": f"{num_spec.get('letter', '?')}{num_row}",
-                        "denominator_cell": f"{den_spec.get('letter', '?')}{den_row}",
-                    },
+                    reason="El periodo o la columna no están disponibles en el archivo.",
+                    public_evidence=base_evidence,
+                    rules=["IPC-01"],
                 )
             )
             continue
 
-        num_base = num_spec.get("base")
-        den_base = den_spec.get("base")
-        public = {
-            "numerator_cell": f"{num_spec['letter']}{num_row}",
-            "denominator_cell": f"{den_spec['letter']}{den_row}",
-            "numerator_base": num_base,
-            "denominator_base": den_base,
-            "unit": spec.get("unit") or profile.get("unit"),
-        }
-        private: dict[str, Any] = {}
+        num_row, num_value = num
+        den_row, den_value = den
 
-        if num_base != den_base:
+        if num_col.get("base") != den_col.get("base"):
             raw = (num_value / den_value - 1.0) * 100.0
-            private = {
-                "computed_pct": raw,
-                "computed_pct_rounded": round(raw, 4),
-                "display_public": False,
-                "note": (
-                    "Se calculó solo para la pantalla de revisión. El número no se "
-                    "muestra en la ficha de consulta ni se exporta al snapshot público."
-                ),
-            }
             results.append(
                 Comparison(
                     comparison_id=comparison_id,
@@ -391,27 +540,24 @@ def _eval_comparisons(
                         "Bases distintas: el cociente entre índices de bases distintas "
                         "no es una variación y no se puede comparar directamente."
                     ),
-                    public_evidence=public,
-                    private_evidence=private,
+                    public_evidence=base_evidence,
+                    private_evidence={
+                        "computed_pct": raw,
+                        "computed_pct_rounded": round(raw, 4),
+                        "display_public": False,
+                        "note": (
+                            "Se calculó solo para la pantalla de revisión. El número no "
+                            "se copia al snapshot público, ni al export, ni a la ficha."
+                        ),
+                    },
+                    rules=["IPC-01"],
                 )
             )
             continue
 
-        period_num = _period_of(values, num_row, profile)
-        period_den = _period_of(values, den_row, profile)
-        if period_num is None or period_den is None:
-            results.append(
-                Comparison(
-                    comparison_id=comparison_id,
-                    label=spec["label"],
-                    status="bloqueada",
-                    reason="No se puede verificar la contigüidad del periodo.",
-                    public_evidence=public,
-                )
-            )
-            continue
-
-        gap = _month_gap(period_den, period_num)
+        den_period = parse_period(str(spec["denominator"]["period"]))
+        num_period = parse_period(str(spec["numerator"]["period"]))
+        gap = (num_period[0] - den_period[0]) * 12 + (num_period[1] - den_period[1])
         if gap != 1:
             results.append(
                 Comparison(
@@ -422,41 +568,46 @@ def _eval_comparisons(
                         "Los periodos solicitados no son contiguos; la variación "
                         "mensual exige meses consecutivos."
                     ),
-                    public_evidence={**public, "months_between": gap},
+                    public_evidence={**base_evidence, "months_between": gap},
+                    rules=["IPC-02"],
                 )
             )
             continue
 
         computed = (num_value / den_value - 1.0) * 100.0
-        submitted: dict[str, Any] = {
-            **public,
-            "period": f"{period_num[0]:04d}-{period_num[1]:02d}",
+        evidence: dict[str, Any] = {
+            **base_evidence,
+            "period": str(spec["numerator"]["period"]),
             "computed_pct": round(computed, 6),
         }
 
         published_spec = spec.get("published")
         if published_spec:
-            published_value = values.get(published_spec["column"], {}).get(
-                int(published_spec["row"])
+            published = _resolve_point(parsed, profile, published_spec)
+            pub_col = _column_of(profile, published_spec["column"])
+            cell = None
+            if published:
+                cell = _cell_ref(
+                    parsed.table, published[0], _column_index(parsed.table, pub_col)
+                ).get("cell")
+            evidence["published_cell"] = cell
+            evidence["published_pct"] = (
+                None if published is None else round(float(published[1]), 6)
             )
-            tolerance = float(spec.get("tolerance_pp", 0.005))
-            cell = f"{resolved[published_spec['column']]['letter']}{int(published_spec['row'])}"
-            submitted["published_cell"] = cell
-            submitted["published_pct"] = (
-                None if published_value is None else round(float(published_value), 6)
-            )
-            if published_value is None:
+            if published is None:
                 results.append(
                     Comparison(
                         comparison_id=comparison_id,
                         label=spec["label"],
                         status="bloqueada",
-                        reason="La variación publicada no está disponible en la celda declarada.",
-                        public_evidence=submitted,
+                        reason="La variación publicada no está disponible.",
+                        public_evidence=evidence,
+                        rules=["IPC-03"],
                     )
                 )
                 continue
-            delta = abs(computed - float(published_value))
+            tolerance = float(spec.get("tolerance_pp", 0.005))
+            delta = abs(computed - float(published[1]))
             if delta > tolerance:
                 results.append(
                     Comparison(
@@ -464,7 +615,8 @@ def _eval_comparisons(
                         label=spec["label"],
                         status="bloqueada",
                         reason="La variación calculada no coincide con la publicada.",
-                        public_evidence={**submitted, "delta_pp": round(delta, 6)},
+                        public_evidence={**evidence, "delta_pp": round(delta, 6)},
+                        rules=["IPC-03"],
                     )
                 )
                 continue
@@ -474,34 +626,86 @@ def _eval_comparisons(
                 comparison_id=comparison_id,
                 label=spec["label"],
                 status="ok",
-                reason="Misma serie, misma base, periodos contiguos y variación publicada.",
-                public_evidence=submitted,
+                reason="Misma base, periodos contiguos y variación publicada.",
+                public_evidence=evidence,
+                rules=["IPC-01", "IPC-02", "IPC-03"]
+                if published_spec
+                else ["IPC-01", "IPC-02"],
             )
         )
     return results
 
 
 # --------------------------------------------------------------------------
-# Identidad por SHA-256 (P0.2)
+# Serie publicable
+# --------------------------------------------------------------------------
+
+
+def build_series(parsed: Parsed, profile: dict[str, Any]) -> list[dict[str, Any]]:
+    table = parsed.table
+    out: list[dict[str, Any]] = []
+    for spec in profile.get("series") or []:
+        column = spec["index_column"]
+        if column not in parsed.values:
+            continue
+        col_spec = _column_of(profile, column)
+        index = _column_index(table, col_spec)
+        variation_column = spec.get("variation_column")
+        var_spec = _column_of(profile, variation_column) if variation_column else None
+        var_index = _column_index(table, var_spec) if var_spec else None
+
+        points = []
+        for period in declared_periods(profile):
+            row = parsed.row_of_period.get(period)
+            if row is None:
+                continue
+            value = parsed.values[column].get(row)
+            if value is None:
+                continue
+            point: dict[str, Any] = {
+                "period": period,
+                "value": value,
+                "cell": _cell_ref(table, row, index).get("cell"),
+            }
+            if var_spec is not None:
+                variation = parsed.values.get(variation_column, {}).get(row)
+                point["published_variation_pct"] = variation
+                point["variation_cell"] = _cell_ref(table, row, var_index).get("cell")
+            points.append(point)
+
+        out.append(
+            {
+                "series_id": spec["id"],
+                "label": spec.get("label", spec["id"]),
+                "base": col_spec.get("base"),
+                "unit": col_spec.get("unit") or profile.get("unit"),
+                "comparable": bool(spec.get("comparable", True)),
+                "not_comparable_reason": spec.get("not_comparable_reason"),
+                "has_published_variation": var_spec is not None,
+                "points": points,
+            }
+        )
+    return out
+
+
+# --------------------------------------------------------------------------
+# P0.2 identidad
 # --------------------------------------------------------------------------
 
 
 def _eval_identity(
-    case: dict[str, Any],
-    meta: dict[str, dict[str, Any]],
+    subject: Subject, meta: dict[str, dict[str, Any]]
 ) -> tuple[list[Finding], dict[str, Any], dict[str, str]]:
     findings: list[Finding] = []
     evidence: dict[str, Any] = {"resources": []}
     files: dict[str, str] = {}
 
-    for resource in case["resources"]:
+    for resource in subject.resources:
         item = config.manifest_item(resource["manifest_item"])
         path = config.ROOT / item["path"]
         if not path.exists():
             findings.append(
-                _finding(
-                    meta, "ID-01", NO_EVALUADO, "Archivo de identidad ausente.", {}
-                )
+                _finding(meta, "ID-01", NO_EVALUADO, "Archivo de identidad ausente.")
             )
             return findings, evidence, files
         actual = file_sha256(path)
@@ -519,6 +723,7 @@ def _eval_identity(
     a, b = evidence["resources"][0], evidence["resources"][1]
     same_bytes = a["sha256"] == b["sha256"]
     evidence["same_bytes"] = same_bytes
+    evidence["sha256"] = a["sha256"]
 
     if not same_bytes:
         findings.append(
@@ -551,17 +756,15 @@ def _eval_identity(
         )
         return findings, evidence, files
 
-    policy = config.justification_for(case["id"], "ID-01")
+    policy = config.justification_for(subject.case_id, "ID-01")
     if policy:
         findings.append(
             _finding(
                 meta,
                 "ID-01",
                 ADVERTENCIA,
-                (
-                    "Mismos bytes con identidad distinta, cubierto por una política "
-                    "de reutilización documentada."
-                ),
+                "Mismos bytes con identidad distinta, cubierto por una política "
+                "de reutilización documentada.",
                 {
                     "sha256": a["sha256"],
                     "mismatched_fields": mismatched,
@@ -589,7 +792,7 @@ def _eval_identity(
 
 
 # --------------------------------------------------------------------------
-# Orquestación
+# Digest y orquestación
 # --------------------------------------------------------------------------
 
 
@@ -599,17 +802,15 @@ def _basis_digest(
     rules_doc: dict[str, Any],
     findings: list[Finding],
 ) -> str:
-    """Digest técnico reproducible: datos, contrato, perfil, reglas, hallazgos.
-
-    No incluye timestamps de ejecución ni de decisión.
-    """
+    """Sin timestamps: datos, contrato, perfil, reglas y hallazgos."""
+    clean = {k: v for k, v in profile.items() if not k.startswith("_")}
     return digest(
         {
             "files": files,
             "profile": {
-                "id": profile["profile_id"],
-                "version": profile["version"],
-                "content_sha256": digest(profile),
+                "id": clean["profile_id"],
+                "version": clean["version"],
+                "content_sha256": digest(clean),
             },
             "rules": {
                 "version": rules_doc["rules_version"],
@@ -628,32 +829,39 @@ def _basis_digest(
     )
 
 
-def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
-    case = config.load_case(case_id)
-    profile = config.load_profile(case["profile"])
+def validate(subject_id: str, write_receipt: bool = True) -> ValidationResult:
+    subject = resolve_subject(subject_id)
+    return validate_subject(subject, write_receipt=write_receipt)
+
+
+def validate_subject(subject: Subject, write_receipt: bool = True) -> ValidationResult:
+    profile = config.load_profile(subject.profile_id, case_id=subject.case_id)
     rules_doc = config.load_rules()
     meta = config.rule_meta(rules_doc)
 
-    method = case["method"]
     findings: list[Finding] = []
     comparisons: list[Comparison] = []
     files: dict[str, str] = {}
+    series: list[dict[str, Any]] = []
     entity: dict[str, Any] = {}
+    license_verified = False
 
-    if method == "identity_pair":
-        findings, identity_evidence, files = _eval_identity(case, meta)
+    if subject.method == "identity_pair":
+        findings, identity_evidence, files = _eval_identity(subject, meta)
         entity = {
             "kind": "par de recursos",
-            "label": case["label"],
+            "label": subject.label,
             "resources": [
-                {
-                    "manifest_item": r["manifest_item"],
-                    "identity": r["identity"],
-                }
-                for r in case["resources"]
+                {"manifest_item": r["manifest_item"], "identity": r["identity"]}
+                for r in subject.resources
             ],
             "same_bytes": identity_evidence.get("same_bytes"),
-            "sha256": identity_evidence["resources"][0]["sha256"],
+            "sha256": identity_evidence.get("sha256"),
+            "profile": f"{profile['profile_id']}@{profile['version']}",
+            "license": config.manifest_item(subject.resources[0]["manifest_item"]).get(
+                "license", {}
+            ),
+            "topic": profile.get("topic"),
             "display": profile.get("display", {}),
         }
         license_verified = all(
@@ -662,15 +870,14 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
                 .get("license", {})
                 .get("verified")
             )
-            for r in case["resources"]
+            for r in subject.resources
         )
-        items = [config.manifest_item(r["manifest_item"]) for r in case["resources"]]
     else:
-        item = config.manifest_item(case["manifest_item"])
-        items = [item]
+        item = subject.items[0]
         path = config.ROOT / item["path"]
+        display = profile.get("display", {})
 
-        # SNAP-01 integridad de bytes contra el manifiesto
+        # SNAP-01 integridad
         if not path.exists():
             findings.append(
                 _finding(
@@ -682,14 +889,11 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
                 )
             )
             actual_sha = None
-            files = {}
         else:
             actual_sha = file_sha256(path)
             files = {item["id"]: actual_sha}
             size = path.stat().st_size
-            size_ok = size == item.get("bytes")
-            hash_ok = actual_sha == item.get("sha256")
-            if size_ok and hash_ok:
+            if actual_sha == item.get("sha256") and size == item.get("bytes"):
                 findings.append(
                     _finding(
                         meta,
@@ -700,6 +904,7 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
                             "sha256": actual_sha,
                             "bytes": size,
                             "manifest_item": item["id"],
+                            "origin": item.get("origin", "snapshot"),
                         },
                     )
                 )
@@ -709,7 +914,7 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
                         meta,
                         "SNAP-01",
                         FALLA,
-                        "El archivo no coincide con los bytes o el hash del manifiesto.",
+                        "El archivo no coincide con los bytes o el hash registrados.",
                         {
                             "expected_sha256": item.get("sha256"),
                             "observed_sha256": actual_sha,
@@ -727,7 +932,7 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
                     meta,
                     "LIC-01",
                     OK,
-                    "Licencia verificada en los metadatos del recurso.",
+                    "Licencia verificada.",
                     {
                         "id": license_info.get("id"),
                         "attribution": license_info.get("attribution"),
@@ -748,9 +953,10 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
                     },
                 )
             )
+        license_verified = bool(license_info.get("verified"))
 
         table: Table | None = None
-        values: dict[str, dict[int, Any]] = {}
+        parsed: Parsed | None = None
         read_failure: str | None = None
         is_xlsx = profile["kind"] == "xlsx"
 
@@ -763,11 +969,15 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
                     "CONT-01",
                     FALLA,
                     "La hoja observada no es la declarada en el perfil.",
-                    {"expected_sheet": exc.expected, "observed_sheets": exc.observed},
+                    {
+                        "expected_sheet": exc.expected,
+                        "observed_sheets": exc.observed,
+                    },
                 )
             )
             read_failure = "hoja inesperada"
         except ReadError as exc:
+            read_failure = "archivo ilegible"
             if is_xlsx:
                 findings.append(
                     _finding(
@@ -778,40 +988,51 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
                         {"path": item["path"]},
                     )
                 )
-            read_failure = "archivo ilegible"
 
         if table is not None and is_xlsx:
-            findings.append(
-                _finding(
-                    meta,
-                    "CONT-01",
-                    OK,
-                    "La hoja declarada está presente.",
-                    {
-                        "expected_sheet": profile.get("expected_sheet"),
-                        "observed_sheets": [table.sheet],
-                    },
+            if table.sheet is None:
+                findings.append(
+                    _finding(
+                        meta,
+                        "CONT-01",
+                        FALLA,
+                        "El perfil espera un libro con hojas y el archivo no tiene hojas.",
+                        {
+                            "expected_sheet": profile.get("expected_sheet"),
+                            "observed_sheets": [],
+                            "observed_format": item["path"].rsplit(".", 1)[-1],
+                        },
+                    )
                 )
-            )
+            else:
+                findings.append(
+                    _finding(
+                        meta,
+                        "CONT-01",
+                        OK,
+                        "La hoja declarada está presente.",
+                        {
+                            "expected_sheet": profile.get("expected_sheet"),
+                            "observed_sheets": [table.sheet],
+                        },
+                    )
+                )
 
-        if read_failure is None:
-            findings.extend(_eval_contract(table, profile, meta))
-            values = _collect_values(table, profile)
+        if read_failure is None and table is not None:
+            parsed = parse_table(table, profile)
+            findings.extend(_eval_contract(parsed, profile, meta))
+            series = build_series(parsed, profile)
+            if subject.requested_comparisons:
+                comparisons = _eval_comparisons(
+                    parsed, profile, subject.requested_comparisons
+                )
         else:
             findings.extend(
                 _not_evaluated(
-                    meta,
-                    ["CONT-02", "CONT-03", "CONT-04", "CONT-05", "CONT-06"],
-                    read_failure,
+                    meta, ALL_CONTRACT_RULES, read_failure or "lectura fallida"
                 )
             )
 
-        if table is not None and case.get("requested_comparisons"):
-            comparisons = _eval_comparisons(
-                table, profile, values, case["requested_comparisons"]
-            )
-
-        license_verified = bool(license_info.get("verified"))
         entity = {
             "kind": "agregado",
             "manifest_item": item["id"],
@@ -822,17 +1043,26 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
             "downloaded_at_utc": item.get("downloaded_at_utc"),
             "sha256": item.get("sha256"),
             "bytes": item.get("bytes"),
+            "origin": item.get("origin", "snapshot"),
+            "topic": profile.get("topic"),
             "profile": f"{profile['profile_id']}@{profile['version']}",
             "license": license_info,
-            "display": profile.get("display", {}),
+            "display": display,
+            "series": series,
         }
 
-    warnings_justified = all(f.justified for f in findings if f.status == ADVERTENCIA)
+    for finding in findings:
+        if finding.status == ADVERTENCIA and not finding.justified:
+            record = config.justification_for(subject.case_id, finding.rule_id)
+            if record:
+                finding.justified = True
+                finding.evidence.setdefault("justification", record)
 
+    warnings_justified = all(f.justified for f in findings if f.status == ADVERTENCIA)
     result = ValidationResult(
-        case_id=case["id"],
-        label=case["label"],
-        method=method,
+        case_id=subject.case_id,
+        label=subject.label,
+        method=subject.method,
         entity=entity,
         findings=findings,
         comparisons=comparisons,
@@ -844,14 +1074,16 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
     result.digests = {
         "validation_digest": basis,
         "decision_basis_digest": basis,
-        "profile_digest": digest(profile),
+        "profile_digest": digest(
+            {"id": profile["profile_id"], "v": profile["version"]}
+        ),
         "rules_digest": digest(rules_doc),
     }
 
-    decision = config.latest_decision(case["id"])
+    decision = config.latest_decision(subject.case_id)
     gate_approved = bool(
         decision
-        and decision.get("gate_decision") == "habilitado"
+        and decision.get("gate_decision") in ("habilitado", "aprobar_con_excepcion")
         and decision.get("decision_basis_digest") == basis
     )
     result.state = derive_state(
@@ -859,84 +1091,7 @@ def validate(case_id: str, write_receipt: bool = True) -> ValidationResult:
     )
 
     if write_receipt:
-        _write_receipt(result, case, profile, rules_doc, items, decision, gate_approved)
+        from .gate import write_receipt
+
+        write_receipt(result, subject, profile, rules_doc, decision)
     return result
-
-
-def _collect_values(table: Table, profile: dict[str, Any]) -> dict[str, dict[int, Any]]:
-    resolved = {c["key"]: c for c in profile["columns"]}
-    values: dict[str, dict[int, Any]] = {key: {} for key in resolved}
-    for key, spec in resolved.items():
-        index = table.column_index(spec["header"])
-        if index is None:
-            continue
-        for row_number in table.row_numbers:
-            raw = table.cell(row_number, index)
-            try:
-                values[key][row_number] = coerce(raw, spec["type"])
-            except ValueError:
-                continue
-    return values
-
-
-def _write_receipt(
-    result: ValidationResult,
-    case: dict[str, Any],
-    profile: dict[str, Any],
-    rules_doc: dict[str, Any],
-    items: list[dict[str, Any]],
-    decision: dict[str, Any] | None,
-    gate_approved: bool,
-) -> None:
-    manifest = config.load_manifest()
-    display = profile.get("display", {})
-    item = items[0]
-    payload = {
-        "snapshot_id": manifest["snapshot_id"],
-        "source_id": item.get("source_id"),
-        "resource_id": item.get("resource_id"),
-        "period": display.get("period"),
-        "base": display.get("base"),
-        "unit": display.get("unit"),
-        "source_url": item.get("source_url"),
-        "downloaded_at_utc": item.get("downloaded_at_utc"),
-        "sha256": item.get("sha256"),
-        "profile_version": f"{profile['profile_id']}@{profile['version']}",
-        "rules_version": rules_doc["rules_version"],
-        "findings": [f.to_dict() for f in result.findings],
-        "comparisons": [c.to_private_dict() for c in result.comparisons],
-        "coverage": result.coverage,
-        "state": result.state,
-        "digest": result.digests["validation_digest"],
-    }
-    receipt: dict[str, Any] = {
-        "receipt_id": f"rec-{manifest['snapshot_id']}-{result.case_id}",
-        "generated_at_utc": _utc_now(),
-        "technical_payload": payload,
-        "decision_log": None,
-    }
-    if decision:
-        receipt["decision_log"] = {
-            "decided_at_utc": decision.get("decided_at_utc"),
-            "operator": decision.get("operator"),
-            "rationale": decision.get("rationale"),
-            "gate_decision": decision.get("gate_decision"),
-            "decision_basis_digest": decision.get("decision_basis_digest"),
-            "still_valid": gate_approved,
-        }
-
-    config.RECEIPT_DIR.mkdir(parents=True, exist_ok=True)
-    path = config.RECEIPT_DIR / f"{result.case_id}.json"
-    with open(path, "w", encoding="utf-8") as fh:
-        _dump(receipt, fh)
-
-
-def _dump(obj: Any, fh: Any) -> None:
-    import json
-
-    json.dump(obj, fh, ensure_ascii=False, indent=2, sort_keys=True)
-    fh.write("\n")
-
-
-def _utc_now() -> str:
-    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
