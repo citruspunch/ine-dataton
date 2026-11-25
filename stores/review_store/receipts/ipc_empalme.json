@@ -1,6 +1,6 @@
 {
   "decision_log": {
-    "decided_at_utc": "2026-11-25T00:15:28Z",
+    "decided_at_utc": "2026-11-25T00:30:18Z",
     "decision_basis_digest": "b7f2f80f1ea904f2cb86192d0622772a823dd21ea22a7efa29326af2d80bc35f",
     "decision_id": "dec-ipc_empalme-001",
     "gate_decision": "habilitado",
@@ -9,7 +9,7 @@
     "rationale": "Ficha oficial cotejada: la variación publicada en G504 coincide con la calculada desde F503 y F504; el cruce entre bases queda bloqueado.",
     "still_valid": true
   },
-  "generated_at_utc": "2026-11-25T00:16:13Z",
+  "generated_at_utc": "2026-11-25T00:37:58Z",
   "receipt_id": "rec-snap-2026-11-23-ipc_empalme",
   "technical_payload": {
     "base": "Cada columna declara su propia base; la serie de trabajo es F, base 2024=100",
