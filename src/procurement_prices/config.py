@@ -306,7 +306,7 @@ GROUP_META: dict[str, dict[str, str]] = {
             "Índice de Precios de Materiales de Construcción, base diciembre 2018 = 100. "
             "Mide variación de precios de 89 materiales y servicios; no es un precio en quetzales."
         ),
-        "statusLabel": "Actualización mensual",
+        "statusLabel": "Mensual · Región I",
         "accent": "ochre",
     },
     "ICC": {
@@ -317,7 +317,7 @@ GROUP_META: dict[str, dict[str, str]] = {
             "Índice de Costos de Construcción de la Vivienda Social Básica, referencia 2025 = 100. "
             "Solo 2026 y Región I; combina materiales, mano de obra, herramienta y equipo."
         ),
-        "statusLabel": "Cobertura parcial",
+        "statusLabel": "Parcial · 2026 · Región I",
         "accent": "clay",
     },
     "BASKETS": {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-25T05:20:30Z",
+  "generatedAt": "2026-11-25T05:23:01Z",
   "groups": {
     "DPIR": {
       "id": "DPIR",
@@ -2466,7 +2466,7 @@
       "tagline": "Índice de precios de 89 materiales",
       "description": "Índice de Precios de Materiales de Construcción, base diciembre 2018 = 100. Mide variación de precios de 89 materiales y servicios; no es un precio en quetzales.",
       "status": "current",
-      "statusLabel": "Actualización mensual",
+      "statusLabel": "Mensual · Región I",
       "cutoff": "2026-10-01",
       "granularity": "month",
       "recordCount": 8366,
@@ -2633,7 +2633,7 @@
       "tagline": "Índice de costos de vivienda social",
       "description": "Índice de Costos de Construcción de la Vivienda Social Básica, referencia 2025 = 100. Solo 2026 y Región I; combina materiales, mano de obra, herramienta y equipo.",
       "status": "limited",
-      "statusLabel": "Cobertura parcial",
+      "statusLabel": "Parcial · 2026 · Región I",
       "cutoff": "2026-10-01",
       "granularity": "month",
       "recordCount": 360,
