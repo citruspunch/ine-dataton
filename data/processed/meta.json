@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 1,
+  "title": "Radar territorial de seguridad vial y salud",
+  "subtitle": "Guatemala · nacimientos, defunciones y siniestralidad vial 2025",
+  "generatedAtUtc": "2026-11-25T06:01:04Z",
+  "dataYear": 2025,
+  "populationYear": 2025,
+  "rateBase": 10000,
+  "topics": {
+    "road_safety": {
+      "label": "Seguridad vial",
+      "description": "Hechos de tránsito, víctimas y vehículos involucrados registrados por la PNC en 2025."
+    },
+    "births": {
+      "label": "Nacimientos",
+      "description": "Nacimientos registrados en Guatemala durante 2025."
+    },
+    "deaths": {
+      "label": "Defunciones",
+      "description": "Defunciones ocurridas en Guatemala durante 2025, con desglose de causas seleccionadas."
+    }
+  },
+  "criteria": {
+    "residence": "Lugar de residencia",
+    "occurrence": "Lugar de ocurrencia"
+  },
+  "criterionNotes": {
+    "residence": "El evento se asigna al municipio de residencia de la persona. El denominador es la población residente proyectada del territorio.",
+    "occurrence": "El evento se asigna al municipio donde ocurrió. La tasa usa la población residente del territorio como denominador de referencia; no representa la población expuesta en el lugar del evento."
+  },
+  "thresholds": {
+    "general": 5,
+    "homicideSuicide": 10,
+    "rateBase": 10000
+  },
+  "suppression": {
+    "law": "Decreto-Ley 3-85 (Ley Orgánica del INE) y su reglamento",
+    "general": 5,
+    "homicideSuicide": 10,
+    "text": "Toda celda con menos de 5 casos se suprime. Los homicidios y suicidios desagregados se suprimen con menos de 10 casos. Una celda suprimida no publica conteo ni tasa: el secreto estadístico protege a las personas.",
+    "smallCellPolicy": "No se publican cruces municipio × día. Los desgloses de causa y los perfiles de edad aplican los mismos umbrales; el perfil de edad se limita a nivel departamental. Los vehículos se muestran solo como conteo, sin marca, color ni modelo."
+  },
+  "population": {
+    "year": 2025,
+    "source": "INE, Estimaciones y proyecciones de la población total por municipio según sexo y edad, 2015–2030.",
+    "note": "El denominador de todas las tasas es la población total proyectada 2025 (ambos sexos). El Censo 2018 se muestra únicamente como referencia y nunca se usa para calcular tasas.",
+    "projectionHorizon": "2015–2030",
+    "projectionNote": "La serie oficial disponible en el banco de datos del INE llega a 2030; no se extrapola a 2035. El año de análisis es 2025."
+  },
+  "pointLayer": {
+    "source_places": 20036,
+    "excluded_suffix_999": 301,
+    "excluded_missing_coordinates": 313,
+    "excluded_unknown_territory": 0,
+    "excluded_total": 313,
+    "included": 19723,
+    "note": "Se excluyen los lugares poblados cuyo código termina en 999 y los que no tienen longitud/latitud. La capa de puntos es geografía de asentamientos, no eventos individuales."
+  },
+  "coverage": {
+    "municipalities": 340,
+    "departments": 22,
+    "crosswalk": "Los 16 municipios del departamento de Guatemala usan el cruce +21 entre el Censo 2018 (0102–0117) y las proyecciones (0123–0138).",
+    "diagnostics": {
+      "births": {
+        "records": 286539,
+        "residence_unmapped": 0,
+        "occurrence_unmapped": 0,
+        "unmapped_codes": {
+          "residence": {},
+          "occurrence": {}
+        }
+      },
+      "deaths": {
+        "records": 96064,
+        "residence_unmapped": 0,
+        "occurrence_unmapped": 1,
+        "unmapped_codes": {
+          "residence": {},
+          "occurrence": {
+            "0930": 1
+          }
+        },
+        "causes": {
+          "homicide": 3097,
+          "suicide": 746,
+          "traffic": 2843,
+          "other": 89378
+        }
+      },
+      "road_safety": {
+        "incidents": {
+          "records": 8881,
+          "unmapped": 0,
+          "unmapped_codes": {}
+        },
+        "fatalities": {
+          "records": 2432,
+          "unmapped": 0,
+          "unmapped_codes": {}
+        },
+        "injuries": {
+          "records": 9599,
+          "unmapped": 0,
+          "unmapped_codes": {}
+        },
+        "vehicles": {
+          "records": 13822,
+          "unmapped": 0,
+          "unmapped_codes": {}
+        },
+        "victims_ignored_status": 2
+      }
+    }
+  },
+  "provenance": [
+    {
+      "filename": "base-de-datos-fallecidos-y-lesionados-pnc-2025.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/b80e7836-a158-4830-9177-bca5a3b6cf0d/resource/2ffc0ffd-74f5-4cae-bbd8-6fa0698e3492/download/base-de-datos-fallecidos-y-lesionados-pnc-2025.xlsx",
+      "kind": "xlsx",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T04:43:12Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "c022c4b10776f92af919b9d19bea58c330adc4119c05954fddde4853bd1bd275",
+      "bytes": 1309998,
+      "publisher": "INE, a partir de la Policía Nacional Civil (PNC)",
+      "license": "CC BY (INE, a partir de la PNC)"
+    },
+    {
+      "filename": "base-de-datos-hechos-de-transito-pnc-2025.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/1960f9e0-93a2-4e12-9692-8867b8150a54/resource/dc29a0a2-31b2-49d8-a047-aa9bd6f2afcb/download/base-de-datos-hechos-de-transito-pnc-2025.xlsx",
+      "kind": "xlsx",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T04:43:12Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "1c44e796adb426354cd7d3fddf3250634f3b794081531fcc7b88d87e203180a9",
+      "bytes": 666547,
+      "publisher": "INE, a partir de la Policía Nacional Civil (PNC)",
+      "license": "CC BY (INE, a partir de la PNC)"
+    },
+    {
+      "filename": "base-de-datos-vehiculos-involucrados-pnc-2025.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/a241d504-1c89-49d2-a490-a73cfc21276d/resource/a157bee0-1e72-448f-8fc7-399ba7b9606d/download/base-de-datos-vehiculos-involucrados-pnc-2025.xlsx",
+      "kind": "xlsx",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T04:43:12Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "81d9e4793efe31c14b5c936d38fdee75fabf2e1a446cae79096164b809d54224",
+      "bytes": 1462360,
+      "publisher": "INE, a partir de la Policía Nacional Civil (PNC)",
+      "license": "CC BY (INE, a partir de la PNC)"
+    },
+    {
+      "filename": "censo_2018_cuadro_a1.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/78019333-d80b-45e8-b694-fb3b8d65e19e/resource/4b9c7220-ca0c-41a9-a121-348f533b070e/download/cuadro-a1-poblacion-total-censada-por-sexo-grupos-quinquenales-de-edad-y-area.xlsx",
+      "kind": "xlsx",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T04:43:12Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "b4dfbc6a0373373e8f35827ef5a8d5ed07db5d035225a271061b1869769e96d9",
+      "bytes": 4072815,
+      "publisher": "Instituto Nacional de Estadística (INE), Guatemala",
+      "license": "CC BY (INE)"
+    },
+    {
+      "filename": "centroides_lugares_poblados_2018.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/78019333-d80b-45e8-b694-fb3b8d65e19e/resource/053dfa99-b3f9-4b1f-a99f-fc933ef00da4/download/centroides-de-lugares-poblados-de-la-republica-de-guatemala.-censo-2018.xlsx",
+      "kind": "xlsx",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T04:43:12Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "b8ea8fea33e6d606e102e8d96ed692deacec660c028ffcf673f84459bcafe14e",
+      "bytes": 1105747,
+      "publisher": "Instituto Nacional de Estadística (INE), Guatemala",
+      "license": "CC BY (INE)"
+    },
+    {
+      "filename": "defunciones_2025.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/14f547c3-ad37-4ea1-9e74-16a3ed50ff54/resource/43adb351-0a14-4783-8401-e5ef21a2222e/download/defunciones_2025.xlsx",
+      "kind": "xlsx",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T04:43:12Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "332da4f661f78db0eab9788450fffaea68f4eedd22febac100790600c51870a7",
+      "bytes": 8918540,
+      "publisher": "Instituto Nacional de Estadística (INE), Guatemala",
+      "license": "Datos abiertos INE — catálogo sin licencia explícita; se cita la fuente"
+    },
+    {
+      "filename": "nacimientos_2025.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/96888fc0-5ced-4a58-bfd0-2a6a292e3208/resource/b6847c70-a0b9-4cfd-a405-4ea4360905d7/download/nacimientos_2025.xlsx",
+      "kind": "xlsx",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T04:43:12Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "12dd75c254f3c37e2637fb76ee6a5e1b11ffdfcec738f90e46a16605945b39e9",
+      "bytes": 39102416,
+      "publisher": "Instituto Nacional de Estadística (INE), Guatemala",
+      "license": "Datos abiertos INE — catálogo sin licencia explícita; se cita la fuente"
+    },
+    {
+      "filename": "proyecciones_poblacion_2015_2030.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/23bbe8f8-ec9b-49c9-bcca-de78bec4efc0/resource/56b97bc0-5624-408d-a136-3931dd05610a/download/estimaciones-y-proyecciones-de-la-poblacion-total-por-municipio-segun-sexo-y-edad.-2015-2030.xlsx",
+      "kind": "xlsx",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T04:43:12Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "b00fa494491b5b06e2fb7dac98df2441b6670e8d9a748cc97c2e72ed5012f499",
+      "bytes": 7775292,
+      "publisher": "Instituto Nacional de Estadística (INE), Guatemala",
+      "license": "ODC-BY (INE)"
+    },
+    {
+      "filename": "gtm_adm1.geojson",
+      "url": "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/GTM/ADM1/geoBoundaries-GTM-ADM1_simplified.geojson",
+      "kind": "geojson",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T05:21:29Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "7f84a4e2a8773953af1c602c67f27457b093e3cfc6ab21052446b172b71d7628",
+      "bytes": 318584,
+      "publisher": "OCHA FISS via geoBoundaries",
+      "license": "CC BY 3.0 IGO (OCHA FISS / geoBoundaries)"
+    },
+    {
+      "filename": "gtm_adm2.geojson",
+      "url": "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/GTM/ADM2/geoBoundaries-GTM-ADM2_simplified.geojson",
+      "kind": "geojson",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T05:21:29Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "04ec4cacdc6c1aa01b4e67ccea28fe4b8f9fa758047a6c7d666668171e95eb94",
+      "bytes": 1162585,
+      "publisher": "OCHA FISS via geoBoundaries",
+      "license": "CC BY 3.0 IGO (OCHA FISS / geoBoundaries)"
+    }
+  ],
+  "limits": [
+    "Los registros de tránsito de la PNC solo tienen lugar de ocurrencia; no permiten un análisis por residencia.",
+    "Una tasa por ocurrencia usa población residente como denominador de referencia y no mide exposición en el lugar del evento.",
+    "Las proyecciones municipales oficiales disponibles llegan a 2030; el análisis se concentra en 2025.",
+    "El registro 0930 de defunciones no corresponde a un municipio del cruce de 340 y se excluye de los totales territoriales (se informa como no mapeado).",
+    "La capa de puntos representa lugares poblados del Censo 2018, no la ubicación de cada evento.",
+    "Los códigos 999 de edad se tratan como ignorados; no se imputan y se informan aparte del perfil de edad.",
+    "Las asociaciones territoriales son descriptivas y no implican causalidad."
+  ],
+  "licenses": [
+    {
+      "name": "Datos INE",
+      "detail": "Datos abiertos del Instituto Nacional de Estadística de Guatemala; se cita la fuente en la aplicación y en este README."
+    },
+    {
+      "name": "geoBoundaries / OCHA FISS",
+      "detail": "CC BY 3.0 IGO. Límites administrativos municipales y departamentales.",
+      "url": "https://www.geoboundaries.org/"
+    },
+    {
+      "name": "Código de la aplicación",
+      "detail": "MIT."
+    }
+  ],
+  "aiDisclosure": "Este proyecto fue desarrollado con asistencia de herramientas de inteligencia artificial generativa (OpenCode y modelos de lenguaje) para redacción de código, revisión y documentación. El equipo revisa y defiende el código y las decisiones metodológicas; la IA no sustituye la validación de los datos oficiales.",
+  "methodology": {
+    "residenceVsOccurrence": "Residencia y ocurrencia son criterios distintos y nunca se suman entre sí. Cada vista declara el criterio activo y su nota metodológica.",
+    "rates": "Tasa = casos / población proyectada 2025 × 10,000. No se mezclan conteos censales con población proyectada.",
+    "suppression": "Los conteos y tasas por debajo del umbral se sustituyen por una marca de supresión; no se publica ningún valor numérico de la celda."
+  }
+}

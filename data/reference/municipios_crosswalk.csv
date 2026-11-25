@@ -1,0 +1,341 @@
+code,census_code,name,census_name,dept_code,dept_name,geo_shape_id,geo_name
+0101,0101,Guatemala,Guatemala,01,Guatemala,79465075B25759952858694,Guatemala
+0123,0102,Santa Catarina Pinula,Santa Catarina Pinula,01,Guatemala,79465075B31337947825966,Santa Catarina Pinula
+0124,0103,San José Pinula,San José Pinula,01,Guatemala,79465075B29005595464714,San José Pinula
+0125,0104,San José del Golfo,San José del Golfo,01,Guatemala,79465075B18750582081906,San José del Golfo
+0126,0105,Palencia,Palencia,01,Guatemala,79465075B84749841265640,Palencia
+0127,0106,Chinautla,Chinautla,01,Guatemala,79465075B40156667013427,Chinautla
+0128,0107,San Pedro Ayampuc,San Pedro Ayampuc,01,Guatemala,79465075B57117467929955,San Pedro Ayampuc
+0129,0108,Mixco,Mixco,01,Guatemala,79465075B33293515878982,Mixco
+0130,0109,San Pedro Sacatepéquez,San Pedro Sacatepéquez,01,Guatemala,79465075B65982966467051,San Pedro Sacatepéquez
+0131,0110,San Juan Sacatepéquez,San Juan Sacatepéquez,01,Guatemala,79465075B9598749560130,San Juan Sacatepéquez
+0132,0111,San Raymundo,San Raymundo,01,Guatemala,79465075B35150348928705,San Raimundo
+0133,0112,Chuarrancho,Chuarrancho,01,Guatemala,79465075B45501962231680,Chuarrancho
+0134,0113,Fraijanes,Fraijanes,01,Guatemala,79465075B66624198993086,Fraijanes
+0135,0114,Amatitlán,Amatitlán,01,Guatemala,79465075B1608091480167,Amatitlán
+0136,0115,Villa Nueva,Villa Nueva,01,Guatemala,79465075B28171431447945,Villa Nueva
+0137,0116,Villa Canales,Villa Canales,01,Guatemala,79465075B61187237098810,Villa Canales
+0138,0117,San Miguel Petapa,San Miguel Petapa,01,Guatemala,79465075B74125992353590,Petapa
+0201,0201,Guastatoya,Guastatoya,02,El Progreso,79465075B25176741785216,Guastatoya
+0202,0202,Morazán,Morazán,02,El Progreso,79465075B64841514160726,Morazán
+0203,0203,San Agustín Acasaguastlán,San Agustín Acasaguastlán,02,El Progreso,79465075B82802507944465,San Agustín Acasaguastlán
+0204,0204,San Cristóbal Acasaguastlán,San Cristóbal Acasaguastlán,02,El Progreso,79465075B13418311867324,San Cristóbal Acasaguastlán
+0205,0205,El Jícaro,El Jícaro,02,El Progreso,79465075B65572825799154,El Jícaro
+0206,0206,Sansare,Sansare,02,El Progreso,79465075B35387126526580,Sansare
+0207,0207,Sanarate,Sanarate,02,El Progreso,79465075B63820217074048,Sanarate
+0208,0208,San Antonio La Paz,San Antonio La Paz,02,El Progreso,79465075B78137762102304,San Antonio La Paz
+0301,0301,Antigua Guatemala,Antigua Guatemala,03,Sacatepéquez,79465075B72939253081387,Antigua Guatemala
+0302,0302,Jocotenango,Jocotenango,03,Sacatepéquez,79465075B20964806196125,Jocotenango
+0303,0303,Pastores,Pastores,03,Sacatepéquez,79465075B63522445953752,Pastores
+0304,0304,Sumpango,Sumpango,03,Sacatepéquez,79465075B37174278421226,Sumpango
+0305,0305,Santo Domingo Xenacoj,Santo Domingo Xenacoj,03,Sacatepéquez,79465075B12925018589584,Santo Domingo Xenacoj
+0306,0306,Santiago Sacatepéquez,Santiago Sacatepéquez,03,Sacatepéquez,79465075B66116547115808,Santiago Sacatepéquez
+0307,0307,San Bartolomé Milpas Altas,San Bartolomé Milpas Altas,03,Sacatepéquez,79465075B34478073333157,San Bartolomé Milpas Altas
+0308,0308,San Lucas Sacatepéquez,San Lucas Sacatepéquez,03,Sacatepéquez,79465075B92764455721704,San Lucas Sacatepéquez
+0309,0309,Santa Lucía Milpas Altas,Santa Lucía Milpas Altas,03,Sacatepéquez,79465075B78305211974628,Santa Lucía Milpas Altas
+0310,0310,Magdalena Milpas Altas,Magdalena Milpas Altas,03,Sacatepéquez,79465075B1840985123579,Magdalena Milpas Altas
+0311,0311,Santa María de Jesús,Santa María de Jesús,03,Sacatepéquez,79465075B23332784997029,Santa María de Jesús
+0312,0312,Ciudad Vieja,Ciudad Vieja,03,Sacatepéquez,79465075B53030566243177,Ciudad Vieja
+0313,0313,San Miguel Dueñas,San Miguel Dueñas,03,Sacatepéquez,79465075B97668033547878,San Miguel Dueñas
+0314,0314,San Juan Alotenango,San Juan Alotenango,03,Sacatepéquez,79465075B60145282500225,Alotenango
+0315,0315,San Antonio Aguas Calientes,San Antonio Aguas Calientes,03,Sacatepéquez,79465075B38855532318009,San Antonio Aguas Calientes
+0316,0316,Santa Catarina Barahona,Santa Catarina Barahona,03,Sacatepéquez,79465075B35254467846514,Santa Catarina Barahona
+0401,0401,Chimaltenango,Chimaltenango,04,Chimaltenango,79465075B80074787415799,Chimaltenango
+0402,0402,San José Poaquil,San José Poaquil,04,Chimaltenango,79465075B26188939943042,San José Poaquil
+0403,0403,San Martín Jilotepeque,San Martín Jilotepeque,04,Chimaltenango,79465075B81292522353259,San Martín Jilotepeque
+0404,0404,San Juan Comalapa,San Juan Comalapa,04,Chimaltenango,79465075B20533835568795,Comalapa
+0405,0405,Santa Apolonia,Santa Apolonia,04,Chimaltenango,79465075B14911635135013,Santa Apolonia
+0406,0406,Tecpán Guatemala,Tecpán Guatemala,04,Chimaltenango,79465075B20320299128156,Tecpán Guatemala
+0407,0407,Patzún,Patzún,04,Chimaltenango,79465075B61157694740062,Patzún
+0408,0408,San Miguel Pochuta,San Miguel Pochuta,04,Chimaltenango,79465075B89019096689616,Pochuta
+0409,0409,Patzicía,Patzicía,04,Chimaltenango,79465075B67566663524639,Patzicía
+0410,0410,Santa Cruz Balanyá,Santa Cruz Balanyá,04,Chimaltenango,79465075B16496006430587,Santa Cruz Balanyá
+0411,0411,Acatenango,Acatenango,04,Chimaltenango,79465075B13136333773356,Acatenango
+0412,0412,San Pedro Yepocapa,San Pedro Yepocapa,04,Chimaltenango,79465075B24340573402590,Yepocapa
+0413,0413,San Andrés Itzapa,San Andrés Itzapa,04,Chimaltenango,79465075B72665543071269,San Andrés Itzapa
+0414,0414,Parramos,Parramos,04,Chimaltenango,79465075B95275885163057,Parramos
+0415,0415,Zaragoza,Zaragoza,04,Chimaltenango,79465075B82010668835108,Zaragoza
+0416,0416,El Tejar,El Tejar,04,Chimaltenango,79465075B23918140958816,El Tejar
+0501,0501,Escuintla,Escuintla,05,Escuintla,79465075B12428075404525,Escuintla
+0502,0502,Santa Lucía Cotzumalguapa,Santa Lucía Cotzumalguapa,05,Escuintla,79465075B85033757561509,Santa Lucía Cotzumalguapa
+0503,0503,La Democracia,La Democracia,05,Escuintla,79465075B56611035242385,La Democracia
+0504,0504,Siquinalá,Siquinalá,05,Escuintla,79465075B25163774414820,Siquinalá
+0505,0505,Masagua,Masagua,05,Escuintla,79465075B43224707646328,Masagua
+0506,0506,Tiquisate,Tiquisate,05,Escuintla,79465075B69803572716764,Tiquisate
+0507,0507,La Gomera,La Gomera,05,Escuintla,79465075B56387033973668,La Gomera
+0508,0508,Guanagazapa,Guanagazapa,05,Escuintla,79465075B46302810770825,Guanagazapa
+0509,0509,San José,San José,05,Escuintla,79465075B23443659204690,San José
+0510,0510,Iztapa,Iztapa,05,Escuintla,79465075B85452841744981,Iztapa
+0511,0511,Palín,Palín,05,Escuintla,79465075B28219742708023,Palín
+0512,0512,San Vicente Pacaya,San Vicente Pacaya,05,Escuintla,79465075B46542077194483,San Vicente Pacaya
+0513,0513,Nueva Concepción,Nueva Concepción,05,Escuintla,79465075B35747325654374,Nueva Concepción
+0514,0514,Sipacate,Sipacate,05,Escuintla,79465075B96502800486536,Sipacate
+0601,0601,Cuilapa,Cuilapa,06,Santa Rosa,79465075B18848858610216,Cuilapa
+0602,0602,Barberena,Barberena,06,Santa Rosa,79465075B64045433059615,Barberena
+0603,0603,Santa Rosa de Lima,Santa Rosa de Lima,06,Santa Rosa,79465075B80857552483649,Santa Rosa de Lima
+0604,0604,Casillas,Casillas,06,Santa Rosa,79465075B57906860405823,Casillas
+0605,0605,San Rafael Las Flores,San Rafael Las Flores,06,Santa Rosa,79465075B42432820540382,San Rafael Las Flores
+0606,0606,Oratorio,Oratorio,06,Santa Rosa,79465075B83773112277760,Oratorio
+0607,0607,San Juan Tecuaco,San Juan Tecuaco,06,Santa Rosa,79465075B56577131945853,San Juan Tecuaco
+0608,0608,Chiquimulilla,Chiquimulilla,06,Santa Rosa,79465075B27028234589447,Chiquimulilla
+0609,0609,Taxisco,Taxisco,06,Santa Rosa,79465075B64159565485617,Taxisco
+0610,0610,Santa María Ixhuatán,Santa María Ixhuatán,06,Santa Rosa,79465075B67666952430364,Santa María Ixhuatán
+0611,0611,Guazacapán,Guazacapán,06,Santa Rosa,79465075B7979151806096,Guazacapán
+0612,0612,Santa Cruz Naranjo,Santa Cruz Naranjo,06,Santa Rosa,79465075B20602166984582,Santa Cruz Naranjo
+0613,0613,Pueblo Nuevo Viñas,Pueblo Nuevo Viñas,06,Santa Rosa,79465075B34201935898883,Pueblo Nuevo Viñas
+0614,0614,Nueva Santa Rosa,Nueva Santa Rosa,06,Santa Rosa,79465075B8683235112277,Nueva Santa Rosa
+0701,0701,Sololá,Sololá,07,Sololá,79465075B95687067740249,Sololá
+0702,0702,San José Chacayá,San José Chacayá,07,Sololá,79465075B53734633338650,San José Chacayá
+0703,0703,Santa María Visitación,Santa María Visitación,07,Sololá,79465075B29728839269099,Santa María Visitación
+0704,0704,Santa Lucía Utatlán,Santa Lucía Utatlán,07,Sololá,79465075B3203772279069,Santa Lucía Utatlán
+0705,0705,Nahualá,Nahualá,07,Sololá,79465075B99753253329912,Nahualá
+0706,0706,Santa Catarina Ixtahuacán,Santa Catarina Ixtahuacán,07,Sololá,79465075B97067153005308,Santa Catarina Ixtahuacán
+0707,0707,Santa Clara La Laguna,Santa Clara La Laguna,07,Sololá,79465075B26793890214768,Santa Clara La Laguna
+0708,0708,Concepción,Concepción,07,Sololá,79465075B28359200258392,Concepción
+0709,0709,San Andrés Semetabaj,San Andrés Semetabaj,07,Sololá,79465075B93234456554890,San Andrés Semetabaj
+0710,0710,Panajachel,Panajachel,07,Sololá,79465075B15499572594181,Panajachel
+0711,0711,Santa Catarina Palopó,Santa Catarina Palopó,07,Sololá,79465075B20909144417391,Santa Catarina Palopó
+0712,0712,San Antonio Palopó,San Antonio Palopó,07,Sololá,79465075B56849944054802,San Antonio Palopó
+0713,0713,San Lucas Tolimán,San Lucas Tolimán,07,Sololá,79465075B2167419407314,San Lucas Tolimán
+0714,0714,Santa Cruz La Laguna,Santa Cruz La Laguna,07,Sololá,79465075B11038489211128,Santa Cruz La Laguna
+0715,0715,San Pablo La Laguna,San Pablo La Laguna,07,Sololá,79465075B65058222740389,San Pablo La Laguna
+0716,0716,San Marcos La Laguna,San Marcos La Laguna,07,Sololá,79465075B78154513463269,San Marcos La Laguna
+0717,0717,San Juan La Laguna,San Juan La Laguna,07,Sololá,79465075B17327710580812,San Juan La Laguna
+0718,0718,San Pedro La Laguna,San Pedro La Laguna,07,Sololá,79465075B50823159206102,San Pedro La Laguna
+0719,0719,Santiago Atitlán,Santiago Atitlán,07,Sololá,79465075B45388350866104,Santiago Atitlán
+0801,0801,Totonicapán,Totonicapán,08,Totonicapán,79465075B19896834166836,Totonicapán
+0802,0802,San Cristóbal Totonicapán,San Cristóbal Totonicapán,08,Totonicapán,79465075B68551302151771,San Cristóbal Totonicapán
+0803,0803,San Francisco el Alto,San Francisco El Alto,08,Totonicapán,79465075B12043571614717,San Francisco El Alto
+0804,0804,San Andrés Xecul,San Andrés Xecul,08,Totonicapán,79465075B53537343705712,San Andrés Xecul
+0805,0805,Momostenango,Momostenango,08,Totonicapán,79465075B37040053715230,Momostenango
+0806,0806,Santa María Chiquimula,Santa María Chiquimula,08,Totonicapán,79465075B31639983176614,Santa María Chiquimula
+0807,0807,Santa Lucía La Reforma,Santa Lucía la Reforma,08,Totonicapán,79465075B7402563693044,Santa Lucía La Reforma
+0808,0808,San Bartolo Aguas Calientes,San Bartolo Aguas Calientes,08,Totonicapán,79465075B3234848459955,San Bartolo
+0901,0901,Quetzaltenango,Quetzaltenango,09,Quetzaltenango,79465075B80303982129661,Quetzaltenango
+0902,0902,Salcajá,Salcajá,09,Quetzaltenango,79465075B86011585476581,Salcajá
+0903,0903,San Juan Olintepeque,San Juan Olintepeque,09,Quetzaltenango,79465075B90968408613772,Olintepeque
+0904,0904,San Carlos Sija,San Carlos Sija,09,Quetzaltenango,79465075B11845713959586,San Carlos Sija
+0905,0905,Sibilia,Sibilia,09,Quetzaltenango,79465075B93967770843500,Sibilia
+0906,0906,Cabricán,Cabricán,09,Quetzaltenango,79465075B20493832744336,Cabricán
+0907,0907,Cajolá,Cajolá,09,Quetzaltenango,79465075B33960112872468,Cajolá
+0908,0908,San Miguel Siguilá,San Miguel Siguilá,09,Quetzaltenango,79465075B47659250151681,San Miguel Sigüila
+0909,0909,San Juan Ostuncalco,San Juan Ostuncalco,09,Quetzaltenango,79465075B83673504677566,Ostuncalco
+0910,0910,San Mateo,San Mateo,09,Quetzaltenango,79465075B40376522775505,San Mateo
+0911,0911,Concepción Chiquirichapa,Concepción Chiquirichapa,09,Quetzaltenango,79465075B62244811980671,Concepción Chiquirichapa
+0912,0912,San Martín Sacatepéquez,San Martín Sacatepéquez,09,Quetzaltenango,79465075B85200654086420,San Martín Sacatepéquez
+0913,0913,Almolonga,Almolonga,09,Quetzaltenango,79465075B59267896905043,Almolonga
+0914,0914,Cantel,Cantel,09,Quetzaltenango,79465075B39486283603330,Cantel
+0915,0915,Huitán,Huitán,09,Quetzaltenango,79465075B44657953271022,Huitán
+0916,0916,Zunil,Zunil,09,Quetzaltenango,79465075B54074459386490,Zunil
+0917,0917,Colomba Costa Cuca,Colomba Costa Cuca,09,Quetzaltenango,79465075B28232035709765,Colomba
+0918,0918,San Francisco La Unión,San Francisco La Unión,09,Quetzaltenango,79465075B13739271835933,San Francisco La Unión
+0919,0919,El Palmar,El Palmar,09,Quetzaltenango,79465075B16576514502159,El Palmar
+0920,0920,Coatepeque,Coatepeque,09,Quetzaltenango,79465075B84423325132752,Coatepeque
+0921,0921,Génova,Génova,09,Quetzaltenango,79465075B90055848837962,Génova
+0922,0922,Flores Costa Cuca,Flores Costa Cuca,09,Quetzaltenango,79465075B83292540692788,Flores Costa Cuca
+0923,0923,La Esperanza,La Esperanza,09,Quetzaltenango,79465075B77884380500547,La Esperanza
+0924,0924,Palestina de Los Altos,Palestina de Los Altos,09,Quetzaltenango,79465075B38894333871635,Palestina de Los Altos
+1001,1001,Mazatenango,Mazatenango,10,Suchitepéquez,79465075B41985315945162,Mazatenango
+1002,1002,Cuyotenango,Cuyotenango,10,Suchitepéquez,79465075B79840770909304,Cuyotenango
+1003,1003,San Francisco Zapotitlán,San Francisco Zapotitlán,10,Suchitepéquez,79465075B91697613076803,San Francisco Zapotitlán
+1004,1004,San Bernardino,San Bernardino,10,Suchitepéquez,79465075B44616748162902,San Bernardino
+1005,1005,San José El Ídolo,San José el Ídolo,10,Suchitepéquez,79465075B37305924039286,San José El Ídolo
+1006,1006,Santo Domingo Suchitepéquez,Santo Domingo Suchitepéquez,10,Suchitepéquez,79465075B35646197433450,Santo Domingo Suchitepéquez
+1007,1007,San Lorenzo,San Lorenzo,10,Suchitepéquez,79465075B60827763716614,San Lorenzo
+1008,1008,Samayac,Samayac,10,Suchitepéquez,79465075B7655458484390,Samayac
+1009,1009,San Pablo Jocopilas,San Pablo Jocopilas,10,Suchitepéquez,79465075B77711429461890,San Pablo Jocopilas
+1010,1010,San Antonio Suchitepéquez,San Antonio Suchitepéquez,10,Suchitepéquez,79465075B26922695910316,San Antonio Suchitepéquez
+1011,1011,San Miguel Panán,San Miguel Panán,10,Suchitepéquez,79465075B30152308361282,San Miguel Panán
+1012,1012,San Gabriel,San Gabriel,10,Suchitepéquez,79465075B61166037793938,San Gabriel
+1013,1013,Chicacao,Chicacao,10,Suchitepéquez,79465075B95007488956615,Chicacao
+1014,1014,Patulul,Patulul,10,Suchitepéquez,79465075B31102822949903,Patulul
+1015,1015,Santa Bárbara,Santa Bárbara,10,Suchitepéquez,79465075B82403769630407,Santa Bárbara
+1016,1016,San Juan Bautista,San Juan Bautista,10,Suchitepéquez,79465075B53380304625786,San Juan Bautista
+1017,1017,Santo Tomas La Unión,Santo Tomas La Unión,10,Suchitepéquez,79465075B46149189037387,Santo Tomás La Unión
+1018,1018,Zunilito,Zunilito,10,Suchitepéquez,79465075B91860193952418,Zunilito
+1019,1019,Pueblo Nuevo,Pueblo Nuevo,10,Suchitepéquez,79465075B83256235526272,Pueblo Nuevo
+1020,1020,Río Bravo,Río Bravo,10,Suchitepéquez,79465075B98045843880740,Río Bravo
+1021,1021,San José La Máquina,San José La Máquina,10,Suchitepéquez,79465075B14696818502524,San José La Máquina
+1101,1101,Retalhuleu,Retalhuleu,11,Retalhuleu,79465075B31149940203077,Retalhuleu
+1102,1102,San Sebastián,San Sebastián,11,Retalhuleu,79465075B80062128439556,San Sebastián
+1103,1103,Santa Cruz Muluá,Santa Cruz Muluá,11,Retalhuleu,79465075B78170683113897,Santa Cruz Muluá
+1104,1104,San Martín Zapotitlán,San Martín Zapotitlán,11,Retalhuleu,79465075B10941026506975,San Martín Zapotitlán
+1105,1105,San Felipe,San Felipe,11,Retalhuleu,79465075B46607071550315,San Felipe
+1106,1106,San Andrés Villa Seca,San Andrés Villa Seca,11,Retalhuleu,79465075B254233596558,San Andrés Villa Seca
+1107,1107,Champerico,Champerico,11,Retalhuleu,79465075B86216931252561,Champerico
+1108,1108,Nuevo San Carlos,Nuevo San Carlos,11,Retalhuleu,79465075B2823208304542,Nuevo San Carlos
+1109,1109,El Asintal,El Asintal,11,Retalhuleu,79465075B44377460468141,El Asintal
+1201,1201,San Marcos,San Marcos,12,San Marcos,79465075B32898701467657,San Marcos
+1202,1202,San Pedro Sacatepéquez,San Pedro Sacatepéquez,12,San Marcos,79465075B62908040243136,San Pedro Sacatepéquez
+1203,1203,San Antonio Sacatepéquez,San Antonio Sacatepéquez,12,San Marcos,79465075B59585261586559,San Antonio Sacatepéquez
+1204,1204,Comitancillo,Comitancillo,12,San Marcos,79465075B17220282453163,Comitancillo
+1205,1205,San Miguel Ixtahuacán,San Miguel Ixtahuacán,12,San Marcos,79465075B62576691905378,San Miguel Ixtahuacán
+1206,1206,Concepción Tutuapa,Concepción Tutuapa,12,San Marcos,79465075B54986860813663,Concepción Tutuapa
+1207,1207,Tacaná,Tacaná,12,San Marcos,79465075B77121462598505,Tacaná
+1208,1208,Sibinal,Sibinal,12,San Marcos,79465075B17563879064897,Sibinal
+1209,1209,Tajumulco,Tajumulco,12,San Marcos,79465075B52566348974333,Tajumulco
+1210,1210,Tejutla,Tejutla,12,San Marcos,79465075B17053106613054,Tejutla
+1211,1211,San Rafael Pie de la Cuesta,San Rafael Pie de la Cuesta,12,San Marcos,79465075B609636359228,San Rafael Pie de la Cuesta
+1212,1212,Nuevo Progreso,Nuevo Progreso,12,San Marcos,79465075B31379081578596,Nuevo Progreso
+1213,1213,El Tumbador,El Tumbador,12,San Marcos,79465075B55604290540821,El Tumbador
+1214,1214,San José el Rodeo,San José el Rodeo,12,San Marcos,79465075B79064464802759,El Rodeo
+1215,1215,Malacatán,Malacatán,12,San Marcos,79465075B54780709245522,Malacatán
+1216,1216,Catarina,Catarina,12,San Marcos,79465075B50413520272297,Catarina
+1217,1217,Ayutla,Ayutla,12,San Marcos,79465075B23985435861738,Ayutla
+1218,1218,Ocós,Ocós,12,San Marcos,79465075B29002473426991,Ocós
+1219,1219,San Pablo,San Pablo,12,San Marcos,79465075B73669305526668,San Pablo
+1220,1220,El Quetzal,El Quetzal,12,San Marcos,79465075B99595855877041,El Quetzal
+1221,1221,La Reforma,La Reforma,12,San Marcos,79465075B25623182739171,La Reforma
+1222,1222,Pajapita,Pajapita,12,San Marcos,79465075B67367283540012,Pajapita
+1223,1223,Ixchiguán,Ixchiguán,12,San Marcos,79465075B80517752911806,Ixchiguán
+1224,1224,San José Ojetenam,San José Ojetenam,12,San Marcos,79465075B2462316079287,San José Ojetenam
+1225,1225,San Cristóbal Cucho,San Cristóbal Cucho,12,San Marcos,79465075B28404659355934,San Cristóbal Cucho
+1226,1226,Sipacapa,Sipacapa,12,San Marcos,79465075B25557085984198,Sipacapa
+1227,1227,Esquipulas Palo Gordo,Esquipulas Palo Gordo,12,San Marcos,79465075B77634541568433,Esquipulas Palo Gordo
+1228,1228,Río Blanco,Río Blanco,12,San Marcos,79465075B55305987595848,Río Blanco
+1229,1229,San Lorenzo,San Lorenzo,12,San Marcos,79465075B14386686272745,San Lorenzo
+1230,1230,La Blanca,La Blanca,12,San Marcos,79465075B67582520223271,La Blanca
+1301,1301,Huehuetenango,Huehuetenango,13,Huehuetenango,79465075B83999365209014,Huehuetenango
+1302,1302,Chiantla,Chiantla,13,Huehuetenango,79465075B62653815483929,Chiantla
+1303,1303,Malacatancito,Malacatancito,13,Huehuetenango,79465075B52740095306971,Malacatancito
+1304,1304,Cuilco,Cuilco,13,Huehuetenango,79465075B28423402187553,Cuilco
+1305,1305,Nentón,Nentón,13,Huehuetenango,79465075B15120752201699,Nentón
+1306,1306,San Pedro Necta,San Pedro Necta,13,Huehuetenango,79465075B78521623494839,San Pedro Necta
+1307,1307,Jacaltenango,Jacaltenango,13,Huehuetenango,79465075B56243891035553,Jacaltenango
+1308,1308,San Pedro Soloma,San Pedro Soloma,13,Huehuetenango,79465075B1417859081281,Soloma
+1309,1309,San Ildefonso Ixtahuacán,San Ildefonso Ixtahuacán,13,Huehuetenango,79465075B38724413967486,Ixtahuacán
+1310,1310,Santa Bárbara,Santa Bárbara,13,Huehuetenango,79465075B43226162523151,Santa Bárbara
+1311,1311,La Libertad,La Libertad,13,Huehuetenango,79465075B32919336538902,La Libertad
+1312,1312,La Democracia,La Democracia,13,Huehuetenango,79465075B38360675898536,La Democracia
+1313,1313,San Miguel Acatán,San Miguel Acatán,13,Huehuetenango,79465075B13081043036874,San Miguel Acatán
+1314,1314,San Rafael La Independencia,San Rafael La Independencia,13,Huehuetenango,79465075B73195694709107,San Rafael La Independencia
+1315,1315,Todos Santos Cuchumatán,Todos Santos Cuchumatán,13,Huehuetenango,79465075B37558522420753,Todos Santos Cuchumatán
+1316,1316,San Juan Atitán,San Juan Atitán,13,Huehuetenango,79465075B84828217033389,San Juan Atitán
+1317,1317,Santa Eulalia,Santa Eulalia,13,Huehuetenango,79465075B65740660783251,Santa Eulalia
+1318,1318,San Mateo Ixtatán,San Mateo Ixtatán,13,Huehuetenango,79465075B68216544960730,San Mateo Ixtatán
+1319,1319,Colotenango,Colotenango,13,Huehuetenango,79465075B36067757797746,Colotenango
+1320,1320,San Sebastián Huehuetenango,San Sebastián Huehuetenango,13,Huehuetenango,79465075B22472302807981,San Sebastián Huehuetenango
+1321,1321,Tectitán,Tectitán,13,Huehuetenango,79465075B96618305654863,Tectitán
+1322,1322,Concepción Huista,Concepción Huista,13,Huehuetenango,79465075B71807144537859,Concepción Huista
+1323,1323,San Juan Ixcoy,San Juan Ixcoy,13,Huehuetenango,79465075B73654259569509,San Juan Ixcoy
+1324,1324,San Antonio Huista,San Antonio Huista,13,Huehuetenango,79465075B52230984514052,San Antonio Huista
+1325,1325,San Sebastián Coatán,San Sebastián Coatán,13,Huehuetenango,79465075B42561724893677,San Sebastián Coatán
+1326,1326,Santa Cruz Barillas,Santa Cruz Barillas,13,Huehuetenango,79465075B26055354107156,Barillas
+1327,1327,Aguacatán,Aguacatán,13,Huehuetenango,79465075B67295913435518,Aguacatán
+1328,1328,San Rafael Petzal,San Rafael Petzal,13,Huehuetenango,79465075B67895884485700,San Rafael Petzal
+1329,1329,San Gaspar Ixchil,San Gaspar Ixchil,13,Huehuetenango,79465075B65859415879145,San Gaspar Ixchil
+1330,1330,Santiago Chimaltenango,Santiago Chimaltenango,13,Huehuetenango,79465075B81878845839698,Santiago Chimaltenango
+1331,1331,Santa Ana Huista,Santa Ana Huista,13,Huehuetenango,79465075B69747530390651,Santa Ana Huista
+1332,1332,Unión Cantinil,Unión Cantinil,13,Huehuetenango,79465075B38315595445593,Unión Cantinil
+1333,1333,Petatán,Petatán,13,Huehuetenango,79465075B18515174231727,Petatán
+1401,1401,Santa Cruz del Quiché,Santa Cruz del Quiché,14,Quiché,79465075B15247969306160,Santa Cruz del Quiché
+1402,1402,Chiché,Chiché,14,Quiché,79465075B58448783087993,Chiché
+1403,1403,Chinique,Chinique,14,Quiché,79465075B24163547134196,Chinique
+1404,1404,Zacualpa,Zacualpa,14,Quiché,79465075B97254104766130,Zacualpa
+1405,1405,Chajul,Chajul,14,Quiché,79465075B19159342798902,Chajul
+1406,1406,Santo Tomás Chichicastenango,Santo Tomás Chichicastenango,14,Quiché,79465075B12794992131800,Chichicastenango
+1407,1407,Patzité,Patzité,14,Quiché,79465075B43387572026262,Patzité
+1408,1408,San Antonio Ilotenango,San Antonio Ilotenango,14,Quiché,79465075B34214096561703,San Antonio Ilotenango
+1409,1409,San Pedro Jocopilas,San Pedro Jocopilas,14,Quiché,79465075B58420470493896,San Pedro Jocopilas
+1410,1410,Cunén,Cunén,14,Quiché,79465075B6309522429005,Cunén
+1411,1411,San Juan Cotzal,San Juan Cotzal,14,Quiché,79465075B84889349679373,San Juan Cotzal
+1412,1412,Joyabaj,Joyabaj,14,Quiché,79465075B91239548931928,Joyabaj
+1413,1413,Santa María Nebaj,Santa María Nebaj,14,Quiché,79465075B6718623285372,Nebaj
+1414,1414,San Andrés Sajcabajá,San Andrés Sajcabajá,14,Quiché,79465075B6703764087341,San Andrés Sajcabajá
+1415,1415,San Miguel Uspantán,San Miguel Uspantán,14,Quiché,79465075B86057243605305,Uspantán
+1416,1416,Sacapulas,Sacapulas,14,Quiché,79465075B69929365391108,Sacapulas
+1417,1417,San Bartolomé Jocotenango,San Bartolomé Jocotenango,14,Quiché,79465075B4206970956801,San Bartolomé Jocotenango
+1418,1418,Canillá,Canillá,14,Quiché,79465075B48890406696018,Canillá
+1419,1419,Chicamán,Chicamán,14,Quiché,79465075B15638381256287,Chicamán
+1420,1420,Playa Grande Ixcán,Playa Grande Ixcán,14,Quiché,79465075B29604867633206,Ixcán
+1421,1421,Pachalum,Pachalum,14,Quiché,79465075B39093617577569,Pachalum
+1501,1501,Salamá,Salamá,15,Baja Verapaz,79465075B18875713614503,Salamá
+1502,1502,San Miguel Chicaj,San Miguel Chicaj,15,Baja Verapaz,79465075B93573685997449,San Miguel Chicaj
+1503,1503,Rabinal,Rabinal,15,Baja Verapaz,79465075B87613469920283,Rabinal
+1504,1504,Cubulco,Cubulco,15,Baja Verapaz,79465075B69115234632813,Cubulco
+1505,1505,Granados,Granados,15,Baja Verapaz,79465075B60020502053438,Granados
+1506,1506,Santa Cruz El Chol,Santa Cruz El Chol,15,Baja Verapaz,79465075B40581937082552,El Chol
+1507,1507,San Jerónimo,San Jerónimo,15,Baja Verapaz,79465075B29506691541664,San Jerónimo
+1508,1508,Purulhá,Purulhá,15,Baja Verapaz,79465075B41794626766416,Purulhá
+1601,1601,Cobán,Cobán,16,Alta Verapaz,79465075B25337893511969,Cobán
+1602,1602,Santa Cruz Verapaz,Santa Cruz Verapaz,16,Alta Verapaz,79465075B71576598572752,Santa Cruz Verapaz
+1603,1603,San Cristóbal Verapaz,San Cristóbal Verapaz,16,Alta Verapaz,79465075B68623160282073,San Cristóbal Verapaz
+1604,1604,Tactic,Tactic,16,Alta Verapaz,79465075B42752756974630,Tactic
+1605,1605,Tamahú,Tamahú,16,Alta Verapaz,79465075B44639416757608,Tamahú
+1606,1606,San Miguel Tucurú,San Miguel Tucurú,16,Alta Verapaz,79465075B80923191364064,Tucurú
+1607,1607,Panzós,Panzós,16,Alta Verapaz,79465075B48438720482803,Panzós
+1608,1608,Senahú,Senahú,16,Alta Verapaz,79465075B39749576611846,Senahú
+1609,1609,San Pedro Carchá,San Pedro Carchá,16,Alta Verapaz,79465075B56532928318150,San Pedro Carchá
+1610,1610,San Juan Chamelco,San Juan Chamelco,16,Alta Verapaz,79465075B61159508916708,San Juan Chamelco
+1611,1611,San Agustín Lanquín,San Agustín Lanquín,16,Alta Verapaz,79465075B47647601026557,Lanquín
+1612,1612,Santa María Cahabón,Santa María Cahabón,16,Alta Verapaz,79465075B65664017230403,Cahabón
+1613,1613,Chisec,Chisec,16,Alta Verapaz,79465075B86099287791236,Chisec
+1614,1614,Chahal,Chahal,16,Alta Verapaz,79465075B23943610665473,Chahal
+1615,1615,Fray Bartolomé de Las Casas,Fray Bartolomé de Las Casas,16,Alta Verapaz,79465075B41204934399249,Fray Bartolomé de Las Casas
+1616,1616,Santa Catalina La Tinta,Santa Catalina La Tinta,16,Alta Verapaz,79465075B69051418753494,Santa Catalina La Tinta
+1617,1617,Raxruhá,Raxruhá,16,Alta Verapaz,79465075B33979032902189,Raxruhá
+1701,1701,Flores,Flores,17,Petén,79465075B29101343458737,Flores
+1702,1702,San José,San José,17,Petén,79465075B657648809250,San José
+1703,1703,San Benito,San Benito,17,Petén,79465075B93827188855866,San Benito
+1704,1704,San Andrés,San Andrés,17,Petén,79465075B48357778365605,San Andrés
+1705,1705,La Libertad,La Libertad,17,Petén,79465075B31281143780542,La Libertad
+1706,1706,San Francisco,San Francisco,17,Petén,79465075B83427933273433,San Francisco
+1707,1707,Santa Ana,Santa Ana,17,Petén,79465075B84602984839461,Santa Ana
+1708,1708,Dolores,Dolores,17,Petén,79465075B81519160116587,Dolores
+1709,1709,San Luis,San Luis,17,Petén,79465075B4836456001209,San Luis
+1710,1710,Sayaxché,Sayaxché,17,Petén,79465075B52336301108850,Sayaxché
+1711,1711,Melchor de Mencos,Melchor de Mencos,17,Petén,79465075B26662084929959,Melchor de Mencos
+1712,1712,Poptún,Poptún,17,Petén,79465075B98225728966625,Poptún
+1713,1713,Las Cruces,Las Cruces,17,Petén,79465075B61221719902426,Las Cruces
+1714,1714,El Chal,El Chal,17,Petén,79465075B2800048141456,El Chal
+1801,1801,Puerto Barrios,Puerto Barrios,18,Izabal,79465075B20471919033812,Puerto Barrios
+1802,1802,Livingston,Livingston,18,Izabal,79465075B12175852129517,Lívingston
+1803,1803,El Estor,El Estor,18,Izabal,79465075B63823362918265,El Estor
+1804,1804,Morales,Morales,18,Izabal,79465075B97649712901036,Morales
+1805,1805,Los Amates,Los Amates,18,Izabal,79465075B97671971478727,Los Amates
+1901,1901,Zacapa,Zacapa,19,Zacapa,79465075B10782882700872,Zacapa
+1902,1902,Estanzuela,Estanzuela,19,Zacapa,79465075B47925591058231,Estanzuela
+1903,1903,Río Hondo,Río Hondo,19,Zacapa,79465075B55217962729749,Río Hondo
+1904,1904,Gualán,Gualán,19,Zacapa,79465075B90602875847956,Gualán
+1905,1905,Teculután,Teculután,19,Zacapa,79465075B78410714598363,Teculután
+1906,1906,Usumatlán,Usumatlán,19,Zacapa,79465075B70422154839704,Usumatlán
+1907,1907,Cabañas,Cabañas,19,Zacapa,79465075B64001111402492,Cabañas
+1908,1908,San Diego,San Diego,19,Zacapa,79465075B11427655280903,San Diego
+1909,1909,La Unión,La Unión,19,Zacapa,79465075B65794247030645,La Unión
+1910,1910,Huité,Huité,19,Zacapa,79465075B89457517012818,Huité
+1911,1911,San Jorge,San Jorge,19,Zacapa,79465075B24520983200883,San Jorge
+2001,2001,Chiquimula,Chiquimula,20,Chiquimula,79465075B13186946486683,Chiquimula
+2002,2002,San José La Arada,San José La Arada,20,Chiquimula,79465075B89151585354949,San José La Arada
+2003,2003,San Juan Ermita,San Juan Ermita,20,Chiquimula,79465075B27447388470202,San Juan Ermita
+2004,2004,Jocotán,Jocotán,20,Chiquimula,79465075B84991525520377,Jocotán
+2005,2005,Camotán,Camotán,20,Chiquimula,79465075B72038924069090,Camotán
+2006,2006,Olopa,Olopa,20,Chiquimula,79465075B46690826995670,Olopa
+2007,2007,Esquipulas,Esquipulas,20,Chiquimula,79465075B80702943511797,Esquipulas
+2008,2008,Concepción Las Minas,Concepción Las Minas,20,Chiquimula,79465075B28925037655820,Concepción Las Minas
+2009,2009,Quezaltepeque,Quezaltepeque,20,Chiquimula,79465075B70587573094312,Quezaltepeque
+2010,2010,San Jacinto,San Jacinto,20,Chiquimula,79465075B29365665250893,San Jacinto
+2011,2011,Ipala,Ipala,20,Chiquimula,79465075B7392170561334,Ipala
+2101,2101,Jalapa,Jalapa,21,Jalapa,79465075B86525651589488,Jalapa
+2102,2102,San Pedro Pinula,San Pedro Pinula,21,Jalapa,79465075B26197491104474,San Pedro Pinula
+2103,2103,San Luis Jilotepeque,San Luis Jilotepeque,21,Jalapa,79465075B90526341743732,San Luis Jilotepeque
+2104,2104,San Manuel Chaparrón,San Manuel Chaparrón,21,Jalapa,79465075B10388039742951,San Manuel Chaparrón
+2105,2105,San Carlos Alzatate,San Carlos Alzatate,21,Jalapa,79465075B59357563721623,San Carlos Alzatate
+2106,2106,Monjas,Monjas,21,Jalapa,79465075B55723885178845,Monjas
+2107,2107,Mataquescuintla,Mataquescuintla,21,Jalapa,79465075B64260644411461,Mataquescuintla
+2201,2201,Jutiapa,Jutiapa,22,Jutiapa,79465075B37757283668569,Jutiapa
+2202,2202,El Progreso,El Progreso,22,Jutiapa,79465075B52166049172952,El Progreso
+2203,2203,Santa Catarina Mita,Santa Catarina Mita,22,Jutiapa,79465075B98787750844284,Santa Catarina Mita
+2204,2204,Agua Blanca,Agua Blanca,22,Jutiapa,79465075B57715659618061,Agua Blanca
+2205,2205,Asunción Mita,Asunción Mita,22,Jutiapa,79465075B73925022965475,Asunción Mita
+2206,2206,Yupiltepeque,Yupiltepeque,22,Jutiapa,79465075B99403768988666,Yupiltepeque
+2207,2207,Atescatempa,Atescatempa,22,Jutiapa,79465075B46496054688907,Atescatempa
+2208,2208,Jerez,Jerez,22,Jutiapa,79465075B56030865521274,Jerez
+2209,2209,El Adelanto,El Adelanto,22,Jutiapa,79465075B13602510028618,El Adelanto
+2210,2210,Zapotitlán,Zapotitlán,22,Jutiapa,79465075B8015591970970,Zapotitlán
+2211,2211,Comapa,Comapa,22,Jutiapa,79465075B15373267205562,Comapa
+2212,2212,Jalpatagua,Jalpatagua,22,Jutiapa,79465075B35053973506085,Jalpatagua
+2213,2213,Conguaco,Conguaco,22,Jutiapa,79465075B31085680066755,Conguaco
+2214,2214,Moyuta,Moyuta,22,Jutiapa,79465075B23671365948765,Moyuta
+2215,2215,Pasaco,Pasaco,22,Jutiapa,79465075B50334197995085,Pasaco
+2216,2216,San José Acatempa,San José Acatempa,22,Jutiapa,79465075B89624307194233,San José Acatempa
+2217,2217,Quesada,Quesada,22,Jutiapa,79465075B71071315687381,Quesada

@@ -1,0 +1,32 @@
+{
+  "generated_at_utc": "2026-11-25T06:00:07Z",
+  "policy": "Se usa el archivo local si existe y es válido; solo se descarga cuando falta o está corrupto. Cada descarga registra URL, fecha UTC y SHA-256.",
+  "sources": [
+    {
+      "filename": "gtm_adm1.geojson",
+      "url": "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/GTM/ADM1/geoBoundaries-GTM-ADM1_simplified.geojson",
+      "kind": "geojson",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T05:21:29Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "7f84a4e2a8773953af1c602c67f27457b093e3cfc6ab21052446b172b71d7628",
+      "bytes": 318584,
+      "publisher": "OCHA FISS via geoBoundaries",
+      "license": "CC BY 3.0 IGO (OCHA FISS / geoBoundaries)"
+    },
+    {
+      "filename": "gtm_adm2.geojson",
+      "url": "https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/GTM/ADM2/geoBoundaries-GTM-ADM2_simplified.geojson",
+      "kind": "geojson",
+      "status": "cached",
+      "origin": "download",
+      "retrieved_at_utc": "2026-11-25T05:21:29Z",
+      "checked_at_utc": "2026-11-25T06:00:07Z",
+      "sha256": "04ec4cacdc6c1aa01b4e67ccea28fe4b8f9fa758047a6c7d666668171e95eb94",
+      "bytes": 1162585,
+      "publisher": "OCHA FISS via geoBoundaries",
+      "license": "CC BY 3.0 IGO (OCHA FISS / geoBoundaries)"
+    }
+  ]
+}

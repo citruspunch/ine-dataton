@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/web/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -9,11 +10,21 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+/.venv
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
 
 # testing
 /coverage
 
 # next.js
+/web/.next/
+/web/out/
 /.next/
 /out/
 
@@ -49,3 +60,8 @@ next-env.d.ts
 
 # Descubrimiento INE (datos crudos, temporales)
 /discovery_ine/
+
+# Datos crudos descargados por `uv run radar build`
+/data/raw/*.xlsx
+/data/raw/*.part
+/data/reference/*.geojson
