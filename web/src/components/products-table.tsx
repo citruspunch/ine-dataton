@@ -1,14 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpDown,
-  ListFilter,
-  Search,
-  X,
-} from "lucide-react";
+import { ArrowUpDown, ChevronDown, ChevronUp, Search, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +9,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -45,7 +37,7 @@ import {
 } from "@/lib/format";
 import type { Area, AreaMonth, Mode, ProductRow } from "@/lib/types";
 
-type SortKey = "name" | "group" | "unitPrice" | "kcal" | "cost" | "kcalCost";
+type SortKey = "name" | "price" | "cost" | "kcalCost";
 type SortDirection = "asc" | "desc";
 
 type ProductsTableProps = {
@@ -56,6 +48,7 @@ type ProductsTableProps = {
 };
 
 const COLLATOR = new Intl.Collator("es", { sensitivity: "base" });
+const INITIAL_ROWS = 6;
 
 function normalize(value: string): string {
   return value
@@ -64,34 +57,44 @@ function normalize(value: string): string {
     .toLowerCase();
 }
 
-function SortButton({
+function SortHeader({
   label,
-  sortKey,
-  activeKey,
+  shortLabel,
+  column,
+  active,
   direction,
-  onClick,
+  onSort,
   align = "left",
 }: {
   label: string;
-  sortKey: SortKey;
-  activeKey: SortKey;
+  shortLabel?: string;
+  column: SortKey;
+  active: SortKey;
   direction: SortDirection;
-  onClick: (key: SortKey) => void;
+  onSort: (column: SortKey) => void;
   align?: "left" | "right";
 }) {
-  const active = activeKey === sortKey;
-  const Icon = !active ? ArrowUpDown : direction === "asc" ? ArrowUp : ArrowDown;
+  const isActive = active === column;
+  const Icon = !isActive ? ArrowUpDown : direction === "asc" ? ChevronUp : ChevronDown;
+
   return (
     <button
       type="button"
-      onClick={() => onClick(sortKey)}
-      className={`inline-flex w-full items-center gap-1 text-[11px] font-medium transition-colors hover:text-foreground ${
-        align === "right" ? "justify-end" : "justify-start"
-      } ${active ? "text-foreground" : "text-muted-foreground"}`}
+      onClick={() => onSort(column)}
       aria-label={`Ordenar por ${label}`}
+      className={`inline-flex w-full items-center gap-1 text-[12.5px] font-medium transition-colors hover:text-foreground ${
+        align === "right" ? "justify-end" : "justify-start"
+      } ${isActive ? "text-foreground" : "text-muted-foreground"}`}
     >
-      {label}
-      <Icon className={`size-3 ${active ? "opacity-100" : "opacity-45"}`} />
+      {shortLabel ? (
+        <>
+          <span className="sm:hidden">{shortLabel}</span>
+          <span className="hidden sm:inline">{label}</span>
+        </>
+      ) : (
+        label
+      )}
+      <Icon className={`size-3 shrink-0 ${isActive ? "opacity-100" : "opacity-35"}`} />
     </button>
   );
 }
@@ -100,12 +103,11 @@ export function ProductsTable({ area, month, members, mode }: ProductsTableProps
   const data = areaData(area);
   const [query, setQuery] = React.useState("");
   const [groupFilter, setGroupFilter] = React.useState("all");
-  // Sin efectos: el orden por defecto depende del modo hasta que la persona
-  // elige explícitamente una columna.
   const [sortKey, setSortKey] = React.useState<SortKey | null>(null);
   const [direction, setDirection] = React.useState<SortDirection>("desc");
-  const activeSortKey: SortKey =
-    sortKey ?? (mode === "total" ? "cost" : "kcalCost");
+  const [expanded, setExpanded] = React.useState(false);
+
+  const activeSort: SortKey = sortKey ?? (mode === "total" ? "cost" : "kcalCost");
 
   const rows: ProductRow[] = React.useMemo(
     () =>
@@ -127,8 +129,7 @@ export function ProductsTable({ area, month, members, mode }: ProductsTableProps
   const filtered = React.useMemo(() => {
     const needle = normalize(query.trim());
     return rows.filter((row) => {
-      const matchesGroup =
-        groupFilter === "all" || row.group === groupFilter;
+      const matchesGroup = groupFilter === "all" || row.group === groupFilter;
       const matchesQuery =
         needle.length === 0 ||
         normalize(row.name).includes(needle) ||
@@ -140,8 +141,7 @@ export function ProductsTable({ area, month, members, mode }: ProductsTableProps
   const sorted = React.useMemo(() => {
     const factor = direction === "asc" ? 1 : -1;
     return [...filtered].sort((a, b) => {
-      // Los productos de 0 kcal siempre al final en el orden por costo calórico.
-      if (activeSortKey === "kcalCost") {
+      if (activeSort === "kcalCost") {
         const aValue = a.costPerThousandKcal;
         const bValue = b.costPerThousandKcal;
         if (aValue === null && bValue === null) return COLLATOR.compare(a.name, b.name);
@@ -149,191 +149,159 @@ export function ProductsTable({ area, month, members, mode }: ProductsTableProps
         if (bValue === null) return -1;
         return (aValue - bValue) * factor;
       }
-      switch (activeSortKey) {
+      switch (activeSort) {
         case "name":
           return COLLATOR.compare(a.name, b.name) * factor;
-        case "group":
-          return (
-            (COLLATOR.compare(a.group, b.group) ||
-              COLLATOR.compare(a.name, b.name)) * factor
-          );
-        case "unitPrice":
+        case "price":
           return (a.unitPrice - b.unitPrice) * factor;
-        case "kcal":
-          return (a.kcalPerPersonDay - b.kcalPerPersonDay) * factor;
         case "cost":
           return (a.costPerPersonMonth - b.costPerPersonMonth) * factor;
         default:
           return 0;
       }
     });
-  }, [filtered, activeSortKey, direction]);
+  }, [filtered, activeSort, direction]);
 
-  const handleSort = (key: SortKey) => {
-    if (key === activeSortKey) {
+  const isFiltering = query.trim().length > 0 || groupFilter !== "all";
+  const limit = expanded || isFiltering ? sorted.length : INITIAL_ROWS;
+  const visible = sorted.slice(0, limit);
+  const canExpand = sorted.length > INITIAL_ROWS && !isFiltering;
+
+  const handleSort = (column: SortKey) => {
+    if (column === activeSort) {
       setDirection((current) => (current === "asc" ? "desc" : "asc"));
-      setSortKey(key);
+      setSortKey(column);
       return;
     }
-    setSortKey(key);
-    setDirection(key === "name" || key === "group" ? "asc" : "desc");
+    setSortKey(column);
+    setDirection(column === "name" ? "asc" : "desc");
   };
-
-  const zeroKcalCount = rows.filter((row) => row.zeroKcal).length;
 
   return (
     <Card>
-      <CardHeader className="pb-2">
-        <div className="flex flex-wrap items-start justify-between gap-2">
-          <div>
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <ListFilter className="size-4 text-primary" />
-              Productos de la canasta
-            </CardTitle>
-            <CardDescription className="mt-0.5 text-[11px]">
-              {rows.length} productos · {data.groups.length} grupos ·{" "}
-              {month.label.toLowerCase()}
-              {mode === "kcal"
-                ? " · agua y sal excluidas del cálculo por 1.000 kcal"
-                : ""}
-            </CardDescription>
-          </div>
-          <Badge
-            variant="outline"
-            className="border-border bg-muted/50 font-mono text-[10px] text-muted-foreground"
-          >
-            CBA {area.toLowerCase()}
-          </Badge>
-        </div>
+      <CardHeader className="pb-1">
+        <CardTitle className="text-[15px]">Productos de la canasta</CardTitle>
+        <CardDescription className="text-[12.5px]">
+          {rows.length} productos · {month.label.toLowerCase()} · precios por
+          unidad base
+        </CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-2.5 pb-2">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-[280px]">
-            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+      <CardContent className="pt-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="relative w-full">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Buscar producto o grupo"
-              aria-label="Buscar producto o grupo"
-              className="h-9 border-border/80 bg-card pl-8 pr-8 text-[12px]"
+              placeholder="Buscar producto"
+              aria-label="Buscar producto"
+              className="h-10 border-border/80 bg-card pl-9 pr-9 text-[13.5px]"
             />
             {query ? (
               <button
                 type="button"
                 onClick={() => setQuery("")}
                 aria-label="Limpiar búsqueda"
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
               >
-                <X className="size-3.5" />
+                <X className="size-4" />
               </button>
             ) : null}
           </div>
-          <div className="flex items-center gap-2">
-            <Select value={groupFilter} onValueChange={setGroupFilter}>
-              <SelectTrigger
-                className="h-9 min-w-0 flex-1 text-[12px] sm:w-[220px]"
-                aria-label="Filtrar por grupo de alimentos"
-              >
-                <SelectValue placeholder="Grupo" />
-              </SelectTrigger>
-              <SelectContent className="max-h-[320px]">
-                <SelectItem value="all">Todos los grupos</SelectItem>
-                {data.groups.map((group) => (
-                  <SelectItem key={group} value={group}>
-                    {group}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <span className="shrink-0 font-mono text-[10.5px] text-muted-foreground">
-              {sorted.length}/{rows.length}
-            </span>
-          </div>
+          <Select value={groupFilter} onValueChange={setGroupFilter}>
+            <SelectTrigger
+              className="h-10 w-full text-[13.5px] sm:w-[230px]"
+              aria-label="Filtrar por grupo de alimentos"
+            >
+              <SelectValue placeholder="Grupo" />
+            </SelectTrigger>
+            <SelectContent className="max-h-[320px]">
+              <SelectItem value="all">Todos los grupos</SelectItem>
+              {data.groups.map((group) => (
+                <SelectItem key={group} value={group}>
+                  {group}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
-        <div className="scrollbar-thin max-h-[560px] overflow-auto rounded-lg border border-border/80">
-          <Table>
+        <div
+          className={`mt-3 overflow-auto rounded-lg border border-border/70 ${
+            expanded ? "scrollbar-thin max-h-[560px]" : ""
+          }`}
+        >
+          <Table className="table-fixed">
             <TableCaption className="sr-only">
               Productos de la canasta básica alimentaria {area.toLowerCase()} para{" "}
-              {month.label}, ordenados según la columna seleccionada.
+              {month.label}.
             </TableCaption>
-            <TableHeader className="sticky top-0 z-10 bg-card/95 backdrop-blur">
+            <TableHeader
+              className={expanded ? "sticky top-0 z-10 bg-card/95 backdrop-blur" : ""}
+            >
               <TableRow className="hover:bg-transparent">
-                <TableHead className="h-9 min-w-[180px]">
-                  <SortButton
+                <TableHead className="h-10 pl-3">
+                  <SortHeader
                     label="Producto"
-                    sortKey="name"
-                    activeKey={activeSortKey}
+                    column="name"
+                    active={activeSort}
                     direction={direction}
-                    onClick={handleSort}
+                    onSort={handleSort}
                   />
                 </TableHead>
-                <TableHead className="hidden h-9 md:table-cell">
-                  <SortButton
-                    label="Grupo"
-                    sortKey="group"
-                    activeKey={activeSortKey}
+                <TableHead className="hidden h-10 w-[104px] text-right sm:table-cell">
+                  <SortHeader
+                    label="Precio"
+                    column="price"
+                    active={activeSort}
                     direction={direction}
-                    onClick={handleSort}
-                  />
-                </TableHead>
-                <TableHead className="hidden h-9 text-right sm:table-cell">
-                  <SortButton
-                    label="Precio unidad"
-                    sortKey="unitPrice"
-                    activeKey={activeSortKey}
-                    direction={direction}
-                    onClick={handleSort}
+                    onSort={handleSort}
                     align="right"
                   />
                 </TableHead>
-                <TableHead className="hidden h-9 text-right lg:table-cell">
-                  <SortButton
-                    label="kcal/día"
-                    sortKey="kcal"
-                    activeKey={activeSortKey}
+                <TableHead
+                  className={`h-10 text-right sm:w-[104px] ${
+                    mode === "kcal" ? "hidden sm:table-cell" : "w-[92px]"
+                  }`}
+                >
+                  <SortHeader
+                    label="Costo hogar"
+                    shortLabel="Costo"
+                    column="cost"
+                    active={activeSort}
                     direction={direction}
-                    onClick={handleSort}
+                    onSort={handleSort}
                     align="right"
                   />
                 </TableHead>
-                <TableHead className="h-9 text-right">
-                  <SortButton
-                    label="Costo hogar/mes"
-                    sortKey="cost"
-                    activeKey={activeSortKey}
-                    direction={direction}
-                    onClick={handleSort}
-                    align="right"
-                  />
-                </TableHead>
-                <TableHead className="h-9 text-right">
-                  <SortButton
+                <TableHead
+                  className={`h-10 pr-3 text-right sm:w-[108px] ${
+                    mode === "total" ? "hidden sm:table-cell" : "w-[92px]"
+                  }`}
+                >
+                  <SortHeader
                     label="Q/1.000 kcal"
-                    sortKey="kcalCost"
-                    activeKey={activeSortKey}
+                    shortLabel="Q/1k"
+                    column="kcalCost"
+                    active={activeSort}
                     direction={direction}
-                    onClick={handleSort}
+                    onSort={handleSort}
                     align="right"
                   />
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sorted.map((row) => (
+              {visible.map((row) => (
                 <TableRow
                   key={row.name}
-                  className={
-                    row.zeroKcal
-                      ? "text-muted-foreground hover:bg-muted/40"
-                      : "hover:bg-muted/40"
-                  }
+                  className={row.zeroKcal ? "text-muted-foreground" : ""}
                 >
-                  <TableCell className="py-1.5">
-                    <div className="flex items-center gap-1.5">
+                  <TableCell className="min-w-0 whitespace-normal py-3 pl-3">
+                    <div className="flex min-w-0 items-center gap-2">
                       <span
-                        className="line-clamp-2 max-w-[360px] text-[12px] font-medium leading-snug sm:line-clamp-1"
+                        className="line-clamp-2 min-w-0 break-words text-[13px] font-medium leading-snug text-foreground sm:text-[13.5px]"
                         title={row.name}
                       >
                         {row.name}
@@ -341,71 +309,92 @@ export function ProductsTable({ area, month, members, mode }: ProductsTableProps
                       {row.zeroKcal ? (
                         <Badge
                           variant="outline"
-                          className="border-amber-300/70 bg-amber-50 px-1.5 py-0 text-[9px] font-medium text-amber-800"
+                          className="border-border bg-muted/60 px-1.5 py-0 text-[11px] font-medium text-muted-foreground"
                         >
                           0 kcal
                         </Badge>
                       ) : null}
                     </div>
-                    <p className="mt-0.5 text-[10px] text-muted-foreground md:hidden">
-                      {row.group} · {formatUnitQuantity(row.baseQuantity, row.baseUnit)}
+                    <p className="mt-0.5 line-clamp-2 break-words text-[12px] leading-snug text-muted-foreground">
+                      <span className="hidden sm:inline">{row.group} · </span>
+                      <span className="sm:hidden">
+                        {formatQuetzales(row.unitPrice)}/
+                        {formatUnitQuantity(row.baseQuantity, row.baseUnit)} ·{" "}
+                      </span>
+                      {row.zeroKcal ? (
+                        "sin calorías"
+                      ) : (
+                        <>
+                          {formatNumber(
+                            row.kcalPerPersonDay,
+                            row.kcalPerPersonDay < 10 ? 1 : 0,
+                          )}{" "}
+                          kcal
+                        </>
+                      )}
                     </p>
                   </TableCell>
-                  <TableCell className="hidden py-1.5 md:table-cell">
-                    <span className="text-[11px] text-muted-foreground">
-                      {row.group}
+                  <TableCell className="hidden py-3 text-right sm:table-cell">
+                    <span className="font-mono text-[13.5px] tabular-nums">
+                      {formatQuetzales(row.unitPrice)}
                     </span>
+                    <p className="text-[11.5px] text-muted-foreground">
+                      {formatUnitQuantity(row.baseQuantity, row.baseUnit)}
+                    </p>
                   </TableCell>
-                  <TableCell className="hidden py-1.5 text-right sm:table-cell">
-                    <span className="font-mono text-[11.5px] tabular-nums">
-                      {formatQuetzales(row.unitPrice, 2)}
+                  <TableCell
+                    className={`whitespace-nowrap px-2 py-3 text-right sm:px-3 ${
+                      mode === "kcal" ? "hidden sm:table-cell" : ""
+                    }`}
+                  >
+                    <span className="block font-mono text-[12.5px] tabular-nums sm:text-[13.5px]">
+                      {formatQuetzales(row.costPerPersonMonth * members)}
                     </span>
-                    <span className="ml-1 whitespace-nowrap text-[10px] text-muted-foreground">
-                      / {formatUnitQuantity(row.baseQuantity, row.baseUnit)}
-                    </span>
+                    {row.zeroKcal ? null : (
+                      <span className="mt-0.5 block text-[11.5px] text-muted-foreground sm:hidden">
+                        {formatQuetzales(row.costPerThousandKcal ?? 0)}/1k
+                      </span>
+                    )}
                   </TableCell>
-                  <TableCell className="hidden py-1.5 text-right lg:table-cell">
-                    <span className="font-mono text-[11.5px] tabular-nums">
-                      {formatNumber(row.kcalPerPersonDay, 1)}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-1.5 text-right">
-                    <span className="font-mono text-[11.5px] tabular-nums">
-                      {formatQuetzales(row.costPerPersonMonth * members, 2)}
-                    </span>
-                  </TableCell>
-                  <TableCell className="py-1.5 text-right">
+                  <TableCell
+                    className={`whitespace-nowrap py-3 pr-3 text-right ${
+                      mode === "total" ? "hidden sm:table-cell" : ""
+                    }`}
+                  >
                     {row.costPerThousandKcal === null ? (
                       <span
-                        className="inline-flex items-center rounded-full bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground"
-                        title="Producto sin calorías: no se calcula costo por 1.000 kcal"
+                        className="block text-[12.5px] text-muted-foreground"
+                        title="Producto sin calorías: no tiene costo por 1.000 kcal"
                       >
-                        no aplica
+                        —
                       </span>
                     ) : (
                       <span
-                        className={`font-mono text-[11.5px] tabular-nums ${
+                        className={`block font-mono text-[12.5px] tabular-nums sm:text-[13.5px] ${
                           mode === "kcal"
                             ? "font-semibold text-foreground"
                             : "text-muted-foreground"
                         }`}
                       >
-                        {formatQuetzales(row.costPerThousandKcal, 2)}
+                        {formatQuetzales(row.costPerThousandKcal)}
                       </span>
                     )}
+                    <span className="mt-0.5 block text-[11.5px] text-muted-foreground sm:hidden">
+                      {formatQuetzales(row.costPerPersonMonth * members)}
+                    </span>
                   </TableCell>
                 </TableRow>
               ))}
-              {sorted.length === 0 ? (
+              {visible.length === 0 ? (
                 <TableRow className="hover:bg-transparent">
-                  <TableCell colSpan={6} className="py-8 text-center">
-                    <p className="text-[12px] text-muted-foreground">
+                  <TableCell colSpan={4} className="py-10 text-center">
+                    <p className="text-[13.5px] text-muted-foreground">
                       No hay productos que coincidan con la búsqueda.
                     </p>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="mt-2 text-xs"
+                      className="mt-1 text-[13px]"
                       onClick={() => {
                         setQuery("");
                         setGroupFilter("all");
@@ -419,19 +408,26 @@ export function ProductsTable({ area, month, members, mode }: ProductsTableProps
             </TableBody>
           </Table>
         </div>
-      </CardContent>
 
-      <CardFooter className="justify-between gap-3 py-2.5 text-[10px] leading-snug text-muted-foreground">
-        <span>
-          Precio por unidad base del INE (no por kg ni comparable entre unidades
-          distintas). kcal y Q/1.000 kcal por persona/día. El costo del hogar
-          incluye todos los productos; la suma puede diferir del total publicado
-          por redondeo.
-        </span>
-        <span className="shrink-0 font-mono">
-          {zeroKcalCount} sin kcal
-        </span>
-      </CardFooter>
+        {canExpand ? (
+          <div className="mt-3 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setExpanded((current) => !current)}
+              className="inline-flex items-center gap-1 text-[13px] font-medium text-primary transition-colors hover:text-primary/80"
+            >
+              {expanded
+                ? "Ver menos productos"
+                : `Ver los ${sorted.length} productos`}
+              {expanded ? (
+                <ChevronUp className="size-3.5" />
+              ) : (
+                <ChevronDown className="size-3.5" />
+              )}
+            </button>
+          </div>
+        ) : null}
+      </CardContent>
     </Card>
   );
 }

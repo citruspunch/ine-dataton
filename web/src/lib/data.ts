@@ -14,10 +14,6 @@ export function areaData(area: Area): AreaData {
   return basketData.areas[area];
 }
 
-export function areaSummary(area: Area) {
-  return basketData.meta.areas[area];
-}
-
 export function findMonth(area: Area, period: string): AreaMonth {
   const month = areaData(area).months.find((item) => item.period === period);
   if (!month) {
@@ -32,10 +28,6 @@ export function findIpc(period: string): IpcRow {
     throw new Error(`No hay IPC para el periodo ${period}`);
   }
   return row;
-}
-
-export function availablePeriods(area: Area): string[] {
-  return areaData(area).months.map((month) => month.period);
 }
 
 export function availableYears(area: Area): number[] {

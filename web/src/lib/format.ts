@@ -46,29 +46,11 @@ export function formatQuetzales(value: number, decimals = 2): string {
   return `Q ${formatNumber(value, decimals)}`;
 }
 
-export function formatQuetzalesCompact(value: number): string {
-  if (Math.abs(value) >= 1000) {
-    return `Q ${formatNumber(value / 1000, 1)}k`;
-  }
-  return `Q ${formatNumber(value, 0)}`;
-}
-
-export function formatPercent(value: number, decimals = 2): string {
-  return `${formatNumber(value, decimals)} %`;
-}
-
 export function formatSignedPercent(value: number, decimals = 2): string {
   if (!Number.isFinite(value)) return "—";
   const rounded = Number(value.toFixed(decimals));
   const sign = rounded > 0 ? "+" : rounded < 0 ? "−" : "";
   return `${sign}${formatNumber(Math.abs(rounded), decimals)} %`;
-}
-
-export function formatSignedPoints(value: number, decimals = 2): string {
-  if (!Number.isFinite(value)) return "—";
-  const rounded = Number(value.toFixed(decimals));
-  const sign = rounded > 0 ? "+" : rounded < 0 ? "−" : "";
-  return `${sign}${formatNumber(Math.abs(rounded), decimals)} pp`;
 }
 
 export function formatKcal(value: number, decimals = 0): string {
@@ -85,12 +67,6 @@ export function formatUnitQuantity(quantity: number, unit: string): string {
     return `${formatNumber(quantity, decimals)} ml`;
   }
   return `${formatNumber(quantity, decimals)} ${normalized}`;
-}
-
-export function formatPeriodShort(period: string): string {
-  const year = period.slice(2, 4);
-  const month = Number(period.slice(5, 7));
-  return `${MONTH_ABBR[month - 1]} ${year}`;
 }
 
 export function formatUtcStamp(iso: string | null): string {
@@ -110,10 +86,6 @@ export function formatFileSize(bytes: number): string {
   return `${formatNumber(bytes / 1024, 1)} KB`;
 }
 
-export function shortHash(hash: string): string {
-  return `${hash.slice(0, 12)}…${hash.slice(-8)}`;
-}
-
 const GROUP_SHORT_NAMES: Record<string, string> = {
   "Vegetales (verduras u hortalizas)": "Vegetales",
   "Carnes, Aves, Pescados y Huevos": "Carnes y huevos",
@@ -128,6 +100,3 @@ export function shortGroupName(name: string): string {
   return GROUP_SHORT_NAMES[name] ?? name;
 }
 
-export function pluralize(count: number, singular: string, plural: string): string {
-  return count === 1 ? singular : plural;
-}

@@ -1,14 +1,10 @@
 "use client";
 
-import { CalendarDays, Gauge, House, Scale } from "lucide-react";
+import { CalendarDays, RotateCcw } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -19,11 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MONTH_NAMES, formatNumber, formatPeriodShort } from "@/lib/format";
+import { MONTH_NAMES, formatNumber } from "@/lib/format";
 import type { Area, BasketMeta, Mode, VariationType } from "@/lib/types";
 
 type ControlPanelProps = {
@@ -43,6 +38,7 @@ type ControlPanelProps = {
   onVariationChange: (variation: VariationType) => void;
   direct: boolean;
   onDirectChange: (direct: boolean) => void;
+  onReset: () => void;
   meta: BasketMeta;
 };
 
@@ -63,48 +59,41 @@ export function ControlPanel({
   onVariationChange,
   direct,
   onDirectChange,
+  onReset,
   meta,
 }: ControlPanelProps) {
   return (
-    <Card className="lg:sticky lg:top-[4.6rem]">
-      <CardHeader className="border-b border-border/70 pb-3">
-        <CardTitle className="flex items-center gap-2 text-sm">
-          <Gauge className="size-4 text-primary" />
-          Configura tu cálculo
-        </CardTitle>
-        <p className="text-[11px] leading-relaxed text-muted-foreground">
-          Ajusta el hogar, el periodo y la forma de medir el costo.
-        </p>
-      </CardHeader>
+    <Card className="lg:sticky lg:top-[5.25rem]">
+      <CardContent className="space-y-5 p-5">
+        <div>
+          <h2 className="text-[15px] font-semibold tracking-tight">Tu cálculo</h2>
+          <p className="mt-0.5 text-[12.5px] text-muted-foreground">
+            Ajusta tu hogar y el periodo.
+          </p>
+        </div>
 
-      <CardContent className="space-y-4 pt-1">
-        <section className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label className="text-xs font-medium">Área de la canasta</Label>
-            <Badge variant="outline" className="text-[10px] text-muted-foreground">
-              CBA
-            </Badge>
-          </div>
+        <section>
+          <Label className="text-[13px] font-medium">Área</Label>
           <RadioGroup
             value={area}
             onValueChange={(value) => onAreaChange(value as Area)}
-            className="grid grid-cols-2 gap-2"
+            className="mt-2 grid grid-cols-2 gap-2"
             aria-label="Área de la canasta básica alimentaria"
           >
             {(["Urbana", "Rural"] as const).map((option) => (
               <label
                 key={option}
-                className="group relative flex cursor-pointer flex-col gap-0.5 rounded-lg border border-border bg-card px-3 py-2.5 transition-colors hover:bg-muted/60 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary/[0.06] has-data-[state=checked]:shadow-[inset_0_0_0_1px_var(--primary)]"
+                className="relative flex cursor-pointer flex-col rounded-lg border border-border bg-card px-3 py-2.5 transition-colors hover:bg-muted/60 has-data-[state=checked]:border-primary has-data-[state=checked]:bg-primary has-data-[state=checked]:text-primary-foreground has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background"
               >
                 <RadioGroupItem
                   value={option}
                   aria-label={`Canasta ${option.toLowerCase()}`}
-                  className="absolute right-2.5 top-2.5"
+                  className="sr-only"
                 />
                 <span className="text-[13px] font-medium leading-tight">
                   {option}
                 </span>
-                <span className="text-[10.5px] leading-tight text-muted-foreground">
+                <span className="mt-0.5 text-[12px] leading-tight opacity-75">
                   {formatNumber(meta.areas[option].referenceKcal)} kcal/día
                 </span>
               </label>
@@ -112,14 +101,19 @@ export function ControlPanel({
           </RadioGroup>
         </section>
 
-        <section className="space-y-2">
-          <div className="flex items-end justify-between">
-            <Label htmlFor="members" className="text-xs font-medium">
+        <section>
+          <div className="flex items-baseline justify-between gap-3">
+            <Label htmlFor="members" className="text-[13px] font-medium">
               Integrantes del hogar
             </Label>
-            <span className="font-mono text-xl font-semibold leading-none tracking-tight tabular-nums">
-              {members}
-            </span>
+            <div className="flex items-baseline gap-1.5">
+              <span className="font-mono text-[22px] font-semibold leading-none tabular-nums">
+                {members}
+              </span>
+              <span className="text-[12px] text-muted-foreground">
+                {members === 1 ? "persona" : "personas"}
+              </span>
+            </div>
           </div>
           <Slider
             id="members"
@@ -129,40 +123,26 @@ export function ControlPanel({
             value={[members]}
             onValueChange={(values) => onMembersChange(values[0] ?? 1)}
             aria-label="Número de integrantes del hogar"
+            className="mt-3 [&_[data-slot=slider-thumb]]:size-5 [&_[data-slot=slider-track]]:h-1.5"
           />
-          <div className="flex justify-between px-0.5 font-mono text-[10px] text-muted-foreground">
-            {Array.from({ length: 8 }, (_, index) => index + 1).map((value) => (
-              <span
-                key={value}
-                className={
-                  value === members
-                    ? "font-semibold text-primary"
-                    : "text-muted-foreground/70"
-                }
-              >
-                {value}
-              </span>
-            ))}
+          <div className="mt-1 flex justify-between text-[12px] text-muted-foreground">
+            <span>1</span>
+            <span>8</span>
           </div>
-          <p className="text-[10.5px] leading-relaxed text-muted-foreground">
-            Hogares de 1 a 8 integrantes. No se ajusta por economías de escala.
-          </p>
         </section>
 
-        <Separator />
-
-        <section className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label className="flex items-center gap-1.5 text-xs font-medium">
+        <section>
+          <div className="flex items-center justify-between gap-2">
+            <Label className="flex items-center gap-1.5 text-[13px] font-medium">
               <CalendarDays className="size-3.5 text-muted-foreground" />
               Periodo
             </Label>
-            <span className="font-mono text-[10px] text-muted-foreground">
-              {formatPeriodShort(`${year}-${String(month).padStart(2, "0")}`)}
+            <span className="text-[11.5px] text-muted-foreground">
+              hasta octubre 2026
             </span>
           </div>
-          <div className="grid grid-cols-[1.35fr_1fr] gap-2">
-            <div className="space-y-1">
+          <div className="mt-2 grid grid-cols-[1.3fr_1fr] gap-2">
+            <div>
               <Label htmlFor="month" className="sr-only">
                 Mes
               </Label>
@@ -170,7 +150,7 @@ export function ControlPanel({
                 value={String(month)}
                 onValueChange={(value) => onMonthChange(Number(value))}
               >
-                <SelectTrigger id="month" className="h-9 w-full text-[13px]">
+                <SelectTrigger id="month" className="h-10 w-full text-[13px]">
                   <SelectValue placeholder="Mes" />
                 </SelectTrigger>
                 <SelectContent>
@@ -189,7 +169,7 @@ export function ControlPanel({
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-1">
+            <div>
               <Label htmlFor="year" className="sr-only">
                 Año
               </Label>
@@ -197,7 +177,7 @@ export function ControlPanel({
                 value={String(year)}
                 onValueChange={(value) => onYearChange(Number(value))}
               >
-                <SelectTrigger id="year" className="h-9 w-full text-[13px]">
+                <SelectTrigger id="year" className="h-10 w-full text-[13px]">
                   <SelectValue placeholder="Año" />
                 </SelectTrigger>
                 <SelectContent>
@@ -210,61 +190,53 @@ export function ControlPanel({
               </Select>
             </div>
           </div>
-          <p className="text-[10.5px] leading-relaxed text-muted-foreground">
-            Disponible de {meta.period.firstLabel} a {meta.period.lastLabel}.
-            Noviembre y diciembre de 2026 aún no se publican.
-          </p>
         </section>
 
-        <Separator />
-
-        <section className="space-y-2">
-          <Label className="flex items-center gap-1.5 text-xs font-medium">
-            <Scale className="size-3.5 text-muted-foreground" />
-            Modo de análisis
-          </Label>
-          <Tabs value={mode} onValueChange={(value) => onModeChange(value as Mode)}>
-            <TabsList className="grid h-9 w-full grid-cols-2">
-              <TabsTrigger value="total" className="text-xs">
-                Costo total
+        <section>
+          <Label className="text-[13px] font-medium">Tipo de costo</Label>
+          <Tabs
+            value={mode}
+            onValueChange={(value) => onModeChange(value as Mode)}
+            className="mt-2"
+          >
+            <TabsList className="grid h-10 w-full grid-cols-2">
+              <TabsTrigger value="total" className="text-[12.5px]">
+                Costo mensual
               </TabsTrigger>
-              <TabsTrigger value="kcal" className="text-xs">
+              <TabsTrigger value="kcal" className="text-[12.5px]">
                 Por 1.000 kcal
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          <p className="text-[10.5px] leading-relaxed text-muted-foreground">
-            {mode === "total"
-              ? "Gasto mensual completo de la canasta para el hogar."
-              : "Costo de 1.000 kcal: mide eficiencia calórica y no depende del tamaño del hogar."}
-          </p>
         </section>
 
-        <section className="space-y-2">
-          <Label htmlFor="variation" className="text-xs font-medium">
+        <section>
+          <Label htmlFor="variation" className="text-[13px] font-medium">
             Variación del IPC
           </Label>
           <Select
             value={variation}
             onValueChange={(value) => onVariationChange(value as VariationType)}
           >
-            <SelectTrigger id="variation" className="h-9 w-full text-[13px]">
+            <SelectTrigger
+              id="variation"
+              className="mt-2 h-10 w-full text-[13px]"
+            >
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="monthly">Mensual (mes anterior)</SelectItem>
+              <SelectItem value="monthly">Mensual</SelectItem>
               <SelectItem value="interannual">Interanual (12 meses)</SelectItem>
             </SelectContent>
           </Select>
 
-          <div className="mt-2 flex items-start justify-between gap-3 rounded-lg border border-dashed border-border bg-muted/40 px-3 py-2.5">
+          <div className="mt-2.5 flex items-start justify-between gap-3 rounded-lg bg-muted/60 px-3 py-2.5">
             <div className="min-w-0">
-              <Label htmlFor="direct" className="text-[11.5px] font-medium">
-                Cálculo directo sin empalme
+              <Label htmlFor="direct" className="text-[13px] font-medium">
+                Calcular sin empalme
               </Label>
-              <p className="mt-0.5 text-[10.5px] leading-snug text-muted-foreground">
-                Modo didáctico: mezcla las bases del IPC para mostrar la
-                distorsión.
+              <p className="mt-0.5 text-[12px] leading-snug text-muted-foreground">
+                Muestra por qué no se mezclan bases del IPC.
               </p>
             </div>
             <Switch
@@ -275,15 +247,18 @@ export function ControlPanel({
             />
           </div>
         </section>
-      </CardContent>
 
-      <CardFooter className="justify-between gap-2 py-2.5 text-[10px] leading-snug text-muted-foreground">
-        <span className="inline-flex items-center gap-1">
-          <House className="size-3" />
-          {meta.daysPerMonth} días por mes
-        </span>
-        <span className="font-mono">INE · {meta.period.count} meses</span>
-      </CardFooter>
+        <div className="border-t border-border/70 pt-4">
+          <button
+            type="button"
+            onClick={onReset}
+            className="inline-flex items-center gap-1.5 text-[12.5px] text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <RotateCcw className="size-3" />
+            Restablecer valores
+          </button>
+        </div>
+      </CardContent>
     </Card>
   );
 }

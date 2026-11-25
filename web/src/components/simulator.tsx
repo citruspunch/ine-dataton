@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { CalendarClock, RotateCcw } from "lucide-react";
 
+import { AboutCba } from "@/components/about-cba";
 import { ControlPanel } from "@/components/control-panel";
-import { GroupChart } from "@/components/group-chart";
+import { GroupBreakdown } from "@/components/group-breakdown";
 import { MethodAlert } from "@/components/method-alert";
 import { MethodologyBreakAlert } from "@/components/methodology-break-alert";
 import { NoticeBanner } from "@/components/notice-banner";
@@ -12,10 +12,7 @@ import { ProductsTable } from "@/components/products-table";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { SummaryCards } from "@/components/summary-cards";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
-  areaSummary,
   availableYears,
   basketData,
   findIpc,
@@ -42,6 +39,7 @@ export function Simulator() {
     DEFAULTS.variation,
   );
   const [direct, setDirect] = React.useState(DEFAULTS.direct);
+  const [resetToken, setResetToken] = React.useState(0);
 
   const meta = basketData.meta;
   const month = React.useMemo(() => findMonth(area, period), [area, period]);
@@ -74,6 +72,7 @@ export function Simulator() {
     setMode(DEFAULTS.mode);
     setVariation(DEFAULTS.variation);
     setDirect(DEFAULTS.direct);
+    setResetToken((current) => current + 1);
   };
 
   const crossBase =
@@ -84,65 +83,36 @@ export function Simulator() {
     <div className="flex min-h-dvh flex-col">
       <SiteHeader />
 
-      <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+      <main className="mx-auto w-full max-w-[1180px] flex-1 px-5 py-5 sm:px-6 lg:px-8">
         <div className="space-y-4">
           <NoticeBanner />
 
-          <div className="grid items-start gap-4 lg:grid-cols-[320px_minmax(0,1fr)] xl:grid-cols-[340px_minmax(0,1fr)]">
-            <ControlPanel
-              area={area}
-              onAreaChange={setArea}
-              members={members}
-              onMembersChange={setMembers}
-              year={year}
-              month={monthNumber}
-              years={years}
-              availableMonths={availableMonths}
-              onYearChange={handleYearChange}
-              onMonthChange={handleMonthChange}
-              mode={mode}
-              onModeChange={setMode}
-              variation={variation}
-              onVariationChange={setVariation}
-              direct={direct}
-              onDirectChange={setDirect}
-              meta={meta}
-            />
+          <div className="grid items-start gap-5 lg:grid-cols-[340px_minmax(0,1fr)]">
+            <div className="space-y-4">
+              <ControlPanel
+                area={area}
+                onAreaChange={setArea}
+                members={members}
+                onMembersChange={setMembers}
+                year={year}
+                month={monthNumber}
+                years={years}
+                availableMonths={availableMonths}
+                onYearChange={handleYearChange}
+                onMonthChange={handleMonthChange}
+                mode={mode}
+                onModeChange={setMode}
+                variation={variation}
+                onVariationChange={setVariation}
+                direct={direct}
+                onDirectChange={setDirect}
+                onReset={handleReset}
+                meta={meta}
+              />
+              <AboutCba />
+            </div>
 
-            <div className="min-w-0 space-y-3.5">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground">
-                  <Badge
-                    variant="outline"
-                    className="border-primary/20 bg-primary/[0.05] text-[10px] font-medium text-primary"
-                  >
-                    CBA {area.toLowerCase()}
-                  </Badge>
-                  <span className="inline-flex items-center gap-1">
-                    <CalendarClock className="size-3" />
-                    {month.label}
-                  </span>
-                  <span className="text-border">·</span>
-                  <span>
-                    {members} {members === 1 ? "integrante" : "integrantes"}
-                  </span>
-                  <span className="text-border">·</span>
-                  <span>
-                    {month.productValues.length} productos ·{" "}
-                    {areaSummary(area).groupCount} grupos
-                  </span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 gap-1 px-2 text-[11px] text-muted-foreground hover:text-foreground"
-                  onClick={handleReset}
-                >
-                  <RotateCcw className="size-3" />
-                  Restablecer
-                </Button>
-              </div>
-
+            <div className="min-w-0 space-y-4">
               <SummaryCards
                 area={area}
                 mode={mode}
@@ -162,7 +132,8 @@ export function Simulator() {
 
               <MethodologyBreakAlert visible={period === meta.period.first} />
 
-              <GroupChart
+              <GroupBreakdown
+                key={`groups-${resetToken}`}
                 area={area}
                 month={month}
                 members={members}
@@ -170,6 +141,7 @@ export function Simulator() {
               />
 
               <ProductsTable
+                key={`products-${resetToken}`}
                 area={area}
                 month={month}
                 members={members}

@@ -152,19 +152,3 @@ export type ProductRow = {
   costPerThousandKcal: number | null;
 };
 
-export type GroupRow = {
-  name: string;
-  shortName: string;
-  costPerPersonDay: number;
-  costHouseholdMonth: number;
-  kcalPerPersonDay: number;
-  costPerThousandKcal: number;
-  sharePct: number;
-};
-
-export type TrendPoint = {
-  period: string;
-  label: string;
-  shortLabel: string;
-  value: number;
-};

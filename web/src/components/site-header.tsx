@@ -1,52 +1,47 @@
 "use client";
 
-import { ChartNoAxesColumnIncreasing } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 
 import { SourcesDialog } from "@/components/sources-dialog";
-import { Badge } from "@/components/ui/badge";
-import { basketData } from "@/lib/data";
-
-function BrandMark() {
-  return (
-    <div
-      aria-hidden
-      className="grid size-10 place-items-center rounded-xl bg-primary shadow-[inset_0_-2px_0_0_rgba(0,0,0,0.12)]"
-    >
-      <ChartNoAxesColumnIncreasing className="size-5 text-white" strokeWidth={2.4} />
-    </div>
-  );
-}
+import { Button } from "@/components/ui/button";
 
 export function SiteHeader() {
-  const meta = basketData.meta;
-
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/90">
-      <div className="h-1 bg-[linear-gradient(90deg,var(--primary)_0%,var(--primary)_62%,var(--chart-2)_62%,var(--chart-2)_100%)]" />
-      <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-x-3.5 gap-y-2 px-4 py-2.5 sm:px-6 lg:px-8">
-        <BrandMark />
-        <div className="mr-auto min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-            Datatón INE 2026 · Datos abiertos
-          </p>
-          <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-            <h1 className="truncate text-[15px] font-semibold leading-tight tracking-tight sm:text-base">
-              Canasta Básica Alimentaria
-            </h1>
-            <span className="hidden text-xs text-muted-foreground sm:inline">
-              Simulador de costo mensual · {meta.period.firstLabel} –{" "}
-              {meta.period.lastLabel}
-            </span>
-          </div>
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur-md">
+      <div className="h-0.5 bg-[linear-gradient(90deg,var(--primary)_0%,var(--primary)_68%,var(--chart-2)_68%,var(--chart-2)_100%)]" />
+      <div className="mx-auto flex max-w-[1180px] items-center gap-3 px-5 py-3 sm:px-6 lg:px-8">
+        <div
+          aria-hidden
+          className="grid size-9 shrink-0 place-items-center rounded-[10px] bg-primary"
+        >
+          <BarChart3 className="size-[18px] text-white" strokeWidth={2.4} />
         </div>
 
-        <Badge
-          variant="outline"
-          className="hidden border-border/80 bg-card text-[10px] font-medium text-muted-foreground md:inline-flex"
-        >
-          CBA urbana y rural · 2024–2026
-        </Badge>
-        <SourcesDialog />
+        <div className="mr-auto min-w-0">
+          <h1 className="truncate text-[16px] font-semibold leading-tight tracking-tight sm:text-[17px]">
+            Canasta Básica Alimentaria
+          </h1>
+          <p className="mt-0.5 truncate text-[12px] leading-tight text-muted-foreground">
+            <span className="sm:hidden">Costo mensual · Guatemala</span>
+            <span className="hidden sm:inline">
+              Simulador de costo mensual · Guatemala
+            </span>
+          </p>
+        </div>
+
+        <SourcesDialog
+          trigger={
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-label="Fuentes y método"
+              className="h-9 gap-2 rounded-lg px-2.5 text-[13px] text-muted-foreground hover:text-foreground sm:px-3"
+            >
+              <span className="hidden sm:inline">Fuentes y método</span>
+              <span className="sm:hidden">Fuentes</span>
+            </Button>
+          }
+        />
       </div>
     </header>
   );

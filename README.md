@@ -10,6 +10,10 @@ verificable de cada archivo.
 
 ![Simulador de la CBA](docs/simulador.png)
 
+<p align="center">
+  <img src="docs/movil.png" alt="Vista móvil del simulador" width="300" />
+</p>
+
 ---
 
 ## 1. Problema y usuarios
@@ -44,17 +48,15 @@ las cifras oficiales del INE.
 - Tarjetas de resumen con el costo mensual del hogar, la variación mensual o
   interanual del IPC —siempre con el empalme oficial— y la cobertura calórica
   diaria (2.052 kcal urbanas, 2.172 kcal rurales por persona).
-- Gráfico de barras por grupo de alimentos y serie de evolución 2024–2026.
-- Tabla ordenable y filtrable de los 66 productos urbanos y 60 rurales, con
-  precio por unidad base, kcal, costo y quetzales por 1.000 kcal.
+- Desglose horizontal del gasto por grupo de alimentos, con los seis grupos
+  principales a la vista y el resto a un clic.
+- Tabla ordenable y filtrable de los 66 productos urbanos y 60 rurales (seis a
+  la vista, con expansión), con precio por unidad base, kcal, costo del hogar y
+  quetzales por 1.000 kcal.
 - **Alerta metodológica** cuando se activa el cálculo directo del IPC y el
   periodo cruza el cambio de base (enero 2025): muestra la cifra oficial
   (+0,50 %) frente a la distorsionada (−0,67 %).
 - Diálogo de **fuentes, metodología y licencias** con la procedencia completa.
-
-| Escritorio | Móvil |
-| :---: | :---: |
-| ![Vista de escritorio](docs/simulador.png) | ![Vista móvil](docs/movil.png) |
 
 ---
 
@@ -288,7 +290,6 @@ licencia en la aplicación (*Fuentes y método*) y en
 | Next.js / React / React DOM | 16.4.6 / 19.3 | MIT |
 | Tailwind CSS | 4.3 | MIT |
 | shadcn/ui, `cn`, Radix UI | 4.23 / 0.5 / 1.8 | MIT |
-| Recharts | 3.8 | MIT |
 | Lucide React | 1.78 | ISC |
 | Geist (tipografía) | — | SIL Open Font License 1.1 |
 | pandas / NumPy | 3.1 / 2.5 | BSD-3-Clause |
