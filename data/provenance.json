@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-11-25T04:49:29Z",
+  "ine_data_bank": "https://datos.ine.gob.gt",
+  "license_status": "Abierta — CKAN CC BY (Creative Commons Attribution)",
+  "files": [
+    {
+      "key": "censo_a1",
+      "filename": "censo-a1.xlsx",
+      "dataset": "Censo 2018 — Lugares poblados",
+      "title": "Cuadro A1 — Población total censada por sexo, grupos quinquenales de edad y área",
+      "year": 2018,
+      "kind": "census",
+      "url": "https://datos.ine.gob.gt/dataset/78019333-d80b-45e8-b694-fb3b8d65e19e/resource/4b9c7220-ca0c-41a9-a121-348f533b070e/download/cuadro-a1-poblacion-total-censada-por-sexo-grupos-quinquenales-de-edad-y-area.xlsx",
+      "page_url": "https://datos.ine.gob.gt/dataset/78019333-d80b-45e8-b694-fb3b8d65e19e",
+      "package_id": "78019333-d80b-45e8-b694-fb3b8d65e19e",
+      "resource_id": "4b9c7220-ca0c-41a9-a121-348f533b070e",
+      "ckan_metadata_modified": "2025-06-11T16:19:42.382242",
+      "license": {
+        "id": "cc-by",
+        "title": "Creative Commons Attribution",
+        "url": "http://www.opendefinition.org/licenses/cc-by",
+        "status": "Abierta (CKAN: CC BY)"
+      },
+      "bytes": 4072815,
+      "sha256": "b4dfbc6a0373373e8f35827ef5a8d5ed07db5d035225a271061b1869769e96d9",
+      "status": "downloaded",
+      "downloaded_at_utc": "2026-11-25T04:48:46Z",
+      "last_verified_utc": "2026-11-25T04:48:46Z",
+      "timestamp_source": "download_log"
+    },
+    {
+      "key": "lugares_poblados",
+      "filename": "lugares-poblados.xlsx",
+      "dataset": "Censo 2018 — Lugares poblados",
+      "title": "Listado de lugares poblados — centroides de la República de Guatemala",
+      "year": 2018,
+      "kind": "places",
+      "url": "https://datos.ine.gob.gt/dataset/78019333-d80b-45e8-b694-fb3b8d65e19e/resource/053dfa99-b3f9-4b1f-a99f-fc933ef00da4/download/centroides-de-lugares-poblados-de-la-republica-de-guatemala.-censo-2018.xlsx",
+      "page_url": "https://datos.ine.gob.gt/dataset/78019333-d80b-45e8-b694-fb3b8d65e19e",
+      "package_id": "78019333-d80b-45e8-b694-fb3b8d65e19e",
+      "resource_id": "053dfa99-b3f9-4b1f-a99f-fc933ef00da4",
+      "ckan_metadata_modified": "2025-06-11T16:19:42.382242",
+      "license": {
+        "id": "cc-by",
+        "title": "Creative Commons Attribution",
+        "url": "http://www.opendefinition.org/licenses/cc-by",
+        "status": "Abierta (CKAN: CC BY)"
+      },
+      "bytes": 1105747,
+      "sha256": "b8ea8fea33e6d606e102e8d96ed692deacec660c028ffcf673f84459bcafe14e",
+      "status": "downloaded",
+      "downloaded_at_utc": "2026-11-25T04:48:47Z",
+      "last_verified_utc": "2026-11-25T04:48:47Z",
+      "timestamp_source": "download_log"
+    },
+    {
+      "key": "dinese_2021",
+      "filename": "dinese-2021.xlsx",
+      "dataset": "Directorio Nacional Estadístico de Empresas (DINESE)",
+      "title": "DINESE 2021 — Empresas 2021",
+      "year": 2021,
+      "kind": "dinese",
+      "url": "https://datos.ine.gob.gt/dataset/794d0a7e-6c2b-4c21-809f-f23b8936407c/resource/d785b230-1933-4fad-9223-cb0d3647ef2e/download/dinese-2021.xlsx",
+      "page_url": "https://datos.ine.gob.gt/dataset/794d0a7e-6c2b-4c21-809f-f23b8936407c",
+      "package_id": "794d0a7e-6c2b-4c21-809f-f23b8936407c",
+      "resource_id": "d785b230-1933-4fad-9223-cb0d3647ef2e",
+      "ckan_metadata_modified": "2026-03-02T15:31:39.575156",
+      "license": {
+        "id": "cc-by",
+        "title": "Creative Commons Attribution",
+        "url": "http://www.opendefinition.org/licenses/cc-by",
+        "status": "Abierta (CKAN: CC BY)"
+      },
+      "bytes": 11322634,
+      "sha256": "17c5f741f456b7a2f7a4cce1993f694ef781542b67824bd3e94ce6399a017b70",
+      "status": "downloaded",
+      "downloaded_at_utc": "2026-11-25T04:49:04Z",
+      "last_verified_utc": "2026-11-25T04:49:04Z",
+      "timestamp_source": "download_log"
+    },
+    {
+      "key": "dinese_2022",
+      "filename": "dinese-2022.xlsx",
+      "dataset": "Directorio Nacional Estadístico de Empresas (DINESE)",
+      "title": "DINESE 2022 — Empresas 2022",
+      "year": 2022,
+      "kind": "dinese",
+      "url": "https://datos.ine.gob.gt/dataset/794d0a7e-6c2b-4c21-809f-f23b8936407c/resource/46d58dea-4529-4486-a5cd-cfc648401b19/download/dinese-2022.xlsx",
+      "page_url": "https://datos.ine.gob.gt/dataset/794d0a7e-6c2b-4c21-809f-f23b8936407c",
+      "package_id": "794d0a7e-6c2b-4c21-809f-f23b8936407c",
+      "resource_id": "46d58dea-4529-4486-a5cd-cfc648401b19",
+      "ckan_metadata_modified": "2026-03-02T15:32:06.499532",
+      "license": {
+        "id": "cc-by",
+        "title": "Creative Commons Attribution",
+        "url": "http://www.opendefinition.org/licenses/cc-by",
+        "status": "Abierta (CKAN: CC BY)"
+      },
+      "bytes": 11091146,
+      "sha256": "1c5ddffc99e7b990161e1230c51bcee365fa3c64d34dd76f1098b16bc35c5abd",
+      "status": "downloaded",
+      "downloaded_at_utc": "2026-11-25T04:49:14Z",
+      "last_verified_utc": "2026-11-25T04:49:14Z",
+      "timestamp_source": "download_log"
+    },
+    {
+      "key": "dinese_2024",
+      "filename": "dinese-2024.xlsx",
+      "dataset": "Directorio Nacional Estadístico de Empresas (DINESE)",
+      "title": "DINESE 2024 — Empresas 2024",
+      "year": 2024,
+      "kind": "dinese",
+      "url": "https://datos.ine.gob.gt/dataset/794d0a7e-6c2b-4c21-809f-f23b8936407c/resource/d6836e3d-c7fe-457b-adbf-26ab462dfb56/download/dinese-2024.xlsx",
+      "page_url": "https://datos.ine.gob.gt/dataset/794d0a7e-6c2b-4c21-809f-f23b8936407c",
+      "package_id": "794d0a7e-6c2b-4c21-809f-f23b8936407c",
+      "resource_id": "d6836e3d-c7fe-457b-adbf-26ab462dfb56",
+      "ckan_metadata_modified": "2026-03-02T15:33:24.480967",
+      "license": {
+        "id": "cc-by",
+        "title": "Creative Commons Attribution",
+        "url": "http://www.opendefinition.org/licenses/cc-by",
+        "status": "Abierta (CKAN: CC BY)"
+      },
+      "bytes": 22072728,
+      "sha256": "7da9cbee0e64004d5869215c73ac0b14e0e3758b2577d7294b8f2906d523a04f",
+      "status": "downloaded",
+      "downloaded_at_utc": "2026-11-25T04:49:29Z",
+      "last_verified_utc": "2026-11-25T04:49:29Z",
+      "timestamp_source": "download_log"
+    }
+  ],
+  "downloads": [
+    {
+      "key": "censo_a1",
+      "url": "https://datos.ine.gob.gt/dataset/78019333-d80b-45e8-b694-fb3b8d65e19e/resource/4b9c7220-ca0c-41a9-a121-348f533b070e/download/cuadro-a1-poblacion-total-censada-por-sexo-grupos-quinquenales-de-edad-y-area.xlsx",
+      "downloaded_at_utc": "2026-11-25T04:48:46Z",
+      "sha256": "b4dfbc6a0373373e8f35827ef5a8d5ed07db5d035225a271061b1869769e96d9",
+      "bytes": 4072815,
+      "filename": "censo-a1.xlsx"
+    },
+    {
+      "key": "lugares_poblados",
+      "url": "https://datos.ine.gob.gt/dataset/78019333-d80b-45e8-b694-fb3b8d65e19e/resource/053dfa99-b3f9-4b1f-a99f-fc933ef00da4/download/centroides-de-lugares-poblados-de-la-republica-de-guatemala.-censo-2018.xlsx",
+      "downloaded_at_utc": "2026-11-25T04:48:47Z",
+      "sha256": "b8ea8fea33e6d606e102e8d96ed692deacec660c028ffcf673f84459bcafe14e",
+      "bytes": 1105747,
+      "filename": "lugares-poblados.xlsx"
+    },
+    {
+      "key": "dinese_2021",
+      "url": "https://datos.ine.gob.gt/dataset/794d0a7e-6c2b-4c21-809f-f23b8936407c/resource/d785b230-1933-4fad-9223-cb0d3647ef2e/download/dinese-2021.xlsx",
+      "downloaded_at_utc": "2026-11-25T04:49:04Z",
+      "sha256": "17c5f741f456b7a2f7a4cce1993f694ef781542b67824bd3e94ce6399a017b70",
+      "bytes": 11322634,
+      "filename": "dinese-2021.xlsx"
+    },
+    {
+      "key": "dinese_2022",
+      "url": "https://datos.ine.gob.gt/dataset/794d0a7e-6c2b-4c21-809f-f23b8936407c/resource/46d58dea-4529-4486-a5cd-cfc648401b19/download/dinese-2022.xlsx",
+      "downloaded_at_utc": "2026-11-25T04:49:14Z",
+      "sha256": "1c5ddffc99e7b990161e1230c51bcee365fa3c64d34dd76f1098b16bc35c5abd",
+      "bytes": 11091146,
+      "filename": "dinese-2022.xlsx"
+    },
+    {
+      "key": "dinese_2024",
+      "url": "https://datos.ine.gob.gt/dataset/794d0a7e-6c2b-4c21-809f-f23b8936407c/resource/d6836e3d-c7fe-457b-adbf-26ab462dfb56/download/dinese-2024.xlsx",
+      "downloaded_at_utc": "2026-11-25T04:49:29Z",
+      "sha256": "7da9cbee0e64004d5869215c73ac0b14e0e3758b2577d7294b8f2906d523a04f",
+      "bytes": 22072728,
+      "filename": "dinese-2024.xlsx"
+    }
+  ],
+  "notes": [
+    "Los archivos existentes se reutilizan sin red; solo se descargan los ausentes.",
+    "Cada descarga registra URL exacta, fecha UTC y SHA-256.",
+    "Si el archivo local no tiene registro previo, la fecha proviene del mtime del archivo."
+  ]
+}

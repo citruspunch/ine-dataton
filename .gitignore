@@ -49,3 +49,13 @@ next-env.d.ts
 
 # Descubrimiento INE (datos crudos, temporales)
 /discovery_ine/
+
+# Datos crudos del INE (se descargan con `uv run municipal-profile fetch`)
+/data/raw/
+
+# Python
+/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
