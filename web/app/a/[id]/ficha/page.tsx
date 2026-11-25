@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, DownloadSimple } from "@phosphor-icons/react/dist/ssr";
@@ -71,12 +70,12 @@ export default async function FichaPage({ params }: PageProps) {
           </p>
         </div>
         <div className="text-right text-[11.5px] text-muted">
-          <Image
-            src="/ine-logo.png"
+          <img
+            src="/ine-logo-vertical.svg"
             alt="Instituto Nacional de Estadística"
-            width={7026}
-            height={2273}
-            className="ml-auto h-8 w-auto"
+            width={1247}
+            height={866}
+            className="ml-auto h-20 w-auto"
           />
           <p className="mt-2 font-mono">{aggregate.case_id}</p>
           <p className="font-mono">snapshot {String(technical?.snapshot_id ?? "—")}</p>
@@ -218,13 +217,13 @@ export default async function FichaPage({ params }: PageProps) {
       <div className="grid gap-8 pt-6 sm:grid-cols-2">
         <div>
           <p className="mb-8 text-[12.5px] text-muted">Revisado por (publicaciones)</p>
-          <div className="border-t border-[#8a97a8] pt-1 text-[11.5px] text-muted">
+          <div className="border-t border-[#999999] pt-1 text-[11.5px] text-muted">
             Nombre y firma
           </div>
         </div>
         <div>
           <p className="mb-8 text-[12.5px] text-muted">Aprobado por (producción)</p>
-          <div className="border-t border-[#8a97a8] pt-1 text-[11.5px] text-muted">
+          <div className="border-t border-[#999999] pt-1 text-[11.5px] text-muted">
             Nombre y firma
           </div>
         </div>

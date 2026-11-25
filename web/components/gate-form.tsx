@@ -58,7 +58,7 @@ export function GateForm({
   return (
     <div className="space-y-4">
       {blocked ? (
-        <div className="rounded-lg border border-[#e7bdb9] bg-fail-bg px-4 py-3 text-[13px] text-fail">
+        <div className="rounded-lg border border-[#ffb699] bg-fail-bg px-4 py-3 text-[13px] text-fail">
           <p className="flex items-center gap-1.5 font-semibold">
             <WarningCircle className="h-4 w-4" aria-hidden />
             No habilitable todavía
@@ -89,7 +89,7 @@ export function GateForm({
             {warnings.map((warning) => (
               <div
                 key={warning.rule_id}
-                className="rounded-lg border border-[#ecd3a1] bg-[#fffaf0] p-3"
+                className="rounded-lg border border-[#ffe28a] bg-[#fff9e6] p-3"
               >
                 <p className="mb-1 flex flex-wrap items-center gap-2 text-[11.5px] text-warn">
                   <span className="font-mono">{warning.rule_id}</span>
@@ -198,8 +198,8 @@ export function GateForm({
             className={cn(
               "rounded-md border px-3 py-2 text-[13px]",
               state.ok
-                ? "border-[#b9dcc7] bg-ok-bg text-ok"
-                : "border-[#e7bdb9] bg-fail-bg text-fail",
+                ? "border-[#c9e68a] bg-ok-bg text-ok"
+                : "border-[#ffb699] bg-fail-bg text-fail",
             )}
           >
             {state.message}

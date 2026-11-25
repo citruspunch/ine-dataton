@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 import { cn } from "@/lib/utils";
 
@@ -16,15 +16,18 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur print:hidden">
-      <div className="h-1 w-full bg-gradient-to-r from-brand via-accent to-brand" />
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-5 py-3 sm:px-6">
+      <div className="flex h-1 w-full" aria-hidden>
+        <span className="h-full w-[45%] bg-accent" />
+        <span className="h-full w-[35%] bg-brand" />
+        <span className="h-full w-[20%] bg-orange" />
+      </div>
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4 sm:px-6">
         <Link href="/" className="flex items-center gap-3" aria-label="INE Data Trust, inicio">
-          <Image
-            src="/ine-logo.png"
+          <img
+            src="/ine-logo-horizontal.svg"
             alt="Instituto Nacional de Estadística"
-            width={7026}
-            height={2273}
-            priority
+            width={1686}
+            height={545}
             className="h-10 w-auto sm:h-11"
           />
           <span className="hidden border-l border-line pl-3 sm:block">
@@ -67,9 +70,7 @@ export function SiteHeader() {
             className="ml-1 hidden items-center gap-1 rounded-md px-3 py-2 text-[13.5px] font-semibold text-muted transition-colors hover:bg-brand-soft hover:text-brand md:inline-flex"
           >
             ine.gob.gt
-            <span aria-hidden className="text-[11px]">
-              ↗
-            </span>
+            <ArrowUpRight className="h-3 w-3" aria-hidden />
           </a>
         </nav>
       </div>

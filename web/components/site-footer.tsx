@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 export function SiteFooter() {
   return (
@@ -7,12 +7,12 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] sm:px-6">
         <div>
           <div className="flex items-center gap-3">
-            <Image
-              src="/ine-logo.png"
+            <img
+              src="/ine-isologo.svg"
               alt=""
-              width={7026}
-              height={2273}
-              className="h-8 w-auto opacity-90"
+              width={540}
+              height={540}
+              className="h-9 w-9"
             />
             <span className="text-[12px] font-bold uppercase tracking-[0.16em] text-brand">
               Data Trust
@@ -40,7 +40,8 @@ export function SiteFooter() {
                 rel="noreferrer"
                 className="hover:text-brand hover:underline"
               >
-                Instituto Nacional de Estadística ↗
+                Instituto Nacional de Estadística
+                <ArrowUpRight className="ml-1 inline h-3 w-3" aria-hidden />
               </a>
             </li>
             <li>
@@ -50,7 +51,8 @@ export function SiteFooter() {
                 rel="noreferrer"
                 className="hover:text-brand hover:underline"
               >
-                Portal de datos abiertos ↗
+                Portal de datos abiertos
+                <ArrowUpRight className="ml-1 inline h-3 w-3" aria-hidden />
               </a>
             </li>
             <li>

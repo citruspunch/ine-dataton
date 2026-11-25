@@ -241,7 +241,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                   return (
                     <div
                       key={comparison.comparison_id}
-                      className="rounded-lg border border-line bg-[#fbfcfe] p-4"
+                      className="rounded-lg border border-line bg-[#fafafa] p-4"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div>

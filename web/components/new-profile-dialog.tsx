@@ -568,7 +568,7 @@ export function NewProfileDialog() {
                 {draft.columns.map((column) => (
                   <div
                     key={column.uid}
-                    className="grid gap-2 rounded-lg border border-line bg-[#fbfcfe] p-3 sm:grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] sm:items-center sm:border-0 sm:bg-transparent sm:p-0"
+                    className="grid gap-2 rounded-lg border border-line bg-[#fafafa] p-3 sm:grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] sm:items-center sm:border-0 sm:bg-transparent sm:p-0"
                   >
                     <Input
                       value={column.name}
@@ -765,7 +765,7 @@ export function NewProfileDialog() {
                 {draft.series.map((series, index) => (
                   <div
                     key={series.uid}
-                    className="space-y-3 rounded-lg border border-line bg-[#fbfcfe] p-4"
+                    className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
                   >
                     <div className="flex items-center justify-between">
                       <p className="text-[12px] font-semibold text-muted">Serie {index + 1}</p>
@@ -898,7 +898,7 @@ export function NewProfileDialog() {
                 {draft.checks.map((check, index) => (
                   <div
                     key={check.uid}
-                    className="space-y-3 rounded-lg border border-line bg-[#fbfcfe] p-4"
+                    className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
                   >
                     <div className="flex items-center justify-between">
                       <p className="text-[12px] font-semibold text-muted">
@@ -1048,18 +1048,18 @@ export function NewProfileDialog() {
               </div>
             </Section>
 
-            <details className="rounded-lg border border-line bg-[#fbfcfe] px-4 py-3">
+            <details className="rounded-lg border border-line bg-[#fafafa] px-4 py-3">
               <summary className="flex cursor-pointer list-none items-center gap-2 text-[13px] font-semibold text-brand">
                 <BracketsCurly className="h-4 w-4" aria-hidden />
                 Vista previa del YAML generado
               </summary>
-              <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-md bg-[#0e1b2c] p-3 font-mono text-[11.5px] leading-relaxed text-[#dbe7f5]">
+              <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-md bg-[#1a1a1a] p-3 font-mono text-[11.5px] leading-relaxed text-[#f0f0f0]">
                 {yaml}
               </pre>
             </details>
           </div>
 
-          <div className="space-y-3 border-t border-line bg-[#fbfcfe] px-6 py-4">
+          <div className="space-y-3 border-t border-line bg-[#fafafa] px-6 py-4">
             {localProblems.length ? (
               <AlertList title="Revise el formulario" items={localProblems} />
             ) : null}
@@ -1289,7 +1289,7 @@ function PeriodsInput({
 
 function AlertList({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="rounded-md border border-[#e7bdb9] bg-fail-bg px-3 py-2 text-[12.5px] text-fail">
+    <div className="rounded-md border border-[#ffb699] bg-fail-bg px-3 py-2 text-[12.5px] text-fail">
       <p className="flex items-center gap-1.5 font-semibold">
         <WarningCircle className="h-3.5 w-3.5" aria-hidden />
         {title}

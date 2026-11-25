@@ -3,7 +3,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const fieldClass =
-  "flex w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink shadow-[0_1px_1px_rgba(16,32,52,.03)] transition-colors placeholder:text-muted/70 hover:border-[#b9c8da] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25 disabled:cursor-not-allowed disabled:bg-surface";
+  "flex w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink shadow-[0_1px_1px_rgba(16,32,52,.03)] transition-colors placeholder:text-muted/70 hover:border-[#bfbfbf] focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25 disabled:cursor-not-allowed disabled:bg-surface";
 
 export function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn(fieldClass, "h-10", className)} {...props} />;

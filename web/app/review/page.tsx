@@ -142,7 +142,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                 motor.
               </p>
             ) : null}
-            <div className="border-t border-line bg-[#fbfcfe] px-5 py-4">
+            <div className="border-t border-line bg-[#fafafa] px-5 py-4">
               <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted">
                 Flujo de revisión
               </p>
@@ -175,7 +175,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                 <li key={row.id}>
                   <Link
                     href={`/review/${row.id}`}
-                    className="block rounded-xl border border-line bg-white p-4 shadow-[0_1px_2px_rgba(16,32,52,.04)] transition-colors hover:border-[#b9c8da]"
+                    className="block rounded-xl border border-line bg-white p-4 shadow-[0_1px_2px_rgba(16,32,52,.04)] transition-colors hover:border-[#bfbfbf]"
                   >
                     <div className="flex flex-wrap items-center gap-2">
                       <StateBadge state={row.state} text={row.state_text} />

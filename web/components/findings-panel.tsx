@@ -40,7 +40,7 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
               "rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition-colors",
               filter === item.value
                 ? "border-brand bg-brand text-white"
-                : "border-line bg-white text-muted hover:border-[#b9c8da] hover:text-brand",
+                : "border-line bg-white text-muted hover:border-[#bfbfbf] hover:text-brand",
             )}
           >
             {item.label}
@@ -61,7 +61,7 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
           {visible.map((finding) => (
             <li key={finding.rule_id}>
               <details className="group">
-                <summary className="flex cursor-pointer list-none flex-wrap items-start gap-3 px-4 py-3 transition-colors hover:bg-[#f8fbfe]">
+                <summary className="flex cursor-pointer list-none flex-wrap items-start gap-3 px-4 py-3 transition-colors hover:bg-[#f7f7f7]">
                   <div className="flex min-w-0 flex-1 items-start gap-3">
                     <span className="mt-0.5 shrink-0">
                       <SeverityBadge status={finding.status} />
@@ -86,7 +86,7 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
                     aria-hidden
                   />
                 </summary>
-                <div className="border-t border-line bg-[#fbfcfe] px-4 py-3">
+                <div className="border-t border-line bg-[#fafafa] px-4 py-3">
                   <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-muted">
                     Evidencia
                   </p>

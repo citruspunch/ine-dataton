@@ -149,7 +149,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
                 <CardContent className="p-0">
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-[13px]">
-                      <thead className="border-b border-line bg-[#f6f9fc] text-[10.5px] uppercase tracking-[0.1em] text-muted">
+                      <thead className="border-b border-line bg-[#f2f2f2] text-[10.5px] uppercase tracking-[0.1em] text-muted">
                         <tr>
                           <th className="px-5 py-2 font-bold">Periodo</th>
                           <th className="px-5 py-2 text-right font-bold">Índice</th>
@@ -163,7 +163,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
                       </thead>
                       <tbody className="divide-y divide-line">
                         {item.points.map((point) => (
-                          <tr key={point.period} className="hover:bg-[#f8fbfe]">
+                          <tr key={point.period} className="hover:bg-[#f7f7f7]">
                             <td className="px-5 py-2 font-mono text-[12px]">{point.period}</td>
                             <td className="px-5 py-2 text-right font-semibold tabular-nums">
                               {formatNumber(point.value)}

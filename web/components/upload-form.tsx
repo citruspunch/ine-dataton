@@ -105,7 +105,7 @@ export function UploadForm({ profiles }: { profiles: ProfileSummary[] }) {
             "flex cursor-pointer items-center gap-3 rounded-lg border border-dashed px-4 py-5 transition-colors",
             dragging
               ? "border-accent bg-accent-soft"
-              : "border-[#c9d6e6] bg-[#fbfdff] hover:border-accent hover:bg-accent-soft/40",
+              : "border-[#c7c7c7] bg-[#fafafa] hover:border-accent hover:bg-accent-soft/40",
           )}
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-brand shadow-sm">
@@ -209,7 +209,7 @@ export function UploadForm({ profiles }: { profiles: ProfileSummary[] }) {
       </div>
 
       {error ? (
-        <p className="rounded-md border border-[#e7bdb9] bg-fail-bg px-3 py-2 text-[13px] text-fail">
+        <p className="rounded-md border border-[#ffb699] bg-fail-bg px-3 py-2 text-[13px] text-fail">
           {error}
         </p>
       ) : null}

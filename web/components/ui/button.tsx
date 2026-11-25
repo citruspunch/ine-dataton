@@ -11,12 +11,12 @@ const buttonVariants = cva(
         default:
           "bg-brand text-white shadow-sm hover:bg-brand-dark active:translate-y-px",
         accent:
-          "bg-accent text-white shadow-sm hover:bg-[#006fdd] active:translate-y-px",
+          "bg-[#0068d6] text-white shadow-sm hover:bg-[#0057b3] active:translate-y-px",
         secondary:
-          "border border-line bg-white text-ink shadow-[0_1px_1px_rgba(16,32,52,.04)] hover:border-[#b9c8da] hover:bg-surface",
+          "border border-line bg-white text-ink shadow-[0_1px_1px_rgba(16,32,52,.04)] hover:border-[#bfbfbf] hover:bg-surface",
         outline: "border border-brand/40 bg-transparent text-brand hover:bg-brand-soft",
         ghost: "text-brand hover:bg-brand-soft",
-        danger: "bg-fail text-white shadow-sm hover:bg-[#701713]",
+        danger: "bg-fail text-white shadow-sm hover:bg-[#662000]",
       },
       size: {
         default: "h-10 px-4 py-2",

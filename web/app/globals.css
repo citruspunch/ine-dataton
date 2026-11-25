@@ -1,33 +1,38 @@
 @import "tailwindcss";
 
 @theme {
-  /* Palette taken from the official INE imagotype: #004080 and #0080FF. */
-  --color-ink: #0e1b2c;
-  --color-muted: #57677d;
-  --color-line: #dbe4ef;
-  --color-surface: #f4f7fb;
+  /* Official Datatón 2026 palette, taken from the INE design kit. */
+  --color-ink: #1a1a1a;
+  --color-muted: #4d4d4d;
+  --color-line: #d9d9d9;
+  --color-surface: #f5f5f5;
   --color-card: #ffffff;
   --color-brand: #004080;
-  --color-brand-dark: #00305f;
-  --color-brand-soft: #eaf2fb;
+  --color-brand-dark: #002b56;
+  --color-brand-soft: #e6f2ff;
   --color-accent: #0080ff;
-  --color-accent-soft: #e6f2ff;
+  --color-accent-soft: #e5f2ff;
 
-  --color-ok: #14603a;
-  --color-ok-bg: #e5f4eb;
-  --color-warn: #7a4d00;
-  --color-warn-bg: #fdf1d6;
-  --color-fail: #8c211c;
-  --color-fail-bg: #fbe8e6;
-  --color-none: #4a5566;
-  --color-none-bg: #edf0f4;
-  --color-syn: #4d2f7a;
-  --color-syn-bg: #f0e8fb;
+  /* Secondary tones: naranja, verde, lila y amarillo. */
+  --color-orange: #ff5500;
+  --color-lime: #9dd926;
+  --color-lilac: #a97eff;
+  --color-yellow: #ffd500;
+
+  --color-ok: #3f560f;
+  --color-ok-bg: #eef7d6;
+  --color-warn: #6b4a00;
+  --color-warn-bg: #fff4cc;
+  --color-fail: #802b00;
+  --color-fail-bg: #ffe4d9;
+  --color-none: #4d4d4d;
+  --color-none-bg: #ededed;
+  --color-syn: #6633cc;
+  --color-syn-bg: #efe8ff;
 
   --font-sans: var(--font-ubuntu-sans), "Ubuntu Sans", ui-sans-serif, system-ui,
     -apple-system, "Segoe UI", sans-serif;
-  --font-mono: var(--font-ubuntu-mono), "Ubuntu Sans Mono", ui-monospace,
-    SFMono-Regular, Menlo, monospace;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 @layer base {
@@ -45,7 +50,7 @@
     text-rendering: optimizeLegibility;
   }
   ::selection {
-    background: #cfe4ff;
+    background: #cce6ff;
   }
   :focus-visible {
     outline: 2px solid var(--color-accent);

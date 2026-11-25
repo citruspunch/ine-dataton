@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
-import { Ubuntu_Sans, Ubuntu_Sans_Mono } from "next/font/google";
+import localFont from "next/font/local";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 import "./globals.css";
 
-const sans = Ubuntu_Sans({
-  subsets: ["latin"],
+// Official Ubuntu Sans variable font shipped in the Datatón design kit.
+const sans = localFont({
+  src: "./fonts/UbuntuSans-Variable.woff2",
   variable: "--font-ubuntu-sans",
   display: "swap",
-});
-
-const mono = Ubuntu_Sans_Mono({
-  subsets: ["latin"],
-  variable: "--font-ubuntu-mono",
-  display: "swap",
+  weight: "100 800",
+  style: "normal",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="es" className={sans.variable}>
       <body className="flex min-h-screen flex-col">
         <a
           href="#contenido"

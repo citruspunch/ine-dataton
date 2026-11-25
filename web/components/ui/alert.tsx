@@ -7,9 +7,9 @@ const alertVariants = cva("flex gap-3 rounded-lg border px-4 py-3 text-sm", {
   variants: {
     variant: {
       info: "border-line bg-white text-ink",
-      ok: "border-[#b9dcc7] bg-ok-bg text-ok",
-      warn: "border-[#ecd3a1] bg-warn-bg text-warn",
-      fail: "border-[#e7bdb9] bg-fail-bg text-fail",
+      ok: "border-[#c9e68a] bg-ok-bg text-ok",
+      warn: "border-[#ffe28a] bg-warn-bg text-warn",
+      fail: "border-[#ffb699] bg-fail-bg text-fail",
     },
   },
   defaultVariants: { variant: "info" },

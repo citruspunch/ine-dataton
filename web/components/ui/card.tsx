@@ -35,6 +35,6 @@ export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDi
 
 export function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("border-t border-line bg-[#fbfcfe] px-5 py-3", className)} {...props} />
+    <div className={cn("border-t border-line bg-[#fafafa] px-5 py-3", className)} {...props} />
   );
 }

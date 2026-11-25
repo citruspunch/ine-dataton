@@ -167,6 +167,28 @@ Reglas versionadas en `rules/rules.json`: `SNAP-01` integridad, `LIC-01` licenci
 Estados: `borrador`, `no_habilitado`, `en_revision`,
 `habilitado_para_consulta`, `cerrado`. No existe “aprobado por el INE”.
 
+### Identidad visual
+
+La interfaz implementa la *Guía de diseño gráfico para Datatón* (INE, noviembre
+2026):
+
+- **Logotipo.** Versiones vectoriales oficiales en `web/public/`: horizontal
+  (`ine-logo-horizontal.svg`) en la cabecera; vertical
+  (`ine-logo-vertical.svg`) en la ficha técnica; isologo (`ine-isologo.svg`)
+  en el pie y el favicon. El isologo negativo
+  (`ine-isologo-negative.svg`) se usa en blanco sobre azul oscuro en la
+  portada. No hay efectos, recortes, recolores ni deformación.
+- **Tonos principales.** Azul radiante `#0080FF`, azul oscuro `#004080` y
+  blanco. La cinta superior retoma la secuencia azul / azul oscuro / naranja de
+  la portada del manual.
+- **Tonos secundarios.** Naranja `#FF5500`, verde lima `#9DD926`, lila
+  `#A97EFF` y amarillo `#FFD500` para estados, acentos y fondos suaves.
+- **Tipografía.** Ubuntu Sans variable, incluida en el kit y servida localmente
+  desde `web/app/fonts/` (subconjunto latino en WOFF2, licencia UFL).
+- **Fondos.** Blanco para tarjetas y superficies de contenido; gris claro
+  `#F5F5F5` para el lienzo; el logotipo nunca se coloca sobre azul, fotografía
+  o fondos con textura.
+
 ## 7. Servidor MCP (P1)
 
 Componente opcional de solo lectura sobre `stores/public_snapshot/`. Sin LLM, sin

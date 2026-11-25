@@ -34,41 +34,62 @@ export default async function PublicIndexPage() {
 
   return (
     <div className="space-y-10">
-      <section className="hairline-grid relative overflow-hidden rounded-2xl border border-line bg-white">
-        <div className="relative z-10 max-w-3xl px-6 py-10 sm:px-10 sm:py-12">
-          <p className="eyebrow">Consulta pública</p>
-          <h1 className="mt-3 text-3xl font-semibold leading-[1.15] tracking-tight text-ink sm:text-[38px]">
-            Agregados estadísticos con trazabilidad verificable
-          </h1>
-          <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted">
-            Cifras publicadas por el INE que ya pasaron las reglas críticas, tienen una
-            licencia verificada y cuentan con una decisión humana registrada. Cada
-            respuesta muestra su origen, su base y su huella de validación.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Badge variant="info" className="font-mono">
-              snapshot {snapshot?.snapshot_id ?? "no disponible"}
-            </Badge>
-            <span className="text-[13px] text-muted">
-              {aggregates.length}{" "}
-              {aggregates.length === 1 ? "agregado habilitado" : "agregados habilitados"}
-            </span>
-            <Link
-              href="/review"
-              className={buttonVariants({ variant: "secondary", size: "sm" })}
-            >
-              <LockKey className="h-3.5 w-3.5" aria-hidden />
-              Revisión técnica
-            </Link>
+      <section className="overflow-hidden rounded-2xl border border-line bg-white">
+        <div className="grid md:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+          <div className="hairline-grid px-6 py-10 sm:px-10 sm:py-12">
+            <p className="eyebrow">Consulta pública</p>
+            <h1 className="mt-3 max-w-2xl text-3xl font-semibold leading-[1.15] tracking-tight text-ink sm:text-[38px]">
+              Agregados estadísticos con trazabilidad verificable
+            </h1>
+            <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted">
+              Cifras publicadas por el INE que ya pasaron las reglas críticas, tienen una
+              licencia verificada y cuentan con una decisión humana registrada. Cada
+              respuesta muestra su origen, su base y su huella de validación.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <Badge variant="info" className="font-mono">
+                snapshot {snapshot?.snapshot_id ?? "no disponible"}
+              </Badge>
+              <span className="text-[13px] text-muted">
+                {aggregates.length}{" "}
+                {aggregates.length === 1 ? "agregado habilitado" : "agregados habilitados"}
+              </span>
+              <Link
+                href="/review"
+                className={buttonVariants({ variant: "secondary", size: "sm" })}
+              >
+                <LockKey className="h-3.5 w-3.5" aria-hidden />
+                Revisión técnica
+              </Link>
+            </div>
           </div>
-        </div>
-        <div
-          aria-hidden
-          className="pointer-events-none absolute bottom-8 right-8 hidden h-[58%] w-48 items-end gap-2 opacity-[0.14] sm:flex"
-        >
-          <div className="h-1/3 flex-1 rounded-t-sm bg-accent" />
-          <div className="h-2/3 flex-1 rounded-t-sm bg-accent" />
-          <div className="h-full flex-1 rounded-t-sm bg-brand" />
+
+          <div className="hidden flex-col justify-between gap-10 bg-brand p-8 text-white md:flex">
+            <img
+              src="/ine-isologo-negative.svg"
+              alt=""
+              width={540}
+              height={540}
+              aria-hidden
+              className="h-20 w-20"
+            />
+            <div className="space-y-2">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/85">
+                Datos con trazabilidad
+              </p>
+              <p className="text-[16px] font-semibold leading-snug">
+                Cada cifra conserva su fuente, su base y la decisión que la habilitó.
+              </p>
+              <p className="text-[12.5px] leading-relaxed text-white/80">
+                Instituto Nacional de Estadística · Guatemala
+              </p>
+            </div>
+            <div className="flex items-center gap-2" aria-hidden>
+              <span className="h-1.5 w-12 rounded-full bg-white" />
+              <span className="h-1.5 w-8 rounded-full bg-white/70" />
+              <span className="h-1.5 w-5 rounded-full bg-orange" />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -97,7 +118,7 @@ export default async function PublicIndexPage() {
           <ul className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
             {aggregates.map((aggregate) => (
               <li key={aggregate.case_id}>
-                <div className="flex flex-col gap-4 px-5 py-4 transition-colors hover:bg-[#f8fbfe] sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-4 px-5 py-4 transition-colors hover:bg-[#f7f7f7] sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <Link

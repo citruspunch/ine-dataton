@@ -15,7 +15,7 @@ const badgeVariants = cva(
         none: "bg-none-bg text-none",
         syn: "bg-syn-bg text-syn",
         info: "bg-brand-soft text-brand",
-        accent: "bg-accent-soft text-[#0059b3]",
+        accent: "bg-accent-soft text-[#004080]",
         outline: "border border-line bg-white text-muted",
       },
     },
