@@ -1,0 +1,105 @@
+{
+  "case_id": "dup_identidad_excepcion",
+  "comparisons": [],
+  "coverage": {
+    "by_status": {
+      "advertencia": 1
+    },
+    "complete": true,
+    "critical_evaluated": 1,
+    "critical_not_evaluated": 0,
+    "critical_total": 1,
+    "rules_total": 1
+  },
+  "digest": "f9e4919c9932f960f57bbf6570e3dafa1d85c942ad314397fc26e712d46a144e",
+  "entity": {
+    "display": {
+      "base": "no aplica",
+      "period": "no aplica",
+      "unit": "no aplica"
+    },
+    "kind": "par de recursos",
+    "label": "Mismo par de bytes con política de reutilización documentada",
+    "license": {
+      "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+      "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista.",
+      "id": "interno-fixture",
+      "verified": true
+    },
+    "profile": "identidad_recursos_v1@2.0.0",
+    "resources": [
+      {
+        "identity": {
+          "base": null,
+          "dataset": "Divorcios (sintético)",
+          "grain": "anio-mes",
+          "period": "2024",
+          "title": "Eventos vitales, serie A",
+          "unit": "registro"
+        },
+        "manifest_item": "fix-identidad-a"
+      },
+      {
+        "identity": {
+          "base": null,
+          "dataset": "Matrimonios (sintético)",
+          "grain": "anio-mes",
+          "period": "2024",
+          "title": "Eventos vitales, serie B",
+          "unit": "registro"
+        },
+        "manifest_item": "fix-identidad-b"
+      }
+    ],
+    "same_bytes": true,
+    "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6",
+    "topic": "identidad"
+  },
+  "findings": [
+    {
+      "critical": true,
+      "evidence": {
+        "identities": [
+          {
+            "base": null,
+            "dataset": "Divorcios (sintético)",
+            "grain": "anio-mes",
+            "period": "2024",
+            "title": "Eventos vitales, serie A",
+            "unit": "registro"
+          },
+          {
+            "base": null,
+            "dataset": "Matrimonios (sintético)",
+            "grain": "anio-mes",
+            "period": "2024",
+            "title": "Eventos vitales, serie B",
+            "unit": "registro"
+          }
+        ],
+        "mismatched_fields": [
+          "dataset",
+          "title"
+        ],
+        "policy": {
+          "date": "2026-11-24",
+          "gate": "requiere visto bueno humano registrado en la bitácora local",
+          "owner": "Revisor de publicaciones (rol del prototipo)",
+          "policy": "POL-DUP-2026-01",
+          "reason": "El mismo archivo se reutiliza de forma intencional como plantilla de dos series de eventos vitales. La reutilización no se publica y queda sujeta al gate humano."
+        },
+        "sha256": "dd562c57e31bf14d5a51b54e78e7655f8650414930829efd148142ca2d4a25f6"
+      },
+      "justified": true,
+      "message": "Mismos bytes con identidad distinta, cubierto por una política de reutilización documentada.",
+      "rule_id": "ID-01",
+      "status": "advertencia",
+      "title": "Identidad por SHA-256"
+    }
+  ],
+  "label": "Mismo par de bytes con política de reutilización documentada",
+  "notice": "Validación técnica del prototipo. No certifica, no corrige, no publica en CKAN y no constituye aprobación del INE.",
+  "published_at_utc": "2026-11-25T00:15:28Z",
+  "state": "habilitado_para_consulta",
+  "state_text": "Habilitado para consulta en el prototipo"
+}

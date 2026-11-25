@@ -1,0 +1,162 @@
+{
+  "decision_log": null,
+  "generated_at_utc": "2026-11-25T00:15:27Z",
+  "receipt_id": "rec-snap-2026-11-23-csv_grano_duplicado",
+  "technical_payload": {
+    "base": "2025=100 (serie sintética, no es una base oficial)",
+    "comparisons": [],
+    "coverage": {
+      "by_status": {
+        "falla": 1,
+        "ok": 6
+      },
+      "complete": true,
+      "critical_evaluated": 7,
+      "critical_not_evaluated": 0,
+      "critical_total": 7,
+      "rules_total": 7
+    },
+    "digest": "3a9fcd30b523ced45ee12a86330f7285bf1be3daa3359e0d6795d88977c6b5c3",
+    "downloaded_at_utc": null,
+    "findings": [
+      {
+        "critical": true,
+        "evidence": {
+          "bytes": 212,
+          "manifest_item": "fix-contrato-grano-duplicado",
+          "origin": "snapshot",
+          "sha256": "ad1a974a5250c49f3f9bef0ecdb38413de0687d0186a76738103bd85cd5e434e"
+        },
+        "justified": false,
+        "message": "Bytes y SHA-256 coinciden con el manifiesto del snapshot.",
+        "rule_id": "SNAP-01",
+        "status": "ok",
+        "title": "Integridad del snapshot"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
+          "evidence": "tools/prepare_snapshot.py genera el archivo de forma determinista.",
+          "id": "interno-fixture"
+        },
+        "justified": false,
+        "message": "Licencia verificada.",
+        "rule_id": "LIC-01",
+        "status": "ok",
+        "title": "Licencia verificada"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "columns": [
+            {
+              "cell_column": "A",
+              "column": "anio"
+            },
+            {
+              "cell_column": "B",
+              "column": "mes"
+            },
+            {
+              "cell_column": "C",
+              "column": "indicador"
+            },
+            {
+              "cell_column": "D",
+              "column": "valor"
+            },
+            {
+              "cell_column": "E",
+              "column": "unidad"
+            }
+          ],
+          "header_row": 1
+        },
+        "justified": false,
+        "message": "Todas las columnas declaradas están presentes con su encabezado.",
+        "rule_id": "CONT-02",
+        "status": "ok",
+        "title": "Columnas requeridas"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "rows_checked": 4
+        },
+        "justified": false,
+        "message": "Los 5 campos declarados parsean a su tipo.",
+        "rule_id": "CONT-03",
+        "status": "ok",
+        "title": "Tipos parseables"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "duplicates": [
+            {
+              "grain": [
+                2025,
+                2,
+                "serie_mensual_sintetica"
+              ],
+              "rows": [
+                3,
+                5
+              ]
+            }
+          ],
+          "grain": [
+            "year",
+            "month",
+            "indicator"
+          ]
+        },
+        "justified": false,
+        "message": "El grano declarado se repite en 1 combinación(es).",
+        "rule_id": "CONT-04",
+        "status": "falla",
+        "title": "Grano único"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "declared_periods": 3,
+          "first": "2025-01",
+          "last": "2025-03",
+          "mode": "lista"
+        },
+        "justified": false,
+        "message": "Los periodos declarados están presentes y son válidos.",
+        "rule_id": "CONT-05",
+        "status": "ok",
+        "title": "Periodo declarado presente"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "declared_bases": {
+            "value": "2025=100"
+          },
+          "declared_unit": "indice"
+        },
+        "justified": false,
+        "message": "Unidad y base coinciden con lo declarado en el perfil.",
+        "rule_id": "CONT-06",
+        "status": "ok",
+        "title": "Unidad y base declaradas"
+      }
+    ],
+    "origin": "snapshot",
+    "period": "enero a marzo de 2025",
+    "profile_version": "contrato_mensual_v1@2.0.0",
+    "resource_id": null,
+    "rules_version": "1.0.0",
+    "sha256": "ad1a974a5250c49f3f9bef0ecdb38413de0687d0186a76738103bd85cd5e434e",
+    "snapshot_id": "snap-2026-11-23",
+    "source_id": null,
+    "source_url": null,
+    "state": "no_habilitado",
+    "unit": "índice"
+  }
+}

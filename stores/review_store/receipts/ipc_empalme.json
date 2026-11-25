@@ -1,0 +1,227 @@
+{
+  "decision_log": {
+    "decided_at_utc": "2026-11-25T00:15:28Z",
+    "decision_basis_digest": "b7f2f80f1ea904f2cb86192d0622772a823dd21ea22a7efa29326af2d80bc35f",
+    "decision_id": "dec-ipc_empalme-001",
+    "gate_decision": "habilitado",
+    "justifications": {},
+    "operator": "Técnico de publicaciones (prototipo)",
+    "rationale": "Ficha oficial cotejada: la variación publicada en G504 coincide con la calculada desde F503 y F504; el cruce entre bases queda bloqueado.",
+    "still_valid": true
+  },
+  "generated_at_utc": "2026-11-25T00:16:13Z",
+  "receipt_id": "rec-snap-2026-11-23-ipc_empalme",
+  "technical_payload": {
+    "base": "Cada columna declara su propia base; la serie de trabajo es F, base 2024=100",
+    "comparisons": [
+      {
+        "comparison_id": "mensual_ene_2025",
+        "evidence": {
+          "computed_pct": 0.501463,
+          "denominator_base": "2024=100",
+          "denominator_cell": "F503",
+          "denominator_column": "Índice año Base  2024=100.00 d/",
+          "denominator_period": "2024-12",
+          "numerator_base": "2024=100",
+          "numerator_cell": "F504",
+          "numerator_column": "Índice año Base  2024=100.00 d/",
+          "numerator_period": "2025-01",
+          "period": "2025-01",
+          "published_cell": "G504",
+          "published_pct": 0.501463,
+          "unit": "porcentaje"
+        },
+        "label": "Variación mensual de enero 2025, serie base 2024=100",
+        "private_evidence": {},
+        "reason": "Misma base, periodos contiguos y variación publicada.",
+        "rules": [
+          "IPC-01",
+          "IPC-02",
+          "IPC-03"
+        ],
+        "status": "ok"
+      },
+      {
+        "comparison_id": "cruce_bases_e_f",
+        "evidence": {
+          "denominator_base": "Diciembre 2023=100",
+          "denominator_cell": "E503",
+          "denominator_column": "Índice Base Diciembre 2023=100.00 c/",
+          "denominator_period": "2024-12",
+          "numerator_base": "2024=100",
+          "numerator_cell": "F504",
+          "numerator_column": "Índice año Base  2024=100.00 d/",
+          "numerator_period": "2025-01",
+          "unit": "índice"
+        },
+        "label": "Solicitud inválida: cociente entre base 2024=100 y base Diciembre 2023=100",
+        "private_evidence": {
+          "computed_pct": -0.6738020159882563,
+          "computed_pct_rounded": -0.6738,
+          "display_public": false,
+          "note": "Se calculó solo para la pantalla de revisión. El número no se copia al snapshot público, ni al export, ni a la ficha."
+        },
+        "reason": "Bases distintas: el cociente entre índices de bases distintas no es una variación y no se puede comparar directamente.",
+        "rules": [
+          "IPC-01"
+        ],
+        "status": "bloqueada"
+      }
+    ],
+    "coverage": {
+      "by_status": {
+        "ok": 8
+      },
+      "complete": true,
+      "critical_evaluated": 8,
+      "critical_not_evaluated": 0,
+      "critical_total": 8,
+      "rules_total": 8
+    },
+    "digest": "b7f2f80f1ea904f2cb86192d0622772a823dd21ea22a7efa29326af2d80bc35f",
+    "downloaded_at_utc": "2026-11-24T05:41:54Z",
+    "findings": [
+      {
+        "critical": true,
+        "evidence": {
+          "bytes": 68016,
+          "manifest_item": "ine-ipc-empalme",
+          "origin": "snapshot",
+          "sha256": "d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4"
+        },
+        "justified": false,
+        "message": "Bytes y SHA-256 coinciden con el manifiesto del snapshot.",
+        "rule_id": "SNAP-01",
+        "status": "ok",
+        "title": "Integridad del snapshot"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
+          "evidence": "Metadatos CKAN (package_show) del conjunto IPC Base Anual 2024=100: license_id cc-by.",
+          "id": "cc-by"
+        },
+        "justified": false,
+        "message": "Licencia verificada.",
+        "rule_id": "LIC-01",
+        "status": "ok",
+        "title": "Licencia verificada"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "expected_sheet": "Hoja2",
+          "header_row": 1,
+          "observed_sheets": [
+            "Hoja2"
+          ]
+        },
+        "justified": false,
+        "message": "La hoja declarada está presente.",
+        "rule_id": "CONT-01",
+        "status": "ok",
+        "title": "Hoja declarada presente"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "columns": [
+            {
+              "cell_column": "A",
+              "column": "Año"
+            },
+            {
+              "cell_column": "B",
+              "column": "Mes"
+            },
+            {
+              "cell_column": "E",
+              "column": "Índice Base Diciembre 2023=100.00 c/"
+            },
+            {
+              "cell_column": "F",
+              "column": "Índice año Base  2024=100.00 d/"
+            },
+            {
+              "cell_column": "G",
+              "column": "Variación Mensual e/"
+            }
+          ],
+          "header_row": 1
+        },
+        "justified": false,
+        "message": "Todas las columnas declaradas están presentes con su encabezado.",
+        "rule_id": "CONT-02",
+        "status": "ok",
+        "title": "Columnas requeridas"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "rows_checked": 524
+        },
+        "justified": false,
+        "message": "Los 5 campos declarados parsean a su tipo.",
+        "rule_id": "CONT-03",
+        "status": "ok",
+        "title": "Tipos parseables"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "grain": [
+            "year",
+            "month"
+          ],
+          "rows": 524
+        },
+        "justified": false,
+        "message": "El grano declarado es único en todas las filas.",
+        "rule_id": "CONT-04",
+        "status": "ok",
+        "title": "Grano único"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "declared_periods": 2,
+          "first": "2024-12",
+          "last": "2025-01",
+          "mode": "lista"
+        },
+        "justified": false,
+        "message": "Los periodos declarados están presentes y son válidos.",
+        "rule_id": "CONT-05",
+        "status": "ok",
+        "title": "Periodo declarado presente"
+      },
+      {
+        "critical": true,
+        "evidence": {
+          "declared_bases": {
+            "e_index": "Diciembre 2023=100",
+            "f_index": "2024=100"
+          },
+          "declared_unit": "índice"
+        },
+        "justified": false,
+        "message": "Unidad y base coinciden con lo declarado en el perfil.",
+        "rule_id": "CONT-06",
+        "status": "ok",
+        "title": "Unidad y base declaradas"
+      }
+    ],
+    "origin": "snapshot",
+    "period": "diciembre 2024 y enero 2025",
+    "profile_version": "ipc_empalme_republica_v1@2.0.0",
+    "resource_id": "6b2cb40a-188c-47c9-9288-ba11c40b5910",
+    "rules_version": "1.0.0",
+    "sha256": "d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4",
+    "snapshot_id": "snap-2026-11-23",
+    "source_id": "ine-ckan-ipc-empalme-rep",
+    "source_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/6b2cb40a-188c-47c9-9288-ba11c40b5910/download/ipc_emprepu_es25.xlsx",
+    "state": "habilitado_para_consulta",
+    "unit": "índice (F y E) y porcentaje (G)"
+  }
+}

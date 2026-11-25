@@ -1,0 +1,54 @@
+{
+  "aggregates": [
+    {
+      "case_id": "csv_ok",
+      "digest": "e52a1c7a52cf38928bacd0bdc681f0628b806dce5f0a1c68550a943d94767d6d",
+      "file": "aggregates/csv_ok.json",
+      "label": "CSV sintético correcto",
+      "origin": "snapshot",
+      "period": "enero a marzo de 2025",
+      "state": "habilitado_para_consulta",
+      "state_text": "Habilitado para consulta en el prototipo",
+      "synthetic": true,
+      "title": "Fixture sintético: CSV mensual correcto"
+    },
+    {
+      "case_id": "dup_identidad_excepcion",
+      "digest": "f9e4919c9932f960f57bbf6570e3dafa1d85c942ad314397fc26e712d46a144e",
+      "file": "aggregates/dup_identidad_excepcion.json",
+      "label": "Mismo par de bytes con política de reutilización documentada",
+      "origin": "snapshot",
+      "period": "no aplica",
+      "state": "habilitado_para_consulta",
+      "state_text": "Habilitado para consulta en el prototipo",
+      "synthetic": true,
+      "title": "Mismo par de bytes con política de reutilización documentada"
+    },
+    {
+      "case_id": "ipc_empalme",
+      "digest": "b7f2f80f1ea904f2cb86192d0622772a823dd21ea22a7efa29326af2d80bc35f",
+      "file": "aggregates/ipc_empalme.json",
+      "label": "IPC empalme República: Hoja2, diciembre 2024 y enero 2025",
+      "origin": "snapshot",
+      "period": "diciembre 2024 y enero 2025",
+      "state": "habilitado_para_consulta",
+      "state_text": "Habilitado para consulta en el prototipo",
+      "synthetic": false,
+      "title": "Índice de Precios al Consumidor, serie empalmada, República"
+    },
+    {
+      "case_id": "ipc_regional",
+      "digest": "c64c108ee196a6efdfadf067e3b15fbddce7cfa92e6081fd32faa53f622ec72d",
+      "file": "aggregates/ipc_regional.json",
+      "label": "IPC por Región: Hoja1, enero 2025 a octubre 2026",
+      "origin": "snapshot",
+      "period": "enero 2025 a octubre 2026",
+      "state": "habilitado_para_consulta",
+      "state_text": "Habilitado para consulta en el prototipo",
+      "synthetic": false,
+      "title": "Índice de Precios al Consumidor por Región"
+    }
+  ],
+  "generated_at_utc": "2026-11-25T00:15:28Z",
+  "snapshot_id": "snap-2026-11-23"
+}
