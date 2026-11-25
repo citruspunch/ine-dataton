@@ -202,7 +202,7 @@ export interface QueryParams {
   to?: string;
   metric?: string;
   unit?: string;
-  flagged?: boolean;
+  includeAlerts?: boolean;
   page?: number;
   pageSize?: number;
 }

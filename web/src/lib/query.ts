@@ -40,17 +40,11 @@ export function unitOf(record: RecordItem): string {
   return record.unit ?? record.metricUnit ?? "Sin unidad";
 }
 
-export function hasDataFlag(record: RecordItem): boolean {
+export function isProblematicRecord(record: RecordItem): boolean {
   return record.flags.some((flag) =>
-    [
-      "invalid_date",
-      "missing_date",
-      "duplicate",
-      "thousands_comma",
-      "missing_nog",
-      "missing_value",
-      "missing_product",
-    ].includes(flag),
+    ["invalid_date", "missing_date", "duplicate", "missing_value", "missing_product"].includes(
+      flag,
+    ),
   );
 }
 
@@ -279,7 +273,9 @@ export function queryRecords(
     filteredStats[0] ??
     null;
 
-  const tableBase = params.flagged ? unitRecords.filter(hasDataFlag) : unitRecords;
+  const tableBase = params.includeAlerts
+    ? unitRecords
+    : unitRecords.filter((record) => !isProblematicRecord(record));
   const sorted = [...tableBase].sort((a, b) => {
     if (a.date && b.date && a.date !== b.date) return b.date.localeCompare(a.date);
     if (a.date && !b.date) return -1;

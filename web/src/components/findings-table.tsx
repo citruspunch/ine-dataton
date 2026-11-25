@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Check, ChevronLeft, ChevronRight, Loader2, SearchX } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, SearchX } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,71 +24,35 @@ import {
 import type { QueryResult, RecordItem } from "@/lib/types";
 
 const datasetLabel: Record<string, string> = {
-  "dpir-2022": "DPIR · archivo 2022",
-  "dpir-2023": "DPIR · archivo 2023",
-  "ipmc-history": "IPMC · histórico",
-  "icc-2026": "ICC · 2026",
-  "cbau-percapita": "CBAU · per cápita",
-  "cbar-percapita": "CBAR · per cápita",
-  "cbau-history": "CBAU · productos",
-  "cbar-history": "CBAR · productos",
+  "dpir-2022": "DPIR 2022",
+  "dpir-2023": "DPIR 2023",
+  "ipmc-history": "IPMC",
+  "icc-2026": "ICC 2026",
+  "cbau-percapita": "CBAU per cápita",
+  "cbar-percapita": "CBAR per cápita",
+  "cbau-history": "CBAU productos",
+  "cbar-history": "CBAR productos",
 };
 
-const statusBadge: Record<string, string> = {
-  frozen: "border-amber-300/60 bg-amber-50 text-amber-800",
-  current: "border-emerald-300/60 bg-emerald-50 text-emerald-800",
-  limited: "border-sky-300/60 bg-sky-50 text-sky-800",
-};
-
-const flagBadge: Record<string, string> = {
-  invalid_date: "border-destructive/30 bg-destructive/5 text-destructive",
+const flagStyles: Record<string, string> = {
+  invalid_date: "border-destructive/25 bg-destructive/5 text-destructive",
   missing_date: "border-destructive/20 bg-destructive/5 text-destructive",
-  duplicate: "border-border bg-muted text-foreground/70",
-  thousands_comma: "border-amber-300/60 bg-amber-50 text-amber-800",
-  missing_nog: "border-border bg-muted text-foreground/70",
-  missing_value: "border-destructive/30 bg-destructive/5 text-destructive",
-  missing_product: "border-destructive/30 bg-destructive/5 text-destructive",
+  duplicate: "border-border bg-muted text-muted-foreground",
+  thousands_comma: "border-amber-300 bg-amber-50 text-amber-800",
+  missing_nog: "border-border bg-muted text-muted-foreground",
+  missing_value: "border-destructive/25 bg-destructive/5 text-destructive",
+  missing_product: "border-destructive/25 bg-destructive/5 text-destructive",
 };
 
-function valueUnit(record: RecordItem): string {
-  if (record.valueKind === "index") return "puntos de índice";
-  if (record.valueKind === "cost") return "Q por persona";
-  return "Q";
-}
-
-function displayUnit(record: RecordItem): string {
-  if (record.valueKind === "index") return record.metricUnit ?? "Índice";
+function unitText(record: RecordItem): string {
+  if (record.valueKind === "index") return record.metricUnit ?? "índice";
   if (record.valueKind === "cost") return "Q por persona al mes";
   return record.unit ?? "—";
 }
 
-function SourceCell({ record }: { record: RecordItem }) {
-  return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-center gap-1.5">
-        <span className="text-xs font-semibold">{record.source}</span>
-        <Badge
-          variant="outline"
-          className={cn("h-4 px-1 text-[8px] font-semibold uppercase tracking-wide", statusBadge[record.status])}
-        >
-          {record.status === "frozen" ? "Congelado" : record.status === "limited" ? "Parcial" : "Vigente"}
-        </Badge>
-      </div>
-      <span className="text-[10px] leading-tight text-muted-foreground">
-        {datasetLabel[record.dataset] ?? record.dataset}
-      </span>
-    </div>
-  );
-}
-
 function QualityCell({ record }: { record: RecordItem }) {
   if (record.flags.length === 0) {
-    return (
-      <span className="inline-flex items-center gap-1 text-[10px] text-muted-foreground">
-        <Check className="size-3 text-success" aria-hidden />
-        Sin alertas
-      </span>
-    );
+    return <span className="text-sm text-muted-foreground">—</span>;
   }
   return (
     <div className="flex flex-wrap gap-1">
@@ -97,7 +61,7 @@ function QualityCell({ record }: { record: RecordItem }) {
           key={flag}
           variant="outline"
           title={flagDescription(flag)}
-          className={cn("h-5 px-1.5 text-[9px] font-medium", flagBadge[flag])}
+          className={cn("h-5 px-1.5 text-[11px] font-normal", flagStyles[flag])}
         >
           {flagLabel(flag)}
         </Badge>
@@ -109,153 +73,167 @@ function QualityCell({ record }: { record: RecordItem }) {
 export function FindingsTable({
   result,
   loading,
+  includeAlerts,
   onPageChange,
 }: {
   result: QueryResult;
   loading: boolean;
+  includeAlerts: boolean;
   onPageChange: (page: number) => void;
 }) {
-  const { records, total, page, pageSize, pageCount, group, selectedMetric, selectedUnit } = result;
+  const { records, total, page, pageSize, pageCount, group, quality } = result;
   const start = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const end = Math.min(page * pageSize, total);
+  const hiddenAlerts = Math.max(0, quality.totalRecords - total);
 
   return (
-    <Card className="overflow-hidden border-border/80 bg-card/85">
-      <CardHeader className="gap-2 border-b border-border/70 pb-4">
-        <div className="flex flex-wrap items-start justify-between gap-3">
+    <Card className="overflow-hidden border-border/70 bg-card shadow-none">
+      <CardHeader className="border-b border-border/60 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              Hallazgos
-            </p>
-            <CardTitle className="mt-1 flex items-center gap-2 font-heading text-xl">
-              Registros que coinciden
+            <CardTitle className="flex items-center gap-2 font-heading text-xl">
+              Registros
               {loading ? <Loader2 className="size-4 animate-spin text-muted-foreground" aria-label="Cargando" /> : null}
             </CardTitle>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {selectedMetric ?? group.label}
-              {selectedUnit ? ` · ${selectedUnit}` : ""} · {formatNumber(total)} registros
+            <p className="mt-1 text-sm text-muted-foreground">
+              {formatNumber(total)} resultados
+              {includeAlerts ? " · incluye alertas" : " · solo registros válidos"}
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline" className="font-normal text-muted-foreground">
-              {group.shortLabel}
-            </Badge>
-            <Badge variant="outline" className={cn("font-medium", statusBadge[group.status])}>
-              {group.statusLabel}
-            </Badge>
-          </div>
+          {hiddenAlerts > 0 && !includeAlerts ? (
+            <span className="text-xs text-muted-foreground">
+              {formatNumber(hiddenAlerts)} con alertas ocultos
+            </span>
+          ) : null}
         </div>
       </CardHeader>
 
       <CardContent className="p-0">
-        <div className={cn("transition-opacity", loading && "pointer-events-none opacity-55")}>
-          <Table className="min-w-[760px] table-fixed">
+        <div className={cn("transition-opacity", loading && "pointer-events-none opacity-50")}>
+          <div className="hidden sm:block">
+          <Table className="min-w-[620px] table-fixed">
             <TableHeader>
-              <TableRow className="bg-muted/40 hover:bg-muted/40">
-                <TableHead className="w-[38%] pl-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              <TableRow className="bg-muted/30 hover:bg-muted/30">
+                <TableHead className={cn("pl-5 text-xs font-medium text-muted-foreground", includeAlerts ? "w-[47%]" : "w-[55%]")}>
                   Producto / material
                 </TableHead>
-                <TableHead className="w-[15%] text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                  Fuente
-                </TableHead>
-                <TableHead className="w-[12%] text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                <TableHead className={cn("text-xs font-medium text-muted-foreground", includeAlerts ? "w-[15%]" : "w-[18%]")}>
                   Fecha
                 </TableHead>
-                <TableHead className="w-[13%] text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                <TableHead className={cn("text-right text-xs font-medium text-muted-foreground", includeAlerts ? "w-[15%]" : "w-[27%]")}>
                   Valor
                 </TableHead>
-                <TableHead className="w-[22%] text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                  Calidad
-                </TableHead>
+                {includeAlerts ? (
+                  <TableHead className="w-[23%] text-xs font-medium text-muted-foreground">
+                    Calidad
+                  </TableHead>
+                ) : null}
               </TableRow>
             </TableHeader>
             <TableBody>
               {records.length === 0 ? (
                 <TableRow className="hover:bg-transparent">
-                  <TableCell colSpan={5} className="h-56 text-center">
-                    <div className="mx-auto flex max-w-md flex-col items-center gap-3">
-                      <span className="grid size-11 place-items-center rounded-full bg-muted text-muted-foreground">
+                  <TableCell colSpan={includeAlerts ? 4 : 3} className="h-56 text-center">
+                    <div className="mx-auto flex max-w-sm flex-col items-center gap-3">
+                      <span className="grid size-10 place-items-center rounded-full bg-muted text-muted-foreground">
                         <SearchX className="size-5" aria-hidden />
                       </span>
                       <div>
-                        <p className="font-medium">No hay registros con estos filtros.</p>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          Pruebe un término más general, quite el filtro de presentación o cambie
-                          la fuente. La búsqueda funciona con fragmentos: “cemento”, “varilla”,
-                          “arroz”.
+                        <p className="text-base font-medium">No hay registros con estos filtros</p>
+                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                          Pruebe un término más general o cambie de fuente. La búsqueda
+                          funciona con fragmentos.
                         </p>
                       </div>
                     </div>
                   </TableCell>
                 </TableRow>
               ) : (
-                records.map((record) => {
-                  const invalidDate = record.dateStatus !== "valid";
-                  return (
-                    <TableRow key={record.id} className="align-top">
-                      <TableCell className="whitespace-normal py-3 pl-4">
-                        <div className="line-clamp-2 break-words font-medium leading-snug">
-                          {truncate(record.item, 120)}
-                        </div>
-                        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[10px] text-muted-foreground">
-                          <span>{record.category}</span>
-                          {record.context ? <span>· {record.context}</span> : null}
-                          {record.level ? <span>· {record.level}</span> : null}
-                          {record.region ? <span>· {record.region}</span> : null}
-                          {record.nog ? <span>· NOG {record.nog}</span> : null}
-                        </div>
-                        {record.description ? (
-                          <div className="mt-1 line-clamp-1 text-[10px] leading-relaxed text-muted-foreground/80">
-                            {record.description}
-                          </div>
-                        ) : null}
-                      </TableCell>
-                      <TableCell className="py-3">
-                        <SourceCell record={record} />
-                      </TableCell>
-                      <TableCell className="py-3">
-                        <div className={cn("text-xs tabular", invalidDate && "text-destructive")}>
-                          {record.date
-                            ? formatDate(record.date, group.granularity)
-                            : record.dateRaw ?? "Sin fecha"}
-                        </div>
-                        {invalidDate && record.dateRaw ? (
-                          <div className="mt-0.5 text-[9px] text-destructive/80">
-                            original: {record.dateRaw}
-                          </div>
-                        ) : null}
-                      </TableCell>
-                      <TableCell className="py-3 text-right">
-                        <div className="font-mono text-sm font-semibold tabular">
-                          {formatNumber(record.value)}
-                        </div>
-                        <div className="mt-0.5 text-[9px] leading-tight text-muted-foreground">
-                          {valueUnit(record)}
-                        </div>
-                        <div className="mt-0.5 text-[9px] leading-tight text-muted-foreground/70">
-                          {displayUnit(record)}
-                        </div>
-                      </TableCell>
-                      <TableCell className="whitespace-normal py-3">
+                records.map((record) => (
+                  <TableRow key={record.id} className="align-top">
+                    <TableCell className="whitespace-normal py-4 pl-5">
+                      <div className="line-clamp-2 break-words text-[15px] font-medium leading-snug">
+                        {truncate(record.item, 110)}
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        {record.category}
+                        {record.context ? ` · ${record.context}` : ""}
+                        <span className="text-muted-foreground/70">
+                          {" "}
+                          · {datasetLabel[record.dataset] ?? record.dataset}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="whitespace-normal py-4 text-sm">
+                      {record.date
+                        ? formatDate(record.date, group.granularity)
+                        : record.dateRaw ?? "Sin fecha"}
+                    </TableCell>
+                    <TableCell className="whitespace-normal py-4 text-right">
+                      <div className="font-mono text-[15px] font-semibold leading-none tabular">
+                        {formatNumber(record.value)}
+                      </div>
+                      <div className="mt-1.5 text-xs leading-tight text-muted-foreground">
+                        {unitText(record)}
+                      </div>
+                    </TableCell>
+                    {includeAlerts ? (
+                      <TableCell className="whitespace-normal py-4">
                         <QualityCell record={record} />
                       </TableCell>
-                    </TableRow>
-                  );
-                })
+                    ) : null}
+                  </TableRow>
+                ))
               )}
             </TableBody>
           </Table>
+          </div>
+
+          <div className="divide-y divide-border/60 sm:hidden">
+            {records.length === 0 ? (
+              <div className="px-5 py-12 text-center text-sm text-muted-foreground">
+                No hay registros con estos filtros.
+              </div>
+            ) : (
+              records.map((record) => (
+                <div key={record.id} className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="line-clamp-2 break-words text-[15px] font-medium leading-snug">
+                        {truncate(record.item, 110)}
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        {record.category} · {datasetLabel[record.dataset] ?? record.dataset}
+                      </div>
+                      {includeAlerts ? (
+                        <div className="mt-2">
+                          <QualityCell record={record} />
+                        </div>
+                      ) : null}
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <div className="font-mono text-[15px] font-semibold leading-none tabular">
+                        {formatNumber(record.value)}
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground">{unitText(record)}</div>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-xs text-muted-foreground">
+                    {record.date
+                      ? formatDate(record.date, group.granularity)
+                      : record.dateRaw ?? "Sin fecha"}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/70 px-4 py-3">
-          <p className="text-[11px] text-muted-foreground">
-            {total === 0 ? "Sin resultados" : `Mostrando ${formatNumber(start)}–${formatNumber(end)} de ${formatNumber(total)}`}
-            {result.quality.excludedFromStats > 0 ? (
-              <span className="ml-2 inline-flex items-center gap-1 text-amber-700">
-                <AlertTriangle className="size-3" aria-hidden />
-                {formatNumber(result.quality.excludedFromStats)} fuera de resúmenes
-              </span>
-            ) : null}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/60 px-5 py-3">
+          <p className="text-xs text-muted-foreground">
+            {total === 0
+              ? "Sin resultados"
+              : `Mostrando ${formatNumber(start)}–${formatNumber(end)} de ${formatNumber(total)}`}
           </p>
           <div className="flex items-center gap-1.5">
             <Button
@@ -264,12 +242,12 @@ export function FindingsTable({
               variant="outline"
               disabled={page <= 1 || loading}
               onClick={() => onPageChange(page - 1)}
-              className="h-8 gap-1"
+              className="h-8 gap-1 px-2.5"
             >
-              <ChevronLeft className="size-3.5" aria-hidden />
+              <ChevronLeft className="size-4" aria-hidden />
               Anterior
             </Button>
-            <span className="min-w-16 text-center text-[11px] tabular text-muted-foreground">
+            <span className="min-w-14 text-center text-xs tabular text-muted-foreground">
               {page} / {pageCount}
             </span>
             <Button
@@ -278,10 +256,10 @@ export function FindingsTable({
               variant="outline"
               disabled={page >= pageCount || loading}
               onClick={() => onPageChange(page + 1)}
-              className="h-8 gap-1"
+              className="h-8 gap-1 px-2.5"
             >
               Siguiente
-              <ChevronRight className="size-3.5" aria-hidden />
+              <ChevronRight className="size-4" aria-hidden />
             </Button>
           </div>
         </div>

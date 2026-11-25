@@ -1,43 +1,35 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Info, Loader2, Sparkles } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FindingsTable } from "@/components/findings-table";
 import { Filters } from "@/components/filters";
-import { Hero } from "@/components/hero";
-import { Methodology } from "@/components/methodology";
+import { PageIntro } from "@/components/page-intro";
 import { PriceChecker } from "@/components/price-checker";
 import { QualityPanel } from "@/components/quality-panel";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { SourceIntegrity } from "@/components/source-integrity";
-import { SourceSwitcher } from "@/components/source-switcher";
 import { StatsCards } from "@/components/stats-cards";
 import { defaultMetricForSource } from "@/lib/query";
-import type {
-  Catalog,
-  DictionaryEntry,
-  Manifest,
-  QueryResult,
-  SourceGroup,
-  Summary,
-} from "@/lib/types";
+import type { Catalog, QueryResult, SourceGroup, Summary } from "@/lib/types";
+
+const sourceContext: Record<SourceGroup, string> = {
+  DPIR: "Instantáneas congeladas de precios observados en compras públicas. No es una serie mensual continua.",
+  IPMC: "Índice mensual de 89 materiales, base diciembre 2018 = 100. Cobertura Región I Metropolitana.",
+  ICC: "Índice de costos de vivienda social, base 2025 = 100. Solo 2026 y Región I; no es un precio.",
+  BASKETS: "Costo por persona de la canasta alimentaria, 2024–2026. No es una cotización de mercado.",
+};
 
 export function PriceDesk({
   initial,
   summary,
-  manifest,
   catalog,
-  dictionary,
 }: {
   initial: QueryResult;
   summary: Summary;
-  manifest: Manifest;
   catalog: Catalog;
-  dictionary: DictionaryEntry[];
 }) {
   const [source, setSource] = useState<SourceGroup>(initial.query.source);
   const [q, setQ] = useState(initial.query.q ?? "");
@@ -45,7 +37,7 @@ export function PriceDesk({
   const [to, setTo] = useState(initial.query.to ?? "");
   const [metric, setMetric] = useState(initial.selectedMetric ?? defaultMetricForSource(source));
   const [unit, setUnit] = useState(initial.selectedUnit ?? "");
-  const [flaggedOnly, setFlaggedOnly] = useState(false);
+  const [includeAlerts, setIncludeAlerts] = useState(false);
   const [page, setPage] = useState(initial.page);
   const [result, setResult] = useState<QueryResult>(initial);
   const [loading, setLoading] = useState(false);
@@ -62,7 +54,7 @@ export function PriceDesk({
     setMetric(defaultMetricForSource(next));
     setUnit("");
     unitTouched.current = false;
-    setFlaggedOnly(false);
+    setIncludeAlerts(false);
     setPage(1);
   };
 
@@ -73,7 +65,7 @@ export function PriceDesk({
     to?: string;
     metric?: string;
     unit?: string;
-    flagged?: boolean;
+    alerts?: boolean;
   }) => {
     if (patch.source && patch.source !== source) {
       applySource(patch.source);
@@ -104,8 +96,8 @@ export function PriceDesk({
       unitTouched.current = true;
       setPage(1);
     }
-    if (patch.flagged !== undefined) {
-      setFlaggedOnly(patch.flagged);
+    if (patch.alerts !== undefined) {
+      setIncludeAlerts(patch.alerts);
       setPage(1);
     }
   };
@@ -116,7 +108,7 @@ export function PriceDesk({
     setTo("");
     setUnit("");
     unitTouched.current = false;
-    setFlaggedOnly(false);
+    setIncludeAlerts(false);
     setMetric(defaultMetricForSource(source));
     setPage(1);
   };
@@ -140,7 +132,7 @@ export function PriceDesk({
       if (to) params.set("to", to);
       if (metric) params.set("metric", metric);
       if (unit) params.set("unit", unit);
-      if (flaggedOnly) params.set("flagged", "1");
+      if (includeAlerts) params.set("alerts", "1");
 
       fetch(`/api/records?${params.toString()}`, { signal: controller.signal })
         .then(async (response) => {
@@ -163,9 +155,6 @@ export function PriceDesk({
             data.facets.units.length > 1 &&
             data.facets.units.length <= 40;
           if (canAutoSelect) {
-            // A price band that mixes a ream with a pound is not comparable.
-            // Default to the most frequent presentation of this search; the
-            // user can still switch back to "Todas".
             setUnit(data.facets.units[0].label);
           } else if (nextUnit !== unit) {
             setUnit(nextUnit);
@@ -183,25 +172,29 @@ export function PriceDesk({
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [source, q, from, to, metric, unit, flaggedOnly, page]);
+  }, [source, q, from, to, metric, unit, includeAlerts, page]);
 
   const suggestions = useMemo(
     () => (catalog[source]?.items ?? []).slice(0, 500).map((item) => item.value),
     [catalog, source],
   );
 
-  const group = summary.groups[source];
+  const alertCount = includeAlerts
+    ? result.quality.duplicates +
+      result.quality.invalidDate +
+      result.quality.missingDate +
+      result.quality.missingValue +
+      result.quality.missingProduct
+    : Math.max(0, result.quality.totalRecords - result.total);
 
   return (
-    <div className="min-h-screen">
-      <SiteHeader summary={summary} />
-      <Hero summary={summary} activeSource={source} />
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
+      <main className="flex-1">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <PageIntro summary={summary} />
 
-      <main>
-        <section id="consulta" className="mx-auto max-w-7xl px-4 pb-14 pt-8 sm:px-6 lg:px-8">
-          <SourceSwitcher summary={summary} active={source} onChange={applySource} />
-
-          <div className="mt-5">
+          <section id="consulta" className="scroll-mt-20">
             <Filters
               source={source}
               q={q}
@@ -209,92 +202,68 @@ export function PriceDesk({
               to={to}
               metric={metric}
               unit={unit}
-              flaggedOnly={flaggedOnly}
+              includeAlerts={includeAlerts}
+              alertCount={alertCount}
               metrics={result.facets.metrics}
               units={result.facets.units}
               suggestions={suggestions}
               onChange={onChange}
               onClear={onClear}
             />
-          </div>
 
-          {error ? (
-            <Alert variant="destructive" className="mt-4 bg-card">
-              <Info className="size-4" aria-hidden />
-              <AlertTitle>No se pudo consultar la API local</AlertTitle>
-              <AlertDescription>
-                {error}. Verifique que los datos estén generados con{" "}
-                <code className="font-mono text-[11px]">uv run python -m procurement_prices build</code>.
-              </AlertDescription>
-            </Alert>
-          ) : null}
+            <div className="mt-4 flex items-start gap-2 text-[13px] leading-relaxed text-muted-foreground">
+              <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+              <p>
+                <span className="font-medium text-foreground">
+                  {summary.groups[source].label}.
+                </span>{" "}
+                {sourceContext[source]}
+              </p>
+            </div>
 
-          <div className="mt-4 flex items-start gap-2 rounded-xl border border-primary/15 bg-primary/[0.04] px-3.5 py-3 text-[11px] leading-relaxed text-foreground/80">
-            <Sparkles className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden />
+            {error ? (
+              <Alert variant="destructive" className="mt-4 bg-card">
+                <Info className="size-4" aria-hidden />
+                <AlertTitle>No se pudo consultar la API local</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            ) : null}
+
+            {loading ? (
+              <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+                <Loader2 className="size-3.5 animate-spin" aria-hidden />
+                Actualizando…
+              </div>
+            ) : null}
+
+            <div className="mt-8">
+              <StatsCards result={result} />
+            </div>
+
+            <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+              <FindingsTable
+                result={result}
+                loading={loading}
+                includeAlerts={includeAlerts}
+                onPageChange={setPage}
+              />
+              <div className="space-y-6">
+                <PriceChecker result={result} />
+                <QualityPanel result={result} includeAlerts={includeAlerts} />
+              </div>
+            </div>
+          </section>
+
+          <div className="mt-10 border-t border-border/60 py-6 text-sm text-muted-foreground">
             <p>
-              <strong className="font-medium text-foreground">{group.label}.</strong>{" "}
-              {group.coverageNote}
+              ¿Necesita las URL, los hashes y las licencias?{" "}
+              <a href="/fuentes" className="font-medium text-primary underline-offset-4 hover:underline">
+                Ver fuentes y método
+              </a>
+              .
             </p>
           </div>
-
-          {loading ? (
-            <div className="mt-4 flex items-center gap-2 text-[10px] text-muted-foreground">
-              <Loader2 className="size-3 animate-spin" aria-hidden />
-              Actualizando la consulta…
-            </div>
-          ) : null}
-
-          <div className="mt-6">
-            <StatsCards result={result} />
-          </div>
-
-          <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_390px]">
-            <div className="min-w-0 space-y-6">
-              <FindingsTable result={result} loading={loading} onPageChange={setPage} />
-              <QualityPanel
-                result={result}
-                flaggedOnly={flaggedOnly}
-                onToggleFlagged={() => onChange({ flagged: !flaggedOnly })}
-              />
-            </div>
-            <div className="space-y-6">
-              <PriceChecker result={result} />
-              <Card className="border-border/80 bg-card/80">
-                <CardHeader className="pb-2">
-                  <CardTitle className="font-heading text-lg">Cómo leer esta consulta</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ol className="space-y-2.5 text-[11px] leading-relaxed text-muted-foreground">
-                    <li>
-                      <span className="mr-1.5 inline-grid size-4 place-items-center rounded-full bg-primary/10 font-mono text-[9px] font-semibold text-primary">
-                        1
-                      </span>
-                      Busque un producto o material. La coincidencia usa fragmentos y no distingue
-                      tildes.
-                    </li>
-                    <li>
-                      <span className="mr-1.5 inline-grid size-4 place-items-center rounded-full bg-primary/10 font-mono text-[9px] font-semibold text-primary">
-                        2
-                      </span>
-                      Fije la presentación si hay varias. El rango sin presentación es solo una
-                      señal amplia.
-                    </li>
-                    <li>
-                      <span className="mr-1.5 inline-grid size-4 place-items-center rounded-full bg-primary/10 font-mono text-[9px] font-semibold text-primary">
-                        3
-                      </span>
-                      Revise el corte y las alertas. Un dato congelado o parcial no se puede
-                      presentar como precio vigente.
-                    </li>
-                  </ol>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        <SourceIntegrity manifest={manifest} activeSource={source} />
-        <Methodology dictionary={dictionary} />
+        </div>
       </main>
       <SiteFooter />
     </div>

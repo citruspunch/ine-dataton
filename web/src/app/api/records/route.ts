@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       to: params.get("to") ?? undefined,
       metric: params.get("metric") ?? undefined,
       unit: params.get("unit") ?? undefined,
-      flagged: params.get("flagged") === "1",
+      includeAlerts: params.get("alerts") === "1",
       page: Number(params.get("page") ?? "1") || 1,
       pageSize: Number(params.get("pageSize") ?? "25") || 25,
     });

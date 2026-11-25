@@ -43,20 +43,21 @@ recordados. Cuando consultan datos del INE se encuentran con archivos que:
 
 - **Búsqueda por producto, material o categoría**, sin distinguir tildes ni mayúsculas.
 - **Selector de fuente** (DPIR, IPMC, ICC, CBAU/CBAR) y filtros por mes.
-- **Tarjetas de banda**: mínimo, mediana, máximo, cuartiles, número de registros,
-  corte real y estado (congelado, vigente o cobertura parcial).
+- **Tarjetas de banda**: mínimo, mediana, máximo y número de registros, con el corte
+  real y el estado de cobertura de la fuente activa.
 - **Filtro de presentación/unidad**: evita comparar una resma con una libra. Si una
   búsqueda devuelve varias presentaciones, la aplicación preselecciona la más frecuente
   y permite volver a “Todas”.
-- **Tabla de hallazgos** con precio/índice, fecha, presentación y badges de calidad:
-  fecha inválida, sin fecha, duplicado, comas de miles, sin NOG, sin precio, sin producto.
+- **Tabla de registros** con producto, fecha, valor y presentación. Por defecto muestra
+  solo registros válidos; “Mostrar alertas” revela duplicados, fechas inválidas y otros
+  problemas con sus badges de calidad.
 - **Verificador de precio unitario**: compara un valor contra la banda filtrada y avisa
-  si está por debajo del mínimo, dentro del rango o por encima del máximo; muestra la
-  posición estimada y la diferencia contra la mediana.
+  si está por debajo del mínimo, dentro del rango o por encima del máximo, con la
+  diferencia contra la mediana.
 - **Auditoría de calidad**: cuántos registros entran en los resúmenes, cuántos se
-  excluyen y por qué; botón “Ver solo alertas”.
-- **Trazabilidad por archivo**: URL oficial exacta, hora UTC de descarga, SHA-256,
-  tamaño, licencia, corte efectivo y notas de cobertura.
+  excluyen y por qué, con el botón “Mostrar alertas”.
+- **Trazabilidad por archivo** en la página `/fuentes`: URL oficial exacta, hora UTC de
+  descarga, SHA-256, tamaño, licencia, corte efectivo y notas de cobertura.
 - **Funciona sin conexión** una vez que los archivos están en `data/raw/` y los
   artefactos en `web/data/` (ambos se incluyen en el repositorio).
 
@@ -399,7 +400,7 @@ Cobertura de las pruebas:
 │   ├── pnpm-lock.yaml
 │   ├── data/                    # bundle JSON que consume la app
 │   └── src/
-│       ├── app/                 # page.tsx + /api/records
+│       ├── app/                 # page.tsx + /fuentes + /api/records
 │       ├── components/          # UI y componentes shadcn
 │       └── lib/                 # tipos, consulta, formato, carga
 └── LICENSE
