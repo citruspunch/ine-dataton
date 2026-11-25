@@ -1,0 +1,402 @@
+{
+ "schema_version": 1,
+ "generated_at_utc": "2026-11-25T04:50:09Z",
+ "generator": "ine-basket 1.0.0",
+ "periods": {
+  "first": "2024-01",
+  "last": "2026-10",
+  "count": 34,
+  "list": [
+   "2024-01",
+   "2024-02",
+   "2024-03",
+   "2024-04",
+   "2024-05",
+   "2024-06",
+   "2024-07",
+   "2024-08",
+   "2024-09",
+   "2024-10",
+   "2024-11",
+   "2024-12",
+   "2025-01",
+   "2025-02",
+   "2025-03",
+   "2025-04",
+   "2025-05",
+   "2025-06",
+   "2025-07",
+   "2025-08",
+   "2025-09",
+   "2025-10",
+   "2025-11",
+   "2025-12",
+   "2026-01",
+   "2026-02",
+   "2026-03",
+   "2026-04",
+   "2026-05",
+   "2026-06",
+   "2026-07",
+   "2026-08",
+   "2026-09",
+   "2026-10"
+  ]
+ },
+ "sources": [
+  {
+   "key": "cba_urbana_percapita",
+   "filename": "costo-cba-percapita_u.xlsx",
+   "local_path": "data/raw/costo-cba-percapita_u.xlsx",
+   "title": "Costo per cápita de la CBA Urbana 2024-2026",
+   "role": "cba-costos",
+   "coverage": "Urbana · 2024-01 a 2026-10",
+   "source_url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/6721d034-7af0-4622-ae34-be10f0f2ac89/download/costo-cba-percapita_u.xlsx",
+   "retrieved_from": "local-cache",
+   "downloaded_at_utc": "2026-11-25T04:26:21Z",
+   "verified_at_utc": "2026-11-25T04:50:09Z",
+   "bytes": 11830,
+   "sha256": "2ad67b889e831c43714ed6a7e92ab62ba5c8561969c947ece636ec4714fd36f3",
+   "license": {
+    "status": "no declarada",
+    "id": null,
+    "title": "Sin licencia declarada en el catálogo CKAN (© INE)",
+    "url": null
+   },
+   "ckan": {
+    "portal": "datos.ine.gob.gt",
+    "package_id": "0317e7b9-9563-4a9c-800f-c74473103063",
+    "package_name": "costos-de-la-cba-urbana-y-rural",
+    "package_title": "Costos de la CA Urbana y Rural y CBA Urbana y Rural",
+    "package_url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063",
+    "resource_id": "6721d034-7af0-4622-ae34-be10f0f2ac89",
+    "resource_last_modified_utc": "2026-11-09T17:51:38Z"
+   },
+   "notes": ""
+  },
+  {
+   "key": "cba_rural_percapita",
+   "filename": "costo-cba-percapita_r.xlsx",
+   "local_path": "data/raw/costo-cba-percapita_r.xlsx",
+   "title": "Costo per cápita de la CBA Rural 2024-2026",
+   "role": "cba-costos",
+   "coverage": "Rural · 2024-01 a 2026-10",
+   "source_url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/69abf503-56da-4de5-9017-875009394843/download/costo-cba-percapita_r.xlsx",
+   "retrieved_from": "local-cache",
+   "downloaded_at_utc": "2026-11-25T04:26:22Z",
+   "verified_at_utc": "2026-11-25T04:50:09Z",
+   "bytes": 11780,
+   "sha256": "464e370e7bfa96d366baf1c70ab3d22a1df5d3e7af835e6f9092174d740aead5",
+   "license": {
+    "status": "no declarada",
+    "id": null,
+    "title": "Sin licencia declarada en el catálogo CKAN (© INE)",
+    "url": null
+   },
+   "ckan": {
+    "portal": "datos.ine.gob.gt",
+    "package_id": "0317e7b9-9563-4a9c-800f-c74473103063",
+    "package_name": "costos-de-la-cba-urbana-y-rural",
+    "package_title": "Costos de la CA Urbana y Rural y CBA Urbana y Rural",
+    "package_url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063",
+    "resource_id": "69abf503-56da-4de5-9017-875009394843",
+    "resource_last_modified_utc": "2026-11-09T17:50:46Z"
+   },
+   "notes": ""
+  },
+  {
+   "key": "cba_urbana_productos",
+   "filename": "historico-cbau_es_2024-2026.xlsx",
+   "local_path": "data/raw/historico-cbau_es_2024-2026.xlsx",
+   "title": "Grupo alimenticio y producto CBA Urbana 2024-2026",
+   "role": "cba-productos",
+   "coverage": "Urbana · 2024-01 a 2026-10",
+   "source_url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/595747ff-a866-4192-99fa-fc032a7795b7/download/historico-cbau_es_2024-2026.xlsx",
+   "retrieved_from": "local-cache",
+   "downloaded_at_utc": "2026-11-25T04:26:22Z",
+   "verified_at_utc": "2026-11-25T04:50:09Z",
+   "bytes": 344962,
+   "sha256": "69a68a251527d6e689248ed0391fd32abc4163449d84d1bcd9c03017550d3206",
+   "license": {
+    "status": "no declarada",
+    "id": null,
+    "title": "Sin licencia declarada en el catálogo CKAN (© INE)",
+    "url": null
+   },
+   "ckan": {
+    "portal": "datos.ine.gob.gt",
+    "package_id": "0317e7b9-9563-4a9c-800f-c74473103063",
+    "package_name": "costos-de-la-cba-urbana-y-rural",
+    "package_title": "Costos de la CA Urbana y Rural y CBA Urbana y Rural",
+    "package_url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063",
+    "resource_id": "595747ff-a866-4192-99fa-fc032a7795b7",
+    "resource_last_modified_utc": "2026-11-09T21:18:41Z"
+   },
+   "notes": "Hojas 'Histórico grupo alimen CBAU' e 'Histórico producto CBAU'."
+  },
+  {
+   "key": "cba_rural_productos",
+   "filename": "historico-cbar_es_2024-2026.xlsx",
+   "local_path": "data/raw/historico-cbar_es_2024-2026.xlsx",
+   "title": "Grupo alimenticio y por producto CBA Rural 2024-2026",
+   "role": "cba-productos",
+   "coverage": "Rural · 2024-01 a 2026-10",
+   "source_url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/23cf94ba-25e9-457b-87fd-a5c7c1e92bcd/download/historico-cbar_es_2024-2026.xlsx",
+   "retrieved_from": "local-cache",
+   "downloaded_at_utc": "2026-11-25T04:26:23Z",
+   "verified_at_utc": "2026-11-25T04:50:09Z",
+   "bytes": 316230,
+   "sha256": "c8c06b1c946336d5908aa8a1f386f2d9c5a6b2419e66c127be5f306032fea048",
+   "license": {
+    "status": "no declarada",
+    "id": null,
+    "title": "Sin licencia declarada en el catálogo CKAN (© INE)",
+    "url": null
+   },
+   "ckan": {
+    "portal": "datos.ine.gob.gt",
+    "package_id": "0317e7b9-9563-4a9c-800f-c74473103063",
+    "package_name": "costos-de-la-cba-urbana-y-rural",
+    "package_title": "Costos de la CA Urbana y Rural y CBA Urbana y Rural",
+    "package_url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063",
+    "resource_id": "23cf94ba-25e9-457b-87fd-a5c7c1e92bcd",
+    "resource_last_modified_utc": "2026-11-09T17:58:50Z"
+   },
+   "notes": "Hojas 'Histórico grupo alimen CBAR' e 'Histórico producto CBAR'."
+  },
+  {
+   "key": "ipc_2024",
+   "filename": "ipc_2024_datosabiertos.xls",
+   "local_path": "data/raw/ipc_2024_datosabiertos.xls",
+   "title": "Índice de Precios al Consumidor por Producto 2024",
+   "role": "ipc-serie-base-2023",
+   "coverage": "República · 2024 (base diciembre 2023 = 100)",
+   "source_url": "https://datos.ine.gob.gt/dataset/cfd35c49-2f16-4c85-b74c-d5f43659b7e1/resource/f9878de2-0d4d-4325-95f0-110567303db7/download/ipc_2024_datosabiertos.xls",
+   "retrieved_from": "local-cache",
+   "downloaded_at_utc": "2026-11-25T04:26:25Z",
+   "verified_at_utc": "2026-11-25T04:50:09Z",
+   "bytes": 1220608,
+   "sha256": "4080151ec22d84fdfbe77c58413e7be5c762cfabd7b853f2f45c7eebb6acd92c",
+   "license": {
+    "status": "declarada",
+    "id": "cc-by",
+    "title": "Creative Commons Attribution (CC BY 4.0)",
+    "url": "http://www.opendefinition.org/licenses/cc-by"
+   },
+   "ckan": {
+    "portal": "datos.ine.gob.gt",
+    "package_id": "cfd35c49-2f16-4c85-b74c-d5f43659b7e1",
+    "package_name": "indice-de-precios-al-consumidor-base-diciembre-2023-100-0",
+    "package_title": "IPC por Producto Base Diciembre 2023 = 100.00",
+    "package_url": "https://datos.ine.gob.gt/dataset/cfd35c49-2f16-4c85-b74c-d5f43659b7e1",
+    "resource_id": "f9878de2-0d4d-4325-95f0-110567303db7",
+    "resource_last_modified_utc": "2025-02-17T14:50:25Z"
+   },
+   "notes": "Serie con base diciembre 2023 = 100. No se concatena sin empalme."
+  },
+  {
+   "key": "ipc_2025",
+   "filename": "base-de-datos-ipc-ano-2025_es.xls",
+   "local_path": "data/raw/base-de-datos-ipc-ano-2025_es.xls",
+   "title": "Base de datos IPC 2025-2026",
+   "role": "ipc-serie-base-2024",
+   "coverage": "República · 2025-01 a 2026-10 (base 2024 = 100)",
+   "source_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/4b1c485c-78cb-4a0e-b11e-39306a8647f1/download/base-de-datos-ipc-ano-2025_es.xls",
+   "retrieved_from": "local-cache",
+   "downloaded_at_utc": "2026-11-25T04:26:26Z",
+   "verified_at_utc": "2026-11-25T04:50:09Z",
+   "bytes": 2402304,
+   "sha256": "f58e21f4fe12a630cb82a02741f238552b7cf5aaf32d62046b430a0fb1cd5469",
+   "license": {
+    "status": "declarada",
+    "id": "cc-by",
+    "title": "Creative Commons Attribution (CC BY 4.0)",
+    "url": "http://www.opendefinition.org/licenses/cc-by"
+   },
+   "ckan": {
+    "portal": "datos.ine.gob.gt",
+    "package_id": "4243818d-b479-4bc1-aae6-2735e2b51265",
+    "package_name": "ipc-por-producto-ano-2024-100-0",
+    "package_title": "IPC Base Anual 2024=100.00",
+    "package_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265",
+    "resource_id": "4b1c485c-78cb-4a0e-b11e-39306a8647f1",
+    "resource_last_modified_utc": "2026-11-09T17:08:34Z"
+   },
+   "notes": "Serie con base 2024 = 100. No se concatena sin empalme."
+  },
+  {
+   "key": "ipc_empalme",
+   "filename": "ipc_emprepu_es25.xlsx",
+   "local_path": "data/raw/ipc_emprepu_es25.xlsx",
+   "title": "Empalme del IPC por República (base anual 2024 = 100)",
+   "role": "ipc-empalme",
+   "coverage": "República · serie histórica empalmada, 1983 a 2026-10",
+   "source_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/6b2cb40a-188c-47c9-9288-ba11c40b5910/download/ipc_emprepu_es25.xlsx",
+   "retrieved_from": "local-cache",
+   "downloaded_at_utc": "2026-11-25T04:26:28Z",
+   "verified_at_utc": "2026-11-25T04:50:09Z",
+   "bytes": 68016,
+   "sha256": "d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4",
+   "license": {
+    "status": "declarada",
+    "id": "cc-by",
+    "title": "Creative Commons Attribution (CC BY 4.0)",
+    "url": "http://www.opendefinition.org/licenses/cc-by"
+   },
+   "ckan": {
+    "portal": "datos.ine.gob.gt",
+    "package_id": "4243818d-b479-4bc1-aae6-2735e2b51265",
+    "package_name": "ipc-por-producto-ano-2024-100-0",
+    "package_title": "IPC Base Anual 2024=100.00",
+    "package_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265",
+    "resource_id": "6b2cb40a-188c-47c9-9288-ba11c40b5910",
+    "resource_last_modified_utc": "2026-11-09T17:47:24Z"
+   },
+   "notes": "Fuente oficial de las variaciones mensual, acumulada e interanual. Aplica el factor de enlace entre bases; es la única serie que la app usa para variaciones del IPC."
+  }
+ ],
+ "rules": {
+  "days_per_month": 30,
+  "month_ordering": "cronológica por (año, número de mes)",
+  "zero_kcal_excluded_from_cost_per_1000_kcal": true,
+  "cpi_variation_source": "ipc_emprepu_es25.xlsx (empalme oficial INE)",
+  "base_break_period": "2025-01",
+  "link_factor_2023_to_2024": 0.988305988,
+  "official_jan_2025_monthly_var_pct": 0.501463331,
+  "direct_jan_2025_monthly_var_pct": -0.673802016
+ },
+ "checks": {
+  "Urbana": {
+   "periods": 34,
+   "products": 66,
+   "groups": 13,
+   "kcalPerDay": 2052.0,
+   "maxGroupCostGapQ": 0.0625,
+   "zeroKcalProducts": [
+    "Agua purificada",
+    "Sal"
+   ]
+  },
+  "Rural": {
+   "periods": 34,
+   "products": 60,
+   "groups": 13,
+   "kcalPerDay": 2172.0,
+   "maxGroupCostGapQ": 0.0506,
+   "zeroKcalProducts": [
+    "Agua purificada",
+    "Sal"
+   ]
+  }
+ },
+ "outputs": [
+  {
+   "table": "cba_monthly",
+   "file": "cba_monthly.parquet",
+   "rows": 68,
+   "columns": [
+    "area",
+    "year",
+    "month",
+    "month_name",
+    "period",
+    "daily_cost",
+    "monthly_cost",
+    "published_monthly_cost",
+    "total_kcal",
+    "total_cost",
+    "caloric_cost_daily",
+    "excluded_cost_daily",
+    "cost_per_1000_kcal",
+    "daily_kcal",
+    "coverage_pct",
+    "cost_gap_vs_products"
+   ],
+   "bytes": 14941,
+   "sha256": "0e6287b651c03b13b8b56c52abf29e581b8d551b52c5ee7846097759c85091a1"
+  },
+  {
+   "table": "cba_products",
+   "file": "cba_products.parquet",
+   "rows": 4284,
+   "columns": [
+    "area",
+    "year",
+    "month",
+    "month_name",
+    "period",
+    "product",
+    "base_quantity",
+    "base_unit",
+    "unit_price",
+    "kcal_daily",
+    "kcal_monthly",
+    "grams_daily",
+    "grams_monthly",
+    "cost_daily",
+    "cost_monthly",
+    "cost_per_1000_kcal",
+    "zero_kcal",
+    "group",
+    "unit_label"
+   ],
+   "bytes": 101930,
+   "sha256": "5b13e3dc9225e3671ff0d8236fe677aec3458287a9d25676e14ffeddf9816f49"
+  },
+  {
+   "table": "cba_groups",
+   "file": "cba_groups.parquet",
+   "rows": 884,
+   "columns": [
+    "area",
+    "year",
+    "month",
+    "month_name",
+    "period",
+    "group_name",
+    "kcal_daily",
+    "grams_daily",
+    "cost_daily",
+    "caloric_cost_daily",
+    "caloric_kcal_daily",
+    "cost_monthly",
+    "kcal_monthly",
+    "cost_per_1000_kcal",
+    "official_cost_daily",
+    "official_kcal_daily",
+    "official_grams_daily",
+    "official_cost_monthly",
+    "cost_gap_vs_official",
+    "cost_gap_pct"
+   ],
+   "bytes": 62917,
+   "sha256": "cd61498862c74babe4cf1e97124dae7b728f40acb8d67f6d94eab3b0831ecb90"
+  },
+  {
+   "table": "ipc_monthly",
+   "file": "ipc_monthly.parquet",
+   "rows": 34,
+   "columns": [
+    "period",
+    "year",
+    "month",
+    "month_name",
+    "published_index",
+    "published_base",
+    "official_index_dec2023",
+    "official_index_2024",
+    "official_monthly_var",
+    "official_accum_var",
+    "official_interannual_var",
+    "direct_monthly_var",
+    "direct_interannual_var",
+    "cross_base_monthly",
+    "cross_base_interannual",
+    "direct_monthly_gap_pp",
+    "direct_interannual_gap_pp"
+   ],
+   "bytes": 14318,
+   "sha256": "1312d1bc10926633e7bd7d9437b3769afd81b0f14d4c58785d5e61a73601f3b6"
+  }
+ ]
+}

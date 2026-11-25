@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "files": {
+    "costo-cba-percapita_u.xlsx": {
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/6721d034-7af0-4622-ae34-be10f0f2ac89/download/costo-cba-percapita_u.xlsx",
+      "sha256": "2ad67b889e831c43714ed6a7e92ab62ba5c8561969c947ece636ec4714fd36f3",
+      "bytes": 11830,
+      "first_downloaded_at_utc": "2026-11-25T04:26:21Z",
+      "downloaded_at_utc": "2026-11-25T04:26:21Z"
+    },
+    "costo-cba-percapita_r.xlsx": {
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/69abf503-56da-4de5-9017-875009394843/download/costo-cba-percapita_r.xlsx",
+      "sha256": "464e370e7bfa96d366baf1c70ab3d22a1df5d3e7af835e6f9092174d740aead5",
+      "bytes": 11780,
+      "first_downloaded_at_utc": "2026-11-25T04:26:22Z",
+      "downloaded_at_utc": "2026-11-25T04:26:22Z"
+    },
+    "historico-cbau_es_2024-2026.xlsx": {
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/595747ff-a866-4192-99fa-fc032a7795b7/download/historico-cbau_es_2024-2026.xlsx",
+      "sha256": "69a68a251527d6e689248ed0391fd32abc4163449d84d1bcd9c03017550d3206",
+      "bytes": 344962,
+      "first_downloaded_at_utc": "2026-11-25T04:26:22Z",
+      "downloaded_at_utc": "2026-11-25T04:26:22Z"
+    },
+    "historico-cbar_es_2024-2026.xlsx": {
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/23cf94ba-25e9-457b-87fd-a5c7c1e92bcd/download/historico-cbar_es_2024-2026.xlsx",
+      "sha256": "c8c06b1c946336d5908aa8a1f386f2d9c5a6b2419e66c127be5f306032fea048",
+      "bytes": 316230,
+      "first_downloaded_at_utc": "2026-11-25T04:26:23Z",
+      "downloaded_at_utc": "2026-11-25T04:26:23Z"
+    },
+    "ipc_2024_datosabiertos.xls": {
+      "url": "https://datos.ine.gob.gt/dataset/cfd35c49-2f16-4c85-b74c-d5f43659b7e1/resource/f9878de2-0d4d-4325-95f0-110567303db7/download/ipc_2024_datosabiertos.xls",
+      "sha256": "4080151ec22d84fdfbe77c58413e7be5c762cfabd7b853f2f45c7eebb6acd92c",
+      "bytes": 1220608,
+      "first_downloaded_at_utc": "2026-11-25T04:26:25Z",
+      "downloaded_at_utc": "2026-11-25T04:26:25Z"
+    },
+    "base-de-datos-ipc-ano-2025_es.xls": {
+      "url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/4b1c485c-78cb-4a0e-b11e-39306a8647f1/download/base-de-datos-ipc-ano-2025_es.xls",
+      "sha256": "f58e21f4fe12a630cb82a02741f238552b7cf5aaf32d62046b430a0fb1cd5469",
+      "bytes": 2402304,
+      "first_downloaded_at_utc": "2026-11-25T04:26:26Z",
+      "downloaded_at_utc": "2026-11-25T04:26:26Z"
+    },
+    "ipc_emprepu_es25.xlsx": {
+      "url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/6b2cb40a-188c-47c9-9288-ba11c40b5910/download/ipc_emprepu_es25.xlsx",
+      "sha256": "d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4",
+      "bytes": 68016,
+      "first_downloaded_at_utc": "2026-11-25T04:26:28Z",
+      "downloaded_at_utc": "2026-11-25T04:26:28Z"
+    }
+  }
+}
