@@ -1,0 +1,40 @@
+[project]
+name = "local-growth-pressure-monitor"
+version = "0.1.0"
+description = "Municipal service-pressure monitor for Guatemala: INE projections and vital events joined to MINEDUC and SEGEPLAN open data."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Dataton INE 2026 team" }]
+dependencies = [
+  "pandas>=2.2.3",
+  "openpyxl>=3.1.5",
+  "pyarrow>=18.0.0",
+  "requests>=2.32.3",
+  "truststore>=0.10.4",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3.4",
+]
+
+[project.scripts]
+build-pressure = "pipeline.build:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+  "integration: requires the cached raw files in data/ (run `uv run build-pressure` first)",
+]
+
+[tool.uv]
+package = true
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["pipeline"]

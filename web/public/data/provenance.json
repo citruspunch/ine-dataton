@@ -1,0 +1,590 @@
+{
+  "snapshot_id": "2026-11-24",
+  "generated_at_utc": "2026-11-25T05:53:23Z",
+  "verified_on": "2026-11-23",
+  "note": "Manifiesto de procedencia. Cada archivo crudo se registra con URL exacta, fecha UTC, SHA-256 y bytes. Los archivos existentes se reutilizan sin volver a descargarse.",
+  "files": [
+    {
+      "id": "ine-proyecciones-2035",
+      "title": "Estimaciones y proyecciones de población municipal 2015-2035",
+      "publisher": "Instituto Nacional de Estadística (INE), Guatemala",
+      "dataset_page": "https://www.ine.gob.gt/proyecciones/",
+      "download_url": "https://www.ine.gob.gt/ine/wp-content/uploads/2020/08/Estimaciones-y-Proyecciones-Municipales-2015-2035.xlsx",
+      "filename": "ine_proyecciones_municipales_2015_2035.xlsx",
+      "format": "xlsx",
+      "license": {
+        "id": "ine-fuente-institucional",
+        "name": "Estadística pública del INE; licencia CKAN no declarada en esta página",
+        "url": "https://www.ine.gob.gt/proyecciones/",
+        "commercial_use": null,
+        "attribution_required": true,
+        "ckan_license_id": null,
+        "ckan_license_title": null,
+        "status": "not_published_on_ckan",
+        "notes": "El archivo municipal 2015-2035 se publica en el sitio institucional del INE, no en el catálogo CKAN. No se le atribuye una licencia abierta distinta de la del portal CKAN del INE."
+      },
+      "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
+      "description": "Población total municipal al 30 de junio de cada año, 2015-2035. Actualización 2020 de las estimaciones y proyecciones municipales. Es la fuente del crecimiento poblacional y del catálogo base de 340 municipios.",
+      "verified_on": "2026-11-23",
+      "downloaded_at_utc": "2026-11-25T04:43:45Z",
+      "download_status": "cached",
+      "sha256": "d2d1e1ab902571040806d9e8b4ad29db15b2b8b475c2f5fa97a057b5115ed4fb",
+      "bytes": 68367,
+      "http_status": 200,
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "local_path": "data/ine_proyecciones_municipales_2015_2035.xlsx",
+      "license_status": "not_published_on_ckan",
+      "ckan_license_id": null,
+      "non_commercial": false,
+      "license_notice": "Licencia no declarada; cite la fuente y verifique los términos."
+    },
+    {
+      "id": "ine-proyecciones-2030",
+      "title": "Proyecciones de población municipal 2015-2030 por sexo y edad",
+      "publisher": "Instituto Nacional de Estadística (INE), Guatemala",
+      "dataset_page": "https://datos.ine.gob.gt/dataset/proyecciones-de-poblacion-2015-2030",
+      "download_url": "https://datos.ine.gob.gt/dataset/23bbe8f8-ec9b-49c9-bcca-de78bec4efc0/resource/56b97bc0-5624-408d-a136-3931dd05610a/download/estimaciones-y-proyecciones-de-la-poblacion-total-por-municipio-segun-sexo-y-edad.-2015-2030.xlsx",
+      "filename": "ine_proyecciones_municipales_2015_2030.xlsx",
+      "format": "xlsx",
+      "license": {
+        "id": "odc-by",
+        "name": "Open Data Commons Attribution License (ODC-By)",
+        "url": "http://www.opendefinition.org/licenses/odc-by",
+        "commercial_use": true,
+        "attribution_required": true,
+        "ckan_license_id": "odc-by",
+        "ckan_license_title": "Open Data Commons Attribution License",
+        "status": "declared",
+        "notes": "Licencia declarada por el INE en el catálogo CKAN del conjunto de proyecciones 2015-2030. Requiere atribución."
+      },
+      "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
+      "description": "Proyecciones municipales 2015-2030 desagregadas por sexo y edad. Se usa para validar el traslape 2015-2030 y para documentar la llave +21 de los 16 municipios del departamento de Guatemala.",
+      "verified_on": "2026-11-23",
+      "downloaded_at_utc": "2026-11-25T04:43:46Z",
+      "download_status": "cached",
+      "sha256": "b00fa494491b5b06e2fb7dac98df2441b6670e8d9a748cc97c2e72ed5012f499",
+      "bytes": 7775292,
+      "http_status": 200,
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "local_path": "data/ine_proyecciones_municipales_2015_2030.xlsx",
+      "license_status": "declared",
+      "ckan_license_id": "odc-by",
+      "non_commercial": false,
+      "license_notice": "Reutilización permitida con atribución."
+    },
+    {
+      "id": "ine-nacimientos-2025",
+      "title": "Nacimientos registrados en 2025",
+      "publisher": "Instituto Nacional de Estadística (INE), Guatemala",
+      "dataset_page": "https://datos.ine.gob.gt/dataset/estadisticas-vitales-nacimientos",
+      "download_url": "https://datos.ine.gob.gt/dataset/96888fc0-5ced-4a58-bfd0-2a6a292e3208/resource/b6847c70-a0b9-4cfd-a405-4ea4360905d7/download/nacimientos_2025.xlsx",
+      "filename": "ine_nacimientos_2025.xlsx",
+      "format": "xlsx",
+      "license": {
+        "id": "ine-no-declarada",
+        "name": "Licencia no declarada en CKAN; estadísticas públicas del INE",
+        "url": "https://www.ine.gob.gt/",
+        "commercial_use": null,
+        "attribution_required": true,
+        "ckan_license_id": null,
+        "ckan_license_title": null,
+        "status": "not_declared",
+        "notes": "El recurso CKAN del INE no tiene license_id. Se cita al INE como fuente y no se atribuye una licencia abierta que la institución no haya declarado. Verifique los términos vigentes antes de reutilizar."
+      },
+      "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
+      "description": "Microdatos de nacimientos registrados en 2025. Se agregan por departamento y municipio de residencia de la madre (Deprem/Muprem).",
+      "verified_on": "2026-11-23",
+      "downloaded_at_utc": "2026-11-25T04:48:49Z",
+      "download_status": "cached",
+      "sha256": "12dd75c254f3c37e2637fb76ee6a5e1b11ffdfcec738f90e46a16605945b39e9",
+      "bytes": 39102416,
+      "http_status": 200,
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "local_path": "data/ine_nacimientos_2025.xlsx",
+      "license_status": "not_declared",
+      "ckan_license_id": null,
+      "non_commercial": false,
+      "license_notice": "Licencia no declarada; cite la fuente y verifique los términos."
+    },
+    {
+      "id": "ine-defunciones-2025",
+      "title": "Defunciones registradas en 2025",
+      "publisher": "Instituto Nacional de Estadística (INE), Guatemala",
+      "dataset_page": "https://datos.ine.gob.gt/dataset/estadisticas-vitales-defunciones",
+      "download_url": "https://datos.ine.gob.gt/dataset/14f547c3-ad37-4ea1-9e74-16a3ed50ff54/resource/43adb351-0a14-4783-8401-e5ef21a2222e/download/defunciones_2025.xlsx",
+      "filename": "ine_defunciones_2025.xlsx",
+      "format": "xlsx",
+      "license": {
+        "id": "ine-no-declarada",
+        "name": "Licencia no declarada en CKAN; estadísticas públicas del INE",
+        "url": "https://www.ine.gob.gt/",
+        "commercial_use": null,
+        "attribution_required": true,
+        "ckan_license_id": null,
+        "ckan_license_title": null,
+        "status": "not_declared",
+        "notes": "El recurso CKAN del INE no tiene license_id. Se cita al INE como fuente y no se atribuye una licencia abierta que la institución no haya declarado. Verifique los términos vigentes antes de reutilizar."
+      },
+      "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
+      "description": "Microdatos de defunciones registradas en 2025. Se agregan por departamento y municipio de residencia del fallecido (Dredif/MreDif). Incluye defunciones de menores de 5 años para el ejercicio de supresión de celdas pequeñas.",
+      "verified_on": "2026-11-23",
+      "downloaded_at_utc": "2026-11-25T04:49:53Z",
+      "download_status": "cached",
+      "sha256": "332da4f661f78db0eab9788450fffaea68f4eedd22febac100790600c51870a7",
+      "bytes": 8918540,
+      "http_status": 200,
+      "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "local_path": "data/ine_defunciones_2025.xlsx",
+      "license_status": "not_declared",
+      "ckan_license_id": null,
+      "non_commercial": false,
+      "license_notice": "Licencia no declarada; cite la fuente y verifique los términos."
+    },
+    {
+      "id": "mineduc-establecimientos-2022",
+      "title": "Establecimientos educativos 2021-2022",
+      "publisher": "Ministerio de Educación (MINEDUC), Guatemala",
+      "dataset_page": "https://datosabiertos.mineduc.gob.gt/dataset/6daf991d-59fc-4f2c-a64c-35759ee6cba0",
+      "download_url": "https://datosabiertos.mineduc.gob.gt/dataset/6daf991d-59fc-4f2c-a64c-35759ee6cba0/resource/b7377ce0-0c66-4f8c-89d7-fd52fc7ab47b/download/establecimientos_2021-2022.csv",
+      "filename": "mineduc_establecimientos_2021_2022.csv",
+      "format": "csv",
+      "license": {
+        "id": "cc-zero",
+        "name": "Creative Commons CCZero (CC0 1.0)",
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "commercial_use": true,
+        "attribution_required": false,
+        "ckan_license_id": "cc-zero",
+        "ckan_license_title": "Creative Commons CCZero",
+        "status": "declared",
+        "notes": "Licencia CC0 declarada por el Ministerio de Educación en su portal CKAN. Se cita igualmente al MINEDUC como fuente."
+      },
+      "attribution": "Ministerio de Educación (MINEDUC), Guatemala",
+      "description": "Directorio de establecimientos educativos con ubicación, sector y nivel. Se cuenta el número de establecimientos únicos por municipio en el ciclo 2022.",
+      "verified_on": "2026-11-23",
+      "downloaded_at_utc": "2026-11-25T04:51:11Z",
+      "download_status": "cached",
+      "sha256": "8d8a2dd991ad8209e1fb3d4d159c361985bc9132e17c741087aa68c8baa6ebd3",
+      "bytes": 20672969,
+      "http_status": 200,
+      "content_type": "text/csv",
+      "local_path": "data/mineduc_establecimientos_2021_2022.csv",
+      "license_status": "declared",
+      "ckan_license_id": "cc-zero",
+      "non_commercial": false,
+      "license_notice": "Reutilización permitida con atribución."
+    },
+    {
+      "id": "mineduc-estudiantes-2022",
+      "title": "Estudiantes 2021-2022 por municipio, nivel y sexo",
+      "publisher": "Ministerio de Educación (MINEDUC), Guatemala",
+      "dataset_page": "https://datosabiertos.mineduc.gob.gt/dataset/4d947596-0b42-4a9a-b151-53d74b230dd5",
+      "download_url": "https://datosabiertos.mineduc.gob.gt/dataset/4d947596-0b42-4a9a-b151-53d74b230dd5/resource/3774793e-1c80-4b6a-a0d8-6dca91e51c0a/download/estudiantes_2021-2022.csv",
+      "filename": "mineduc_estudiantes_2021_2022.csv",
+      "format": "csv",
+      "license": {
+        "id": "cc-zero",
+        "name": "Creative Commons CCZero (CC0 1.0)",
+        "url": "http://www.opendefinition.org/licenses/cc-zero",
+        "commercial_use": true,
+        "attribution_required": false,
+        "ckan_license_id": "cc-zero",
+        "ckan_license_title": "Creative Commons CCZero",
+        "status": "declared",
+        "notes": "Licencia CC0 declarada por el Ministerio de Educación en su portal CKAN. Se cita igualmente al MINEDUC como fuente."
+      },
+      "attribution": "Ministerio de Educación (MINEDUC), Guatemala",
+      "description": "Matrícula inscrita por municipio, nivel, grado, sector y etnia en el ciclo 2022. Se suma InscritosTotal por municipio.",
+      "verified_on": "2026-11-23",
+      "downloaded_at_utc": "2026-11-25T04:51:34Z",
+      "download_status": "cached",
+      "sha256": "c43f38ae61260636292b5fec3fc47e0a3f4fb18c5e50b0d13a2e07f92bebc206",
+      "bytes": 12772841,
+      "http_status": 200,
+      "content_type": "text/csv",
+      "local_path": "data/mineduc_estudiantes_2021_2022.csv",
+      "license_status": "declared",
+      "ckan_license_id": "cc-zero",
+      "non_commercial": false,
+      "license_notice": "Reutilización permitida con atribución."
+    },
+    {
+      "id": "segeplan-pobreza-2023",
+      "title": "Mapa de pobreza por municipio 2023",
+      "publisher": "Secretaría de Planificación y Programación de la Presidencia (SEGEPLAN)",
+      "dataset_page": "https://datos.segeplan.gob.gt/dataset/bfddf2e8-db9b-408f-b2b6-2519e207b150",
+      "download_url": "https://datos.segeplan.gob.gt/dataset/bfddf2e8-db9b-408f-b2b6-2519e207b150/resource/40ccb784-5f6d-47ab-8343-342fa2caabeb/download/datos-abiertos_resultados-mapa2023_mupio.csv",
+      "filename": "segeplan_pobreza_municipal_2023.csv",
+      "format": "csv",
+      "license": {
+        "id": "cc-nc",
+        "name": "Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+        "url": "http://creativecommons.org/licenses/by-nc/2.0/",
+        "commercial_use": false,
+        "attribution_required": true,
+        "ckan_license_id": "cc-nc",
+        "ckan_license_title": "Creative Commons Non-Commercial (Cualquiera)",
+        "status": "declared",
+        "notes": "Licencia CC BY-NC 2.0 declarada por SEGEPLAN en su portal CKAN. USO NO COMERCIAL ÚNICAMENTE. Se exige atribución a SEGEPLAN. Cualquier reutilización comercial requiere autorización expresa."
+      },
+      "attribution": "SEGEPLAN, Mapas de pobreza a nivel municipal 2023",
+      "description": "Incidencia de pobreza general y extrema, brecha, severidad y consumo promedio per cápita por municipio, 2023. La pobreza extrema no está disponible para 23 municipios.",
+      "verified_on": "2026-11-23",
+      "downloaded_at_utc": "2026-11-25T04:51:48Z",
+      "download_status": "cached",
+      "sha256": "462e10c77aa9d5c5ad8e43250e0da1c24679161cde4be944cfd93f67127ab277",
+      "bytes": 59568,
+      "http_status": 200,
+      "content_type": "text/csv",
+      "local_path": "data/segeplan_pobreza_municipal_2023.csv",
+      "license_status": "declared",
+      "ckan_license_id": "cc-nc",
+      "non_commercial": true,
+      "license_notice": "CC BY-NC 2.0: uso no comercial únicamente; se requiere atribución a SEGEPLAN."
+    },
+    {
+      "id": "segeplan-asignacion-2026",
+      "title": "Cálculo matemático de la asignación constitucional 2026",
+      "publisher": "Secretaría de Planificación y Programación de la Presidencia (SEGEPLAN)",
+      "dataset_page": "https://datos.segeplan.gob.gt/dataset/f4ee4102-b724-4617-8343-95a03e7fe34b",
+      "download_url": "https://datos.segeplan.gob.gt/dataset/f4ee4102-b724-4617-8343-95a03e7fe34b/resource/8df77811-4e24-4fe8-af78-6e40153850f8/download/calculo-matematico-para-la-asignacion-constitucional-a-las-municipalidades-del-ano-2026.csv",
+      "filename": "segeplan_asignacion_constitucional_2026.csv",
+      "format": "csv",
+      "license": {
+        "id": "cc-nc",
+        "name": "Creative Commons Atribución-NoComercial 2.0 (CC BY-NC 2.0)",
+        "url": "http://creativecommons.org/licenses/by-nc/2.0/",
+        "commercial_use": false,
+        "attribution_required": true,
+        "ckan_license_id": "cc-nc",
+        "ckan_license_title": "Creative Commons Non-Commercial (Cualquiera)",
+        "status": "declared",
+        "notes": "Licencia CC BY-NC 2.0 declarada por SEGEPLAN en su portal CKAN. USO NO COMERCIAL ÚNICAMENTE. Se exige atribución a SEGEPLAN. Cualquier reutilización comercial requiere autorización expresa."
+      },
+      "attribution": "SEGEPLAN, Cálculo matemático de la asignación constitucional 2026",
+      "description": "Distribución del situado constitucional a las 340 municipalidades para el ejercicio fiscal 2026, con población 2025, ingresos propios per cápita y número de aldeas y caseríos.",
+      "verified_on": "2026-11-23",
+      "downloaded_at_utc": "2026-11-25T04:51:50Z",
+      "download_status": "cached",
+      "sha256": "c3f896c1ccfd26e20272809712cd3c69e5abf8f01b6166163d41129fb10f0af7",
+      "bytes": 47817,
+      "http_status": 200,
+      "content_type": "text/csv",
+      "local_path": "data/segeplan_asignacion_constitucional_2026.csv",
+      "license_status": "declared",
+      "ckan_license_id": "cc-nc",
+      "non_commercial": true,
+      "license_notice": "CC BY-NC 2.0: uso no comercial únicamente; se requiere atribución a SEGEPLAN."
+    },
+    {
+      "id": "ine-catalogo-municipal-340",
+      "title": "Catálogo de referencia de los 340 municipios",
+      "publisher": "Derivado de la tabla municipal oficial del INE",
+      "dataset_page": "https://www.ine.gob.gt/proyecciones/",
+      "download_url": "https://www.ine.gob.gt/ine/wp-content/uploads/2020/08/Estimaciones-y-Proyecciones-Municipales-2015-2035.xlsx",
+      "filename": "municipios_gt_340.csv",
+      "format": "derived-csv",
+      "license": {
+        "id": "ine-fuente-institucional",
+        "name": "Estadística pública del INE; licencia CKAN no declarada en esta página",
+        "url": "https://www.ine.gob.gt/proyecciones/",
+        "commercial_use": null,
+        "attribution_required": true,
+        "ckan_license_id": null,
+        "ckan_license_title": null,
+        "status": "not_published_on_ckan",
+        "notes": "El archivo municipal 2015-2035 se publica en el sitio institucional del INE, no en el catálogo CKAN. No se le atribuye una licencia abierta distinta de la del portal CKAN del INE."
+      },
+      "license_status": "not_published_on_ckan",
+      "ckan_license_id": null,
+      "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
+      "description": "Catálogo construido a partir de las 340 filas municipales de la proyección 2015-2035. Se validó contra los 340 códigos de MINEDUC, SEGEPLAN y la proyección larga 2015-2030.",
+      "verified_on": "2026-11-23",
+      "downloaded_at_utc": "2026-11-25T04:43:45Z",
+      "download_status": "derived",
+      "sha256": "d2d1e1ab902571040806d9e8b4ad29db15b2b8b475c2f5fa97a057b5115ed4fb",
+      "bytes": null,
+      "http_status": null,
+      "content_type": "text/csv",
+      "local_path": "data/reference/municipios_gt_340.csv",
+      "non_commercial": false,
+      "license_notice": "Licencia no declarada; cite la fuente y verifique los términos."
+    }
+  ],
+  "transformations": {
+    "reference_catalog": {
+      "rows": 340,
+      "departments": 22,
+      "years": [
+        2015,
+        2035
+      ],
+      "coding_note": "La tabla ancha usa códigos como 101 y 2217; se normalizan a 0101 y 2217.",
+      "derivation": "Se extrajeron las 340 filas municipales de la hoja 'Resultado Municipal' y se normalizaron los códigos a 4 dígitos.",
+      "output": "data/reference/municipios_gt_340.csv"
+    },
+    "projections_2030": {
+      "rows": 340,
+      "raw_rows": 72420,
+      "crosswalk_applied": 16,
+      "crosswalk_mapping": "0123-0138 -> 0102-0117 (restar 21 al correlativo municipal)",
+      "sex_filter": "SEXO=0 (total); se excluyen las filas de sexo 1 y 2 para no duplicar la población",
+      "years": [
+        2015,
+        2030
+      ]
+    },
+    "projection_overlap": {
+      "rows_compared": 340,
+      "years": [
+        2015,
+        2030
+      ],
+      "max_abs_difference_people": 0.0,
+      "max_abs_difference_year": 2015,
+      "by_year": {
+        "2015": 0.0,
+        "2016": 0.0,
+        "2017": 0.0,
+        "2018": 0.0,
+        "2019": 0.0,
+        "2020": 0.0,
+        "2021": 0.0,
+        "2022": 0.0,
+        "2023": 0.0,
+        "2024": 0.0,
+        "2025": 0.0,
+        "2026": 0.0,
+        "2027": 0.0,
+        "2028": 0.0,
+        "2029": 0.0,
+        "2030": 0.0
+      },
+      "tolerance_people": 1.0,
+      "status": "ok"
+    },
+    "births_2025": {
+      "rows_total": 286539,
+      "rows_year_2025": 248197,
+      "rows_used": 238109,
+      "rows_unmatched": 10088,
+      "unmatched_codes": [
+        {
+          "codigo": "9999",
+          "registros": 9636
+        },
+        {
+          "codigo": "2300",
+          "registros": 452
+        }
+      ],
+      "municipalities_with_data": 340,
+      "zero_filled_municipalities": 0,
+      "total_used": 238109,
+      "residence_field": "Deprem + Muprem (residencia de la madre)",
+      "year_field": "Añoreg = 2025",
+      "min_count": 28,
+      "max_count": 12136
+    },
+    "deaths_2025": {
+      "rows_total": 96064,
+      "rows_year_2025": 91843,
+      "rows_used": 88181,
+      "rows_unmatched": 3662,
+      "unmatched_codes": [
+        {
+          "codigo": "9999",
+          "registros": 3317
+        },
+        {
+          "codigo": "2300",
+          "registros": 345
+        }
+      ],
+      "municipalities_with_data": 340,
+      "zero_filled_municipalities": 0,
+      "total_used": 88181,
+      "under5_total": 3537,
+      "under5_min": 0,
+      "under5_max": 140,
+      "under5_municipalities_with_data": 315,
+      "under5_small_count_candidates": 120,
+      "residence_field": "Dredif + MreDif (residencia del fallecido)",
+      "under5_definition": "Edadif < 5 años",
+      "year_field": "Añoreg = 2025"
+    },
+    "establishments_2022": {
+      "rows_total": 99743,
+      "rows_year_2022": 42465,
+      "rows_used": 42465,
+      "rows_outside_catalog": 0,
+      "municipalities_with_data": 340,
+      "zero_filled_municipalities": 0,
+      "total_schools": 42465,
+      "total_public_schools": 31014,
+      "min_schools": 7,
+      "max_schools": 2260,
+      "min_public_schools": 4,
+      "year": "2022",
+      "counting_rule": "Conteo de CodigoEst únicos por municipio y ciclo 2022."
+    },
+    "students_2022": {
+      "rows_total": 100643,
+      "rows_year_2022": 50827,
+      "rows_used": 50827,
+      "rows_outside_catalog": 0,
+      "municipalities_with_data": 340,
+      "zero_filled_municipalities": 0,
+      "total_students": 4171483,
+      "total_public_students": 3168810,
+      "min_students": 552,
+      "max_students": 322966,
+      "year": "2022",
+      "counting_rule": "Suma de InscritosTotal por municipio y ciclo 2022."
+    },
+    "poverty_2023": {
+      "rows": 340,
+      "municipalities": 340,
+      "missing_extreme_poverty": 23,
+      "national_general_poverty_mean_unweighted": 58.641764705882345,
+      "national_extreme_poverty_mean_unweighted": 17.592744479495266,
+      "year": 2023,
+      "notes": "La incidencia de pobreza extrema no está publicada para 23 municipios; se muestra como no disponible."
+    },
+    "allocation_2026": {
+      "rows": 340,
+      "municipalities": 340,
+      "total_allocation_gtq": 6141820999.940001,
+      "national_per_capita_gtq": 339.7060588546008,
+      "year": 2026,
+      "notes": "Cálculo matemático del situado constitucional 2026. No es ejecución presupuestaria; la población de referencia es la usada por SEGEPLAN en el cálculo (2025)."
+    },
+    "indicators": {
+      "rows": 340,
+      "columns": 89,
+      "suppression": {
+        "counts": {
+          "threshold": 5,
+          "rule": "Se suprimen los conteos no nulos menores que 5. Los ceros se publican como cero. Las tasas derivadas se suprimen si cualquiera de sus componentes fue suprimido.",
+          "count_fields": [
+            {
+              "field": "nacimientos_2025",
+              "label": "Nacimientos registrados en 2025",
+              "suppressed_cells": 0
+            },
+            {
+              "field": "defunciones_2025",
+              "label": "Defunciones registradas en 2025",
+              "suppressed_cells": 0
+            },
+            {
+              "field": "defunciones_menores_5_2025",
+              "label": "Defunciones de menores de 5 años en 2025",
+              "suppressed_cells": 120
+            },
+            {
+              "field": "escuelas_2022",
+              "label": "Establecimientos educativos en 2022",
+              "suppressed_cells": 0
+            },
+            {
+              "field": "escuelas_publicas_2022",
+              "label": "Establecimientos públicos en 2022",
+              "suppressed_cells": 1
+            },
+            {
+              "field": "estudiantes_2022",
+              "label": "Estudiantes inscritos en 2022",
+              "suppressed_cells": 0
+            },
+            {
+              "field": "estudiantes_publicos_2022",
+              "label": "Estudiantes en establecimientos públicos en 2022",
+              "suppressed_cells": 0
+            }
+          ],
+          "suppressed_cells_by_field": {
+            "defunciones_menores_5_2025": 120,
+            "escuelas_publicas_2022": 1
+          },
+          "suppressed_cells_total": 121,
+          "municipalities_with_suppression": 121,
+          "legal_basis": "Decreto-Ley 3-85, Ley de Estadística, y sus reglamentos: secreto estadístico y prohibición de divulgar datos individuales. La supresión de celdas pequeñas es una salvaguarda adicional.",
+          "notes": "La regla de umbral 5 es una decisión conservadora del prototipo, no una marca oficial de supresión del INE. Las estimaciones de pobreza y los montos administrativos no son conteos y no se suprimen."
+        },
+        "derived": {
+          "derived_fields": [
+            {
+              "field": "nacimientos_por_escuela_2025",
+              "label": "Nacimientos por escuela",
+              "suppressed_cells": 0
+            },
+            {
+              "field": "estudiantes_por_escuela_2022",
+              "label": "Estudiantes por escuela",
+              "suppressed_cells": 0
+            },
+            {
+              "field": "nacimientos_por_100_estudiantes_2025",
+              "label": "Nacimientos por 100 estudiantes",
+              "suppressed_cells": 0
+            },
+            {
+              "field": "tasa_mortalidad_menor_5_2025",
+              "label": "Mortalidad de menores de 5 años por 1,000 nacimientos",
+              "suppressed_cells": 120
+            },
+            {
+              "field": "tasa_mortalidad_general_2025",
+              "label": "Mortalidad general por 1,000 habitantes",
+              "suppressed_cells": 0
+            }
+          ],
+          "suppressed_cells_total": 120
+        },
+        "total_suppressed_cells": 241
+      },
+      "pressure_classes": {
+        "crecimiento_poblacional_pct": {
+          "Presión alta": 86,
+          "Presión media-alta": 85,
+          "Presión media": 85,
+          "Presión baja": 84,
+          "Sin dato": 0
+        },
+        "nacimientos_por_escuela_2025": {
+          "Presión alta": 86,
+          "Presión media-alta": 85,
+          "Presión media": 85,
+          "Presión baja": 84,
+          "Sin dato": 0
+        },
+        "asignacion_presion_indice_2026": {
+          "Presión alta": 86,
+          "Presión media-alta": 85,
+          "Presión media": 85,
+          "Presión baja": 84,
+          "Sin dato": 0
+        }
+      }
+    }
+  },
+  "outputs": {
+    "data/processed/municipios.parquet": {
+      "bytes": 9384,
+      "sha256": "3e6b411972383d0f5fc0e546d00e1d8148f83e4428f63456d37afc2613302d1b"
+    },
+    "data/processed/indicators.parquet": {
+      "bytes": 185852,
+      "sha256": "544e6fb87bcb6ca65f29623f80b1c8080361066f710ee30182d266df97e889dd"
+    },
+    "data/processed/indicators.json": {
+      "bytes": 1277084,
+      "sha256": "334cd8b6573bae5665ebafd692c843c5c452313c1c62a837146a59513d25c9a2"
+    },
+    "data/reference/municipios_gt_340.csv": {
+      "bytes": 11668,
+      "sha256": "624f1100eb1f6525bab31162867d033e7ccce43adcb6324dd486cddf0cb5c376"
+    }
+  }
+}

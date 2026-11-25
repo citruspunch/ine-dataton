@@ -49,3 +49,24 @@ next-env.d.ts
 
 # Descubrimiento INE (datos crudos, temporales)
 /discovery_ine/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Raw data cache. Large files are re-downloadable from the URLs in
+# pipeline/sources.py; the manifest and the processed outputs are tracked.
+data/*.xlsx
+data/*.csv
+!data/reference/municipios_gt_340.csv
+
+# Frontend dependencies
+web/node_modules/
+web/.next/
+web/out/
+web/next-env.d.ts
+web/tsconfig.tsbuildinfo
