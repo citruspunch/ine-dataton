@@ -15,6 +15,7 @@
     "test:web": "pnpm --dir web run typecheck",
     "build:web": "pnpm --dir web run build",
     "mcp": "uv run python mcp/server.py",
-    "licenses": "uv run python -m engine.licenses"
+    "licenses": "uv run python -m engine.licenses",
+    "profiles:check": "uv run python -m engine.profiles"
   }
 }

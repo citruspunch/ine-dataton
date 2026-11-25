@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState, useTransition } from "react";
+import { useActionState, useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 import { createProfile, validateProfileYaml } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -62,6 +63,23 @@ export function NewProfileDialog() {
   const [yaml, setYaml] = useState(TEMPLATE);
   const [errors, setErrors] = useState<{ field: string; message: string }[]>([]);
   const [checking, startChecking] = useTransition();
+  const router = useRouter();
+
+  // Live contract validation: debounce while typing, no save involved.
+  useEffect(() => {
+    if (!yaml.trim()) return;
+    const timer = setTimeout(() => {
+      startChecking(async () => {
+        const result = await validateProfileYaml(yaml);
+        setErrors(result.errors);
+      });
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [yaml]);
+
+  useEffect(() => {
+    if (state.ok && state.profileId) router.refresh();
+  }, [state.ok, state.profileId, router]);
 
   function validate() {
     startChecking(async () => {
@@ -84,7 +102,8 @@ export function NewProfileDialog() {
           <DialogTitle>Nuevo perfil declarativo</DialogTitle>
           <DialogDescription>
             El motor valida sintaxis, campos obligatorios, tipos permitidos, grano,
-            fechas y comparabilidad antes de guardar en <code>profiles/</code>.
+            fechas y comparabilidad mientras escribe, y otra vez antes de guardar en
+            <code>profiles/</code>.
           </DialogDescription>
         </DialogHeader>
 

@@ -430,3 +430,55 @@ def validate_text(text: str) -> tuple[dict[str, Any], list[dict[str, str]]]:
     except ProfileError as exc:
         return {}, exc.errors
     return data, validate_profile(data)
+
+
+# --------------------------------------------------------------------------
+# Contract validator entry point: python -m engine.profiles [paths...]
+# --------------------------------------------------------------------------
+
+
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+    import sys
+
+    parser = argparse.ArgumentParser(
+        prog="python -m engine.profiles",
+        description="Valida contratos YAML de profiles/ y reporta errores por campo.",
+    )
+    parser.add_argument(
+        "paths",
+        nargs="*",
+        help="archivos YAML; por defecto todos los de profiles/",
+    )
+    args = parser.parse_args(argv)
+
+    paths = [Path(item) for item in args.paths] or sorted(
+        config.PROFILE_DIR.glob("*.yaml")
+    )
+    if not paths:
+        print("no hay perfiles para validar", file=sys.stderr)
+        return 2
+
+    failed = 0
+    for path in paths:
+        try:
+            data = parse_yaml(path.read_text(encoding="utf-8"))
+        except (OSError, ProfileError) as exc:
+            failed += 1
+            print(f"✗ {path.name}: {exc}")
+            continue
+        errors = validate_profile(data)
+        if errors:
+            failed += 1
+            print(f"✗ {path.name}")
+            for error in errors:
+                print(f"    {error['field']}: {error['message']}")
+        else:
+            print(f"✓ {path.name}")
+
+    print(f"\n{len(paths) - failed}/{len(paths)} contratos válidos")
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

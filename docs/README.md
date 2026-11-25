@@ -50,8 +50,10 @@ Scripts disponibles (definidos en `package.json`):
 | `pnpm run test:engine` | suite `pytest` |
 | `pnpm run test:web` | verificación de tipos de TypeScript |
 | `pnpm run mcp` | servidor MCP por stdio |
+| `pnpm run profiles:check` | valida los contratos YAML de `profiles/` |
 
-Después de `uv sync` y `pnpm install`, todo funciona **sin red**.
+Después de `uv sync` y `pnpm install`, todo funciona **sin red**. Los contratos
+se pueden validar sin interfaz con `uv run python -m engine.profiles`.
 
 > `pnpm run seed` reinicia la cola: borra cargas, enmiendas, cuarentena, recibos
 > y decisiones, y vuelve a habilitar los cuatro casos base. El estado versionado
@@ -159,9 +161,10 @@ Reglas versionadas en `rules/rules.json`: `SNAP-01` integridad, `LIC-01` licenci
   evidencia privada, formulario de gate con justificación de advertencias y botón
   de **invalidación en vivo** que cambia la versión del perfil, recalcula el
   digest y retira el agregado del portal.
-- **Consulta** (`/a/[id]`): comparador seguro de periodos, tabla de series,
-  reglas evaluadas, descarga de `recibo.json` y **ficha técnica imprimible**
-  (`/a/[id]/ficha`) para adjuntar al ticket del procedimiento 18.
+- **Consulta** (`/a/[id]`): ficha con fuente, base y periodo, tabla de series
+  publicadas, reglas evaluadas, descarga de `recibo.json` y **ficha técnica
+  imprimible** (`/a/[id]/ficha`) para adjuntar al ticket del procedimiento 18.
+  No incluye comparador de periodos.
 
 Estados: `borrador`, `no_habilitado`, `en_revision`,
 `habilitado_para_consulta`, `cerrado`. No existe “aprobado por el INE”.
@@ -174,7 +177,7 @@ escritura y sin acceso a la cola de revisión.
 | Herramienta | Devuelve |
 |---|---|
 | `list_enabled_aggregates()` | agregados con fuente, URL, fecha UTC, licencia, base, series y `decision_basis_digest` |
-| `query_ipc_period_comparison(period_a, period_b, series)` | variación publicada entre dos periodos, o un bloqueo estructurado |
+| `get_aggregate_receipt(case_id)` | metadatos del agregado y su recibo público (`technical_payload` y `decision_log`), o un bloqueo estructurado |
 
 ```json
 {
@@ -201,8 +204,8 @@ pnpm run test        # motor + tipos
 - **Motor (pytest):** contrato, `.xls` heredado, identidad, comparabilidad,
   determinismo e invalidación del digest, gate, frontera de la API pública y
   aislamiento del MCP.
-- **API HTTP:** casos, carga, gate, simulación, comparador, recibos y creación de
-  perfiles con errores de campo.
+- **API HTTP:** casos, carga, gate, simulación, recibos y creación de perfiles con
+  errores de campo; el endpoint de comparación ya no existe.
 - **Web:** `tsc --noEmit` sobre la interfaz.
 
 ## 9. Limitaciones
@@ -213,8 +216,9 @@ pnpm run test        # motor + tipos
 - El hash prueba igualdad de bytes del par observado, no autoría ni calidad.
 - El caso de duplicados usa un fixture sintético; el par real es microdato.
 - La cobertura es la del perfil declarado, no la de toda la hoja.
-- El comparador solo opera sobre los periodos publicados en el snapshot.
-- El regional publica índices, no variaciones: el comparador lo dice y no calcula.
+- No hay comparador de periodos: el portal muestra metadatos, reglas y recibo, y
+  no calcula variaciones entre periodos.
+- El regional publica índices, no variaciones; el prototipo no las calcula.
 - La fecha de descarga del regional proviene de la mtime del archivo
   (`downloaded_at_source: "mtime"`), declarada en el manifiesto.
 
