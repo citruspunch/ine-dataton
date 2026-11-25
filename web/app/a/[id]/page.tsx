@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { SeverityBadge, StateBadge } from "@/components/badges";
-import { Comparator } from "@/components/comparator";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
@@ -29,10 +28,6 @@ export default async function PublicDetailPage({ params }: PageProps) {
   const { aggregate } = payload;
   const entity = aggregate.entity;
   const series: Series[] = entity.series ?? [];
-  const comparable = series.find((item) => item.comparable && item.has_published_variation);
-  const defaultSeries = comparable ?? series[0];
-  const defaultPeriods = defaultSeries?.points.map((point) => point.period) ?? [];
-
   return (
     <div className="space-y-6">
       <p className="text-[13px] print:hidden">
@@ -85,24 +80,6 @@ export default async function PublicDetailPage({ params }: PageProps) {
       {series.length ? (
         <section className="space-y-3">
           <h2 className="text-[12px] font-semibold uppercase tracking-widest text-muted">
-            Comparador seguro de periodos
-          </h2>
-          <Comparator
-            caseId={aggregate.case_id}
-            series={series}
-            defaults={{
-              seriesA: defaultSeries?.series_id ?? "",
-              periodA: defaultPeriods[0] ?? "",
-              seriesB: defaultSeries?.series_id ?? "",
-              periodB: defaultPeriods[defaultPeriods.length - 1] ?? "",
-            }}
-          />
-        </section>
-      ) : null}
-
-      {series.length ? (
-        <section className="space-y-3">
-          <h2 className="text-[12px] font-semibold uppercase tracking-widest text-muted">
             Series publicadas
           </h2>
           <Table>
@@ -112,7 +89,6 @@ export default async function PublicDetailPage({ params }: PageProps) {
                 <TH>Etiqueta</TH>
                 <TH>Base</TH>
                 <TH>Periodos</TH>
-                <TH>Comparable</TH>
               </TR>
             </THead>
             <TBody>
@@ -122,19 +98,6 @@ export default async function PublicDetailPage({ params }: PageProps) {
                   <TD>{item.label}</TD>
                   <TD className="whitespace-nowrap">{item.base ?? "—"}</TD>
                   <TD className="whitespace-nowrap">{item.points.length}</TD>
-                  <TD>
-                    {item.comparable && item.has_published_variation ? (
-                      <Badge variant="ok">sí</Badge>
-                    ) : (
-                      <>
-                        <Badge variant="fail">no</Badge>
-                        <div className="text-[12px] text-muted">
-                          {item.not_comparable_reason ??
-                            "sin variación publicada en este recurso"}
-                        </div>
-                      </>
-                    )}
-                  </TD>
                 </TR>
               ))}
             </TBody>

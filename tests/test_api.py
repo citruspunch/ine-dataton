@@ -144,32 +144,12 @@ def test_public_index_and_detail(client):
     assert "private_evidence" not in json.dumps(detail)
 
 
-def test_compare_valid_and_blocked(client):
-    valid = client.post(
+def test_compare_endpoint_is_gone(client):
+    response = client.post(
         "/public/ipc_empalme/compare",
-        json={
-            "series_a": "f",
-            "period_a": "2024-12",
-            "series_b": "f",
-            "period_b": "2025-01",
-        },
-    ).json()
-    assert valid["status"] == "ok"
-    assert valid["published_pct"] == pytest.approx(0.501463, abs=1e-6)
-    assert valid["published_cell"] == "G504"
-
-    blocked = client.post(
-        "/public/ipc_empalme/compare",
-        json={
-            "series_a": "e",
-            "period_a": "2024-12",
-            "series_b": "f",
-            "period_b": "2025-01",
-        },
-    ).json()
-    assert blocked["status"] == "bloqueada"
-    assert blocked["code"] == "base_incompatible"
-    assert "published_pct" not in blocked
+        json={"series_a": "f", "period_a": "2024-12", "series_b": "f", "period_b": "2025-01"},
+    )
+    assert response.status_code in (404, 405)
 
 
 def test_public_receipt_is_downloadable(client):

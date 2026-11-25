@@ -81,14 +81,7 @@ def test_public_snapshot_does_not_mention_private_folder(seeded):
             assert "review_store" not in text, path.name
 
 
-def test_ipc_series_matches_official_file(seeded):
-    data = public_api.query_ipc_series("2024-12", "2025-01")
-    values = {p["period"]: p["value"] for p in data["points"]}
-    assert values["2025-01"] == pytest.approx(101.017579223309, abs=1e-12)
-    assert values["2024-12"] == pytest.approx(100.513540673814, abs=1e-9)
-
-
 def test_public_consultation_without_aggregates(sandbox):
     assert public_api.list_enabled_aggregates() == []
     with pytest.raises(public_api.PublicError):
-        public_api.query_ipc_series("2024-01", "2025-12")
+        public_api.require_aggregate("ipc_empalme")

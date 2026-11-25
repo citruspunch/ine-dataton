@@ -10,11 +10,3 @@ export function formatPct(value: number | null | undefined): string {
   const text = value.toFixed(2);
   return `${value > 0 ? "+" : ""}${text.replace(".", ",")}%`;
 }
-
-export function formatIndex(value: number | null | undefined): string {
-  if (value === null || value === undefined) return "—";
-  return value.toLocaleString("es-GT", {
-    minimumFractionDigits: 6,
-    maximumFractionDigits: 6,
-  });
-}

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { errorDetail, postForm, postJson } from "@/lib/api";
-import type { ActionState, ComparisonResult } from "@/lib/types";
+import type { ActionState } from "@/lib/types";
 
 function flash(path: string, message: string, kind: "ok" | "warn" | "err" = "ok") {
   redirect(`${path}?msg=${encodeURIComponent(message)}&kind=${kind}`);
@@ -121,25 +121,6 @@ export async function verifyAll() {
   } catch (error) {
     const detail = errorDetail(error);
     flash("/review", detail.message, "err");
-  }
-}
-
-export async function comparePeriods(
-  _prev: ActionState,
-  formData: FormData,
-): Promise<ActionState> {
-  const caseId = String(formData.get("case_id") || "");
-  try {
-    const result = await postJson<ComparisonResult>(`/public/${caseId}/compare`, {
-      series_a: String(formData.get("series_a") || ""),
-      period_a: String(formData.get("period_a") || ""),
-      series_b: String(formData.get("series_b") || ""),
-      period_b: String(formData.get("period_b") || ""),
-    });
-    return { ok: result.status === "ok", result };
-  } catch (error) {
-    const detail = errorDetail(error);
-    return { ok: false, message: detail.message };
   }
 }
 

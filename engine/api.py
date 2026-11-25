@@ -331,25 +331,7 @@ def public_detail(case_id: str) -> dict[str, Any]:
     return {
         "aggregate": aggregate,
         "receipt": public_api.get_receipt(case_id),
-        "series": public_api.series_catalog(aggregate),
     }
-
-
-class CompareBody(BaseModel):
-    series_a: str
-    period_a: str
-    series_b: str
-    period_b: str
-
-
-@app.post("/public/{case_id}/compare")
-def public_compare(case_id: str, body: CompareBody) -> dict[str, Any]:
-    try:
-        return public_api.compare(
-            case_id, body.series_a, body.period_a, body.series_b, body.period_b
-        )
-    except public_api.PublicError as exc:
-        return JSONResponse(status_code=409, content=exc.to_dict())
 
 
 @app.get("/public/{case_id}/receipt.json")

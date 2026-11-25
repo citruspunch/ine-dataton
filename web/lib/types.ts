@@ -168,28 +168,9 @@ export interface Receipt {
   decision_log: Record<string, unknown> | null;
 }
 
-export interface ComparisonResult {
-  status: "ok" | "bloqueada";
-  code: string;
-  message: string;
-  rule?: string;
-  published_pct?: number;
-  published_cell?: string | null;
-  period?: string;
-  previous_period?: string;
-  series?: string;
-  series_label?: string;
-  base?: string | null;
-  index_value?: number;
-  index_cell?: string | null;
-  previous_index_value?: number;
-  detail?: Record<string, unknown>;
-}
-
 export interface ActionState {
   ok: boolean;
   message?: string;
   errors?: { field: string; message: string }[];
-  result?: ComparisonResult | null;
   profileId?: string;
 }
