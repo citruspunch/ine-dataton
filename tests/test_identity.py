@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from idt import config, engine
-from idt.canonical import file_sha256
-from idt.model import WARNING, FAILURE
+from engine import config, rules
+from engine.canonical import file_sha256
+from engine.model import WARNING, FAILURE
 
 
 def test_same_bytes_with_incompatible_identity_fails():
-    result = engine.validate("dup_identidad", write_receipt=False)
+    result = rules.validate("dup_identidad", write_receipt=False)
     finding = next(f for f in result.findings if f.rule_id == "ID-01")
     assert finding.status == FAILURE
     assert result.entity["same_bytes"] is True
@@ -17,7 +17,7 @@ def test_same_bytes_with_incompatible_identity_fails():
 
 
 def test_documented_exception_becomes_warning(seeded):
-    result = engine.validate("dup_identidad_excepcion", write_receipt=False)
+    result = rules.validate("dup_identidad_excepcion", write_receipt=False)
     finding = next(f for f in result.findings if f.rule_id == "ID-01")
     assert finding.status == WARNING
     assert finding.justified is True

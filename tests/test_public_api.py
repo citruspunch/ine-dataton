@@ -6,7 +6,7 @@ import json
 
 import pytest
 
-from idt import config, engine, gate, public_api
+from engine import config, gate, rules, public_api
 
 
 def _walk_strings(node):

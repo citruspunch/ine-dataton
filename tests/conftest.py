@@ -10,7 +10,7 @@ import pytest
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from idt import config, gate  # noqa: E402
+from engine import config, gate  # noqa: E402
 
 PROMOTIONS = ["ipc_empalme", "ipc_regional", "csv_ok", "dup_identidad_excepcion"]
 
@@ -40,7 +40,7 @@ def sandbox(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "UPLOAD_REGISTRY", review / "uploads" / "manifest.json")
     monkeypatch.setattr(config, "JUSTIFICATION_FILE", review / "justifications.json")
 
-    source = ROOT / "review_store" / "justifications.json"
+    source = ROOT / "stores" / "review_store" / "justifications.json"
     target = review / "justifications.json"
     if source.exists():
         shutil.copyfile(source, target)

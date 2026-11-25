@@ -6,30 +6,30 @@ import json
 
 import pytest
 
-from idt import config, engine, gate
-from idt.model import WARNING, FAILURE, Finding, OK, derive_state
+from engine import config, gate, profiles, rules
+from engine.model import WARNING, FAILURE, Finding, OK, derive_state
 
 
 def test_two_runs_give_same_digest():
-    first = engine.validate("ipc_empalme", write_receipt=False)
-    second = engine.validate("ipc_empalme", write_receipt=False)
+    first = rules.validate("ipc_empalme", write_receipt=False)
+    second = rules.validate("ipc_empalme", write_receipt=False)
     assert first.digests["validation_digest"] == second.digests["validation_digest"]
 
 
 def test_digest_changes_when_profile_changes():
-    profile = config.load_profile("ipc_empalme_republica")
+    profile = profiles.load_profile("ipc_empalme_republica_v1")
     other = json.loads(json.dumps(profile))
     other["version"] = "9.9.9"
-    result = engine.validate("ipc_empalme", write_receipt=False)
-    rules = config.load_rules()
+    result = rules.validate("ipc_empalme", write_receipt=False)
+    rules_doc = config.load_rules()
     files = {"ine-ipc-empalme": result.entity["sha256"]}
-    assert engine._basis_digest(files, profile, rules, result.findings) != (
-        engine._basis_digest(files, other, rules, result.findings)
+    assert rules._basis_digest(files, profile, rules_doc, result.findings) != (
+        rules._basis_digest(files, other, rules_doc, result.findings)
     )
 
 
 def test_digest_does_not_depend_on_timestamps():
-    result = engine.validate("ipc_empalme", write_receipt=False)
+    result = rules.validate("ipc_empalme", write_receipt=False)
     payload = json.dumps(result.to_public_dict(), sort_keys=True)
     assert "generated_at_utc" not in payload
     assert "decided_at_utc" not in payload
@@ -42,7 +42,7 @@ def test_receipt_separates_payload_and_log(seeded):
     assert receipt["decision_log"] is not None
     assert (
         receipt["technical_payload"]["digest"]
-        == engine.validate("ipc_empalme", write_receipt=False).digests[
+        == rules.validate("ipc_empalme", write_receipt=False).digests[
             "validation_digest"
         ]
     )
@@ -93,13 +93,13 @@ def test_gate_rejects_failing_case(sandbox):
 
 
 def test_gate_rejects_unevaluated_critical_rules(sandbox):
-    result = engine.validate("xlsx_hoja_inesperada", write_receipt=False)
+    result = rules.validate("xlsx_hoja_inesperada", write_receipt=False)
     problems = gate.blocking_reasons(result)
     assert any("no evaluadas" in p or "no_evaluado" in p for p in problems)
 
 
 def test_gate_accepts_justified_exception(sandbox):
-    result = engine.validate("dup_identidad_excepcion", write_receipt=False)
+    result = rules.validate("dup_identidad_excepcion", write_receipt=False)
     assert gate.blocking_reasons(result) == []
 
 
@@ -128,14 +128,14 @@ def test_approval_publishes_and_writes_receipt(sandbox):
     assert receipt["decision_log"]["gate_decision"] == "habilitado"
     assert (
         receipt["technical_payload"]["digest"]
-        == engine.validate("ipc_empalme", write_receipt=False).digests[
+        == rules.validate("ipc_empalme", write_receipt=False).digests[
             "validation_digest"
         ]
     )
 
 
 def test_justified_warning_lifts_gate_block(sandbox):
-    result = engine.validate("dup_identidad", write_receipt=False)
+    result = rules.validate("dup_identidad", write_receipt=False)
     assert gate.blocking_reasons(result)
     final = gate.decide(
         "dup_identidad",
@@ -163,11 +163,11 @@ def test_simulation_invalidates_decision_and_withdraws_aggregate(seeded):
     assert gate.aggregate_path("ipc_empalme").exists()
     before = config.latest_decision("ipc_empalme")["decision_basis_digest"]
 
-    profile = config.load_profile("ipc_empalme_republica")
+    profile = profiles.load_profile("ipc_empalme_republica_v1")
     profile["version"] = f"{profile['version']}+sim"
     config.save_override("ipc_empalme", profile, "prueba de invalidación")
 
-    after = engine.validate("ipc_empalme", write_receipt=False).digests[
+    after = rules.validate("ipc_empalme", write_receipt=False).digests[
         "validation_digest"
     ]
     assert before != after
@@ -179,15 +179,15 @@ def test_simulation_invalidates_decision_and_withdraws_aggregate(seeded):
 
 
 def test_removing_simulation_restores_digest(seeded):
-    profile = config.load_profile("ipc_empalme_republica")
-    original = engine.validate("ipc_empalme", write_receipt=False).digests[
+    profile = profiles.load_profile("ipc_empalme_republica_v1")
+    original = rules.validate("ipc_empalme", write_receipt=False).digests[
         "validation_digest"
     ]
     profile["version"] = f"{profile['version']}+sim"
     config.save_override("ipc_empalme", profile, "prueba")
     config.clear_override("ipc_empalme")
     assert (
-        engine.validate("ipc_empalme", write_receipt=False).digests["validation_digest"]
+        rules.validate("ipc_empalme", write_receipt=False).digests["validation_digest"]
         == original
     )
 

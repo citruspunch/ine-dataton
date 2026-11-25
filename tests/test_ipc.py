@@ -6,12 +6,12 @@ import json
 
 import pytest
 
-from idt import engine, public_api
-from idt.model import OK
+from engine import public_api, rules
+from engine.model import OK
 
 
 def test_full_ipc_contract():
-    result = engine.validate("ipc_empalme", write_receipt=False)
+    result = rules.validate("ipc_empalme", write_receipt=False)
     assert result.coverage["complete"]
     assert [f.status for f in result.findings] == [OK] * len(result.findings)
     assert (
@@ -21,7 +21,7 @@ def test_full_ipc_contract():
 
 
 def test_valid_comparison_uses_published_variation():
-    result = engine.validate("ipc_empalme", write_receipt=False)
+    result = rules.validate("ipc_empalme", write_receipt=False)
     valid = next(c for c in result.comparisons if c.comparison_id == "mensual_ene_2025")
     assert valid.status == "ok"
     assert valid.public_evidence["computed_pct"] == pytest.approx(0.501463, abs=1e-6)
@@ -30,7 +30,7 @@ def test_valid_comparison_uses_published_variation():
 
 
 def test_invalid_comparison_is_blocked():
-    result = engine.validate("ipc_empalme", write_receipt=False)
+    result = rules.validate("ipc_empalme", write_receipt=False)
     blocked = next(
         c for c in result.comparisons if c.comparison_id == "cruce_bases_e_f"
     )
@@ -43,7 +43,7 @@ def test_invalid_comparison_is_blocked():
 
 
 def test_invalid_number_never_reaches_public_evidence():
-    result = engine.validate("ipc_empalme", write_receipt=False)
+    result = rules.validate("ipc_empalme", write_receipt=False)
     public = json.dumps(result.to_public_dict(), ensure_ascii=False)
     assert "0.6738" not in public
     assert "0,67" not in public
