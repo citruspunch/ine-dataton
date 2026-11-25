@@ -31,7 +31,7 @@ LICENSE_CHOICES = {
         "id": "interno-fixture",
         "verified": True,
         "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
-        "evidence": "Fixture generado por el equipo para la demostración.",
+        "evidence": "Fixture sintético generado por el equipo para pruebas.",
         "synthetic": True,
     },
     "sin-licencia": {

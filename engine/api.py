@@ -94,7 +94,7 @@ def _case_rows() -> list[dict[str, Any]]:
                 "state": result.state,
                 "state_text": result.state_text,
                 "profile": result.entity.get("profile") or case["profile"],
-                "origin": "demostración",
+                "origin": "caso de ejemplo",
                 "critical": f"{result.coverage.get('critical_evaluated')}/"
                 f"{result.coverage.get('critical_total')}",
                 "override": config.has_override(result.case_id),
@@ -236,7 +236,7 @@ def review_simulate(case_id: str) -> dict[str, Any]:
     config.save_override(
         case_id,
         profile,
-        "Simulación: versión del perfil enmendada para demostrar la invalidación.",
+        "Simulación: versión del perfil enmendada para forzar la invalidación.",
     )
     report = gate.verify()
     return {

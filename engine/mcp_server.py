@@ -43,7 +43,7 @@ def list_enabled_aggregates() -> dict[str, Any]:
         "total": len(aggregates),
         "aggregates": aggregates,
         "notice": (
-            "Solo agregados habilitados tras el gate humano. El prototipo no certifica."
+            "Solo agregados habilitados tras el gate humano. No certifica."
         ),
     }
 
@@ -107,7 +107,7 @@ def get_aggregate_receipt(case_id: str) -> dict[str, Any]:
         "metadata": metadata,
         "receipt": public_api.get_receipt(case_id),
         "notice": (
-            "Validación técnica del prototipo. El recibo separa technical_payload y "
+            "Validación técnica. El recibo separa technical_payload y "
             "decision_log; el digest no incluye timestamps."
         ),
     }

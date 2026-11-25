@@ -2,7 +2,7 @@
 
 ## En el producto
 
-Ninguno. El prototipo no incluye modelos, prompts, agentes ni servicios de IA en
+Ninguno. El producto no incluye modelos, prompts, agentes ni servicios de IA en
 tiempo de ejecución:
 
 - El motor (`engine/`) es determinista y no hace llamadas de red.

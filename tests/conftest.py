@@ -71,7 +71,7 @@ def sandbox(tmp_path, monkeypatch):
 
 @pytest.fixture()
 def seeded(sandbox):
-    """Sandbox with the four enabled cases, as in the demo."""
+    """Sandbox with the four cases approved for the test."""
     for case_id in PROMOTIONS:
         gate.promote(
             case_id,

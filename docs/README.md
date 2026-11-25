@@ -1,4 +1,4 @@
-# INE Data Trust · prototipo (monorepo modular)
+# INE Data Trust
 
 Validación técnica de agregados estadísticos ya publicados. El sistema comprueba
 un archivo candidato contra un contrato declarativo en YAML, marca identidades
@@ -6,7 +6,7 @@ incompatibles por SHA-256, bloquea comparaciones entre bases del IPC que no son
 comparables, registra el visto bueno humano y exporta un recibo reproducible.
 
 > **No implica certificación, aprobación ni adopción por el INE.**
-> Datatón INE 2026, Categoría 2. Estado: prototipo funcional.
+> Datatón INE 2026, Categoría 2. Versión 2.0.
 
 ---
 
@@ -31,12 +31,13 @@ Requisitos: **uv** (Python) y **pnpm** (Node.js). No se usa `make`.
 ```bash
 uv sync                       # entorno Python y uv.lock
 pnpm --dir web install        # interfaz Next.js y pnpm-lock.yaml
-
-pnpm run seed                 # snapshot, validación y gate de la demo
+pnpm run prepare              # verifica y registra las muestras del INE
 pnpm run dev                  # motor :8000 + interfaz :3000
 ```
 
-Abrir **http://127.0.0.1:3000**.
+Abrir **http://127.0.0.1:3000**. El portal de consulta arranca vacío: un
+agregado solo aparece cuando un revisor lo valida y registra el visto bueno en
+la bandeja de revisión.
 
 Scripts disponibles (definidos en `package.json`):
 
@@ -45,8 +46,8 @@ Scripts disponibles (definidos en `package.json`):
 | `pnpm run dev` | arranca motor y web juntos |
 | `pnpm run dev:engine` | solo el motor (`uv run uvicorn engine.api:app`) |
 | `pnpm run dev:web` | solo la interfaz (`next dev`) |
-| `pnpm run seed` | prepara snapshot, valida y habilita los casos de la demo |
-| `pnpm run demo:offline` | `seed` + servidores, sin red |
+| `pnpm run prepare` | verifica las muestras del INE y escribe el manifiesto |
+| `pnpm run verify` | recalcula digests y retira agregados sin decisión vigente |
 | `pnpm run test:engine` | suite `pytest` |
 | `pnpm run test:web` | verificación de tipos de TypeScript |
 | `pnpm run mcp` | servidor MCP por stdio |
@@ -55,9 +56,9 @@ Scripts disponibles (definidos en `package.json`):
 Después de `uv sync` y `pnpm install`, todo funciona **sin red**. Los contratos
 se pueden validar sin interfaz con `uv run python -m engine.profiles`.
 
-> `pnpm run seed` reinicia la cola: borra cargas, enmiendas, cuarentena, recibos
-> y decisiones, y vuelve a habilitar los cuatro casos base. El estado versionado
-> de la demo se recupera con `git restore stores`.
+> La cola de revisión arranca sin decisiones: los casos precargados se validan y
+> se habilitan desde la interfaz, y cada decisión queda en la bitácora con
+> responsable y motivo.
 
 ## 3. Arquitectura de carpetas
 
@@ -95,7 +96,7 @@ Ambos del conjunto CKAN **IPC Base Anual 2024=100**
 
 URLs completas en `data/sources.json` y `data/manifest.json`.
 
-**Por qué el empalme.** Permite demostrar un error metodológico real y
+**Por qué el empalme.** Permite exponer un error metodológico real y
 verificable:
 
 | Celda | Valor | Qué es |
@@ -211,14 +212,15 @@ pnpm run test        # motor + tipos
 ## 9. Limitaciones
 
 - No hay piloto en sombra ni prueba de usabilidad ejecutada.
-- La habilitación es del prototipo. No hay firma criptográfica ni autenticación.
+- La habilitación corresponde a este sistema, no al INE. No hay firma
+  criptográfica ni autenticación.
 - `n<5` no se usa como garantía legal; no se afirma secreto estadístico.
 - El hash prueba igualdad de bytes del par observado, no autoría ni calidad.
 - El caso de duplicados usa un fixture sintético; el par real es microdato.
 - La cobertura es la del perfil declarado, no la de toda la hoja.
 - No hay comparador de periodos: el portal muestra metadatos, reglas y recibo, y
   no calcula variaciones entre periodos.
-- El regional publica índices, no variaciones; el prototipo no las calcula.
+- El regional publica índices, no variaciones; el sistema no las calcula.
 - La fecha de descarga del regional proviene de la mtime del archivo
   (`downloaded_at_source: "mtime"`), declarada en el manifiesto.
 

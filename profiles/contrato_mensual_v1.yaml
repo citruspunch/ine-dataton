@@ -5,7 +5,7 @@ topic: sintetico
 title: Contrato mensual (CSV)
 description: >
   Contrato mínimo para un CSV mensual: una fila por año, mes e indicador.
-  Sirve para demostrar los casos positivos y negativos del contrato.
+  Sirve para ejercitar los casos positivos y negativos del contrato.
 
 expected_sheet: null
 header_row: 1

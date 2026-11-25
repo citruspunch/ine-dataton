@@ -281,8 +281,8 @@ def write_public_aggregate(result: ValidationResult) -> Path:
     payload = result.to_public_dict()
     payload["published_at_utc"] = utc_now()
     payload["notice"] = (
-        "Validación técnica del prototipo. No certifica, no corrige, no publica en "
-        "CKAN y no constituye aprobación del INE."
+        "Validación técnica. No certifica, no corrige, no publica en CKAN y no "
+        "constituye aprobación del INE."
     )
     config.dump_json(payload, path)
     write_public_receipt(result, payload)

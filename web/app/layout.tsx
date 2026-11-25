@@ -4,7 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "INE Data Trust · prototipo",
+  title: "INE Data Trust",
   description: "Validación técnica de agregados estadísticos publicados",
 };
 
@@ -17,9 +17,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/" className="flex items-baseline gap-3">
               <span className="text-lg font-semibold tracking-tight">
                 INE Data Trust
-              </span>
-              <span className="rounded bg-white/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest">
-                prototipo
               </span>
             </Link>
             <nav className="flex items-center gap-1 text-sm">
@@ -43,9 +40,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <footer className="mx-auto max-w-6xl px-6 pb-12 text-xs text-muted print:hidden">
           <p>
-            Validación técnica del prototipo. No certifica, no corrige, no publica
-            en CKAN y no constituye aprobación del INE. Los datos conservan su
-            licencia original.
+            Validación técnica. No certifica, no corrige, no publica en CKAN y no
+            constituye aprobación del INE. Los datos conservan su licencia original.
           </p>
         </footer>
       </body>

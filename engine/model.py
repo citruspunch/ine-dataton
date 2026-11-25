@@ -16,7 +16,7 @@ STATE_TEXT = {
     "borrador": "Borrador, no consultable",
     "no_habilitado": "No habilitado para consulta",
     "en_revision": "En revisión",
-    "habilitado_para_consulta": "Habilitado para consulta en el prototipo",
+    "habilitado_para_consulta": "Habilitado para consulta",
     "cerrado": "Cerrado por defecto",
 }
 

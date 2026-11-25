@@ -1,6 +1,6 @@
 """Deterministic generation of the synthetic fixtures.
 
-Every fixture is synthetic, labelled as such in the manifest, and demonstrates
+Every fixture is synthetic, labelled as such in the manifest, and exercises
 one specific case. None of them contains microdata, PII or official data.
 
 Column headers and cell values are kept in Spanish because they are the data

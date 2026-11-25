@@ -34,11 +34,10 @@ next-env.d.ts
 # --- Data discovery: not part of the submission ---
 /discovery_ine/
 
-# --- Transient demo artifacts ---
+# --- Transient session artifacts ---
 # Uploaded files, simulation overrides and withdrawn aggregates are session
 # state and are not versioned. Private receipts, decisions and the public
-# snapshot are: they are the evidence. The one uploaded file recorded as demo
-# evidence was added with `git add -f` and stays tracked despite this rule.
+# snapshot are: they are the evidence.
 /stores/review_store/uploads/
 /stores/review_store/overrides/
 /stores/review_store/quarantine/

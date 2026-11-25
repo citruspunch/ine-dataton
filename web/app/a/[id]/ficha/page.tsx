@@ -204,7 +204,7 @@ export default async function FichaPage({ params }: PageProps) {
       </div>
 
       <p className="text-[12px] text-muted">
-        La habilitación es del prototipo, no del INE. Este documento no certifica. El digest
+        La habilitación corresponde a este sistema, no al INE. Este documento no certifica. El digest
         no incluye timestamps de ejecución ni de decisión. Los datos conservan su licencia{" "}
         {entity.license.id || "original"}.
       </p>
