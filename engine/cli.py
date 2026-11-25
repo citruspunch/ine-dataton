@@ -12,7 +12,7 @@ import sys
 from typing import Any
 
 from . import config, gate
-from .engine import validate
+from .rules import validate
 from .model import WARNING, FAILURE, NOT_EVALUATED, OK
 
 STATUS_LABEL = {
@@ -213,9 +213,9 @@ def cmd_export(args: argparse.Namespace) -> int:
 def cmd_serve(args: argparse.Namespace) -> int:
     import uvicorn
 
-    from .web.app import app
+    from .api import app
 
-    print(f"INE Data Trust · http://{args.host}:{args.port}")
+    print(f"INE Data Trust engine · http://{args.host}:{args.port}")
     uvicorn.run(app, host=args.host, port=args.port)
     return 0
 
@@ -271,3 +271,7 @@ def main(argv: list[str] | None = None) -> int:
     except config.ConfigError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

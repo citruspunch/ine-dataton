@@ -11,25 +11,31 @@ state, severity, coverage and evidence.
 
 from __future__ import annotations
 
-import datetime as dt
 import re
 from dataclasses import dataclass, field
 from typing import Any
 
-from . import config
+from . import config, profiles
 from .canonical import digest, file_sha256
 from .model import (
-    WARNING,
     FAILURE,
     NOT_EVALUATED,
     OK,
+    WARNING,
     Comparison,
     Finding,
     ValidationResult,
     derive_state,
     summarize_coverage,
 )
-from .reader import ReadError, Table, UnexpectedSheet, coerce, read_table
+from .reader import (
+    ReadError,
+    Table,
+    UnexpectedSheet,
+    coerce,
+    coerce_month,
+    read_table,
+)
 
 MAX_EVIDENCE_ITEMS = 8
 PERIOD_RE = re.compile(r"^(\d{4})-(\d{2})$")
@@ -121,11 +127,12 @@ def month_range(start: str, end: str) -> list[str]:
 
 
 def declared_periods(profile: dict[str, Any]) -> list[str]:
-    period = profile.get("period") or {}
-    if period.get("expected"):
-        return list(period["expected"])
-    if period.get("range"):
-        return month_range(period["range"]["from"], period["range"]["to"])
+    dates = profile.get("dates") or {}
+    if dates.get("expected"):
+        return [str(p) for p in dates["expected"]]
+    window = dates.get("range")
+    if window:
+        return month_range(window["from"], window["to"])
     return []
 
 
@@ -138,37 +145,55 @@ def _cell_ref(table: Table, row: int, index: int | None) -> dict[str, Any]:
     return ref
 
 
-def _column_index(table: Table, spec: dict[str, Any]) -> int | None:
-    return table.column_index(spec["header"])
+def _field_index(table: Table, entry: dict[str, Any]) -> int | None:
+    return table.column_index(entry["column"])
+
+
+def _is_blank(value: Any) -> bool:
+    return value is None or (isinstance(value, str) and not value.strip())
+
+
+def _convert(
+    entry: dict[str, Any],
+    raw: Any,
+    month_field: str,
+    month_format: str,
+) -> Any:
+    if entry["name"] == month_field:
+        return coerce_month(raw, month_format)
+    return coerce(raw, entry["type"])
 
 
 def parse_table(table: Table, profile: dict[str, Any]) -> Parsed:
-    columns = profile["columns"]
-    values: dict[str, dict[int, Any]] = {c["key"]: {} for c in columns}
-    for spec in columns:
-        index = _column_index(table, spec)
+    schema = profile["schema"]
+    dates = profile.get("dates") or {}
+    month_field = dates.get("month", "")
+    month_format = dates.get("month_format", "name_es")
+
+    values: dict[str, dict[int, Any]] = {e["name"]: {} for e in schema}
+    for entry in schema:
+        index = _field_index(table, entry)
         if index is None:
             continue
         for row_number in table.row_numbers:
             raw = table.cell(row_number, index)
-            if raw is None or (isinstance(raw, str) and not raw.strip()):
-                if spec.get("nullable"):
-                    values[spec["key"]][row_number] = None
-                    continue
+            if _is_blank(raw) and entry.get("nullable"):
+                values[entry["name"]][row_number] = None
+                continue
             try:
-                values[spec["key"]][row_number] = coerce(raw, spec["type"])
+                values[entry["name"]][row_number] = _convert(
+                    entry, raw, month_field, month_format
+                )
             except ValueError:
                 continue
 
     period_of_row: dict[int, str] = {}
     row_of_period: dict[str, int] = {}
-    period = profile.get("period") or {}
-    year_key = period.get("year_column", "year")
-    month_key = period.get("month_column", "month")
-    if year_key in values and month_key in values:
+    year_field = dates.get("year", "year")
+    if year_field in values and month_field in values:
         for row_number in table.row_numbers:
-            year = values[year_key].get(row_number)
-            month = values[month_key].get(row_number)
+            year = values[year_field].get(row_number)
+            month = values[month_field].get(row_number)
             if not isinstance(year, int) or not isinstance(month, int):
                 continue
             text = f"{year:04d}-{month:02d}"
@@ -202,7 +227,8 @@ def _not_evaluated(
     meta: dict[str, dict[str, Any]], rule_ids: list[str], reason: str
 ) -> list[Finding]:
     return [
-        _finding(meta, rid, NOT_EVALUATED, f"No evaluado: {reason}.") for rid in rule_ids
+        _finding(meta, rid, NOT_EVALUATED, f"No evaluado: {reason}.")
+        for rid in rule_ids
     ]
 
 
@@ -216,9 +242,12 @@ def _eval_contract(
 ) -> list[Finding]:
     table = parsed.table
     findings: list[Finding] = []
-    columns = profile["columns"]
+    schema = profile["schema"]
+    dates = profile.get("dates") or {}
+    month_field = dates.get("month", "")
+    month_format = dates.get("month_format", "name_es")
 
-    missing = [c["header"] for c in columns if _column_index(table, c) is None]
+    missing = [e["column"] for e in schema if _field_index(table, e) is None]
     if missing:
         findings.append(
             _finding(
@@ -229,7 +258,8 @@ def _eval_contract(
                 {
                     "missing_columns": missing,
                     "observed_header": table.header,
-                    "expected_header": [c["header"] for c in columns],
+                    "expected_header": [e["column"] for e in schema],
+                    "header_row": table.header_row,
                 },
             )
         )
@@ -246,32 +276,32 @@ def _eval_contract(
             {
                 "columns": [
                     {
-                        "header": c["header"],
-                        "cell_column": table.letter(_column_index(table, c) or 0),
+                        "column": e["column"],
+                        "cell_column": table.letter(_field_index(table, e) or 0),
                     }
-                    for c in columns
-                ]
+                    for e in schema
+                ],
+                "header_row": table.header_row,
             },
         )
     )
 
     # CONT-03 types
     errors: list[dict[str, Any]] = []
-    for spec in columns:
-        index = _column_index(table, spec)
+    for entry in schema:
+        index = _field_index(table, entry)
         for row_number in table.row_numbers:
             raw = table.cell(row_number, index)
-            if raw is None or (isinstance(raw, str) and not raw.strip()):
-                if spec.get("nullable"):
-                    continue
+            if _is_blank(raw) and entry.get("nullable"):
+                continue
             try:
-                coerce(raw, spec["type"])
+                _convert(entry, raw, month_field, month_format)
             except ValueError as exc:
                 if len(errors) < MAX_EVIDENCE_ITEMS:
                     errors.append(
                         {
-                            "column": spec["header"],
-                            "type": spec["type"],
+                            "column": entry["column"],
+                            "type": entry["type"],
                             "value": None if raw is None else str(raw),
                             "error": str(exc),
                             **_cell_ref(table, row_number, index),
@@ -296,7 +326,7 @@ def _eval_contract(
             meta,
             "CONT-03",
             OK,
-            f"Los {len(columns)} campos declarados parsean a su tipo.",
+            f"Los {len(schema)} campos declarados parsean a su tipo.",
             {"rows_checked": len(table.rows)},
         )
     )
@@ -305,7 +335,7 @@ def _eval_contract(
     grain = profile["grain"]
     seen: dict[tuple[Any, ...], list[int]] = {}
     for row_number in table.row_numbers:
-        combo = tuple(parsed.values[key].get(row_number) for key in grain)
+        combo = tuple(parsed.values[name].get(row_number) for name in grain)
         if all(value is None for value in combo):
             continue
         seen.setdefault(combo, []).append(row_number)
@@ -336,20 +366,19 @@ def _eval_contract(
         )
 
     # CONT-05 periods
-    period = profile.get("period") or {}
-    if not period:
+    expected = declared_periods(profile)
+    if not expected:
         findings.append(
-            _finding(meta, "CONT-05", NOT_EVALUATED, "El perfil no declara periodo.", {})
+            _finding(meta, "CONT-05", NOT_EVALUATED, "El perfil no declara periodo.")
         )
     else:
-        expected = declared_periods(profile)
-        missing_periods = [p for p in expected if p not in parsed.row_of_period]
-        invalid_dates: list[str] = []
+        invalid_dates = []
         for text in expected:
             try:
                 parse_period(text)
             except ValueError:
                 invalid_dates.append(text)
+        missing_periods = [p for p in expected if p not in parsed.row_of_period]
         if invalid_dates:
             findings.append(
                 _finding(
@@ -389,23 +418,21 @@ def _eval_contract(
                         "declared_periods": len(expected),
                         "first": expected[0],
                         "last": expected[-1],
-                        "mode": "rango" if period.get("range") else "lista",
+                        "mode": "rango" if dates.get("range") else "lista",
                     },
                 )
             )
 
     # CONT-06 unit and base
-    unit = profile.get("unit")
-    bases = {
-        c["key"]: c["base"]
-        for c in columns
-        if c.get("role") == "index" and c.get("base")
-    }
+    block = profile.get("comparability") or {}
+    unit = block.get("unit")
+    series = block.get("series") or []
+    bases = {s["index"]: s.get("base") for s in series if s.get("base")}
+    unit_field = block.get("unit_field")
     unit_issues: list[dict[str, Any]] = []
-    unit_column = profile.get("unit_column")
-    if unit_column and unit and unit_column in parsed.values:
-        spec = next(c for c in columns if c["key"] == unit_column)
-        index = _column_index(table, spec)
+    if unit_field and unit and unit_field in parsed.values:
+        entry = next(e for e in schema if e["name"] == unit_field)
+        index = _field_index(table, entry)
         for row_number in table.row_numbers:
             raw = table.cell(row_number, index)
             observed = "" if raw is None else str(raw).strip()
@@ -452,20 +479,25 @@ def _eval_contract(
 # --------------------------------------------------------------------------
 
 
-def _column_of(profile: dict[str, Any], key: str) -> dict[str, Any]:
-    for spec in profile["columns"]:
-        if spec["key"] == key:
-            return spec
-    raise config.ConfigError(f"el perfil no declara la columna {key}")
+def _base_of(profile: dict[str, Any], field_name: str) -> str | None:
+    for series in (profile.get("comparability") or {}).get("series") or []:
+        if series.get("index") == field_name:
+            return series.get("base")
+    return None
 
 
-def _resolve_point(
-    parsed: Parsed, profile: dict[str, Any], ref: dict[str, Any]
-) -> tuple[int, Any] | None:
-    row = parsed.row_of_period.get(str(ref["period"]))
+def _column_of(profile: dict[str, Any], field_name: str) -> dict[str, Any]:
+    for entry in profile["schema"]:
+        if entry["name"] == field_name:
+            return entry
+    raise config.ConfigError(f"el perfil no declara el campo {field_name}")
+
+
+def _resolve_point(parsed: Parsed, ref: dict[str, Any]) -> tuple[int, Any] | None:
+    row = parsed.row_of_period.get(str(ref.get("period")))
     if row is None:
         return None
-    value = parsed.values.get(ref["column"], {}).get(row)
+    value = parsed.values.get(ref.get("field"), {}).get(row)
     if value is None:
         return None
     return row, value
@@ -474,7 +506,8 @@ def _resolve_point(
 def _eval_comparisons(
     parsed: Parsed, profile: dict[str, Any], requested: list[str]
 ) -> list[Comparison]:
-    specs = {c["id"]: c for c in profile.get("comparisons") or []}
+    block = profile.get("comparability") or {}
+    specs = {c["id"]: c for c in block.get("checks") or []}
     results: list[Comparison] = []
 
     for comparison_id in requested:
@@ -490,27 +523,29 @@ def _eval_comparisons(
             )
             continue
 
-        num_col = _column_of(profile, spec["numerator"]["column"])
-        den_col = _column_of(profile, spec["denominator"]["column"])
-        num = _resolve_point(parsed, profile, spec["numerator"])
-        den = _resolve_point(parsed, profile, spec["denominator"])
+        num_field = spec["numerator"]["field"]
+        den_field = spec["denominator"]["field"]
+        num_entry = _column_of(profile, num_field)
+        den_entry = _column_of(profile, den_field)
+        num = _resolve_point(parsed, spec["numerator"])
+        den = _resolve_point(parsed, spec["denominator"])
 
-        base_evidence = {
-            "numerator_column": num_col["header"],
-            "denominator_column": den_col["header"],
-            "numerator_base": num_col.get("base"),
-            "denominator_base": den_col.get("base"),
+        evidence: dict[str, Any] = {
+            "numerator_column": num_entry["column"],
+            "denominator_column": den_entry["column"],
+            "numerator_base": _base_of(profile, num_field),
+            "denominator_base": _base_of(profile, den_field),
             "numerator_period": spec["numerator"]["period"],
             "denominator_period": spec["denominator"]["period"],
-            "unit": spec.get("unit") or profile.get("unit"),
+            "unit": spec.get("unit") or block.get("unit"),
         }
         if num:
-            base_evidence["numerator_cell"] = _cell_ref(
-                parsed.table, num[0], _column_index(parsed.table, num_col)
+            evidence["numerator_cell"] = _cell_ref(
+                parsed.table, num[0], _field_index(parsed.table, num_entry)
             ).get("cell")
         if den:
-            base_evidence["denominator_cell"] = _cell_ref(
-                parsed.table, den[0], _column_index(parsed.table, den_col)
+            evidence["denominator_cell"] = _cell_ref(
+                parsed.table, den[0], _field_index(parsed.table, den_entry)
             ).get("cell")
 
         if num is None or den is None:
@@ -520,7 +555,7 @@ def _eval_comparisons(
                     label=spec["label"],
                     status="bloqueada",
                     reason="El periodo o la columna no están disponibles en el archivo.",
-                    public_evidence=base_evidence,
+                    public_evidence=evidence,
                     rules=["IPC-01"],
                 )
             )
@@ -529,7 +564,7 @@ def _eval_comparisons(
         num_row, num_value = num
         den_row, den_value = den
 
-        if num_col.get("base") != den_col.get("base"):
+        if _base_of(profile, num_field) != _base_of(profile, den_field):
             raw = (num_value / den_value - 1.0) * 100.0
             results.append(
                 Comparison(
@@ -540,7 +575,7 @@ def _eval_comparisons(
                         "Bases distintas: el cociente entre índices de bases distintas "
                         "no es una variación y no se puede comparar directamente."
                     ),
-                    public_evidence=base_evidence,
+                    public_evidence=evidence,
                     private_evidence={
                         "computed_pct": raw,
                         "computed_pct_rounded": round(raw, 4),
@@ -568,30 +603,30 @@ def _eval_comparisons(
                         "Los periodos solicitados no son contiguos; la variación "
                         "mensual exige meses consecutivos."
                     ),
-                    public_evidence={**base_evidence, "months_between": gap},
+                    public_evidence={**evidence, "months_between": gap},
                     rules=["IPC-02"],
                 )
             )
             continue
 
         computed = (num_value / den_value - 1.0) * 100.0
-        evidence: dict[str, Any] = {
-            **base_evidence,
+        submitted: dict[str, Any] = {
+            **evidence,
             "period": str(spec["numerator"]["period"]),
             "computed_pct": round(computed, 6),
         }
 
         published_spec = spec.get("published")
         if published_spec:
-            published = _resolve_point(parsed, profile, published_spec)
-            pub_col = _column_of(profile, published_spec["column"])
+            published = _resolve_point(parsed, published_spec)
+            pub_entry = _column_of(profile, published_spec["field"])
             cell = None
             if published:
                 cell = _cell_ref(
-                    parsed.table, published[0], _column_index(parsed.table, pub_col)
+                    parsed.table, published[0], _field_index(parsed.table, pub_entry)
                 ).get("cell")
-            evidence["published_cell"] = cell
-            evidence["published_pct"] = (
+            submitted["published_cell"] = cell
+            submitted["published_pct"] = (
                 None if published is None else round(float(published[1]), 6)
             )
             if published is None:
@@ -601,7 +636,7 @@ def _eval_comparisons(
                         label=spec["label"],
                         status="bloqueada",
                         reason="La variación publicada no está disponible.",
-                        public_evidence=evidence,
+                        public_evidence=submitted,
                         rules=["IPC-03"],
                     )
                 )
@@ -615,7 +650,7 @@ def _eval_comparisons(
                         label=spec["label"],
                         status="bloqueada",
                         reason="La variación calculada no coincide con la publicada.",
-                        public_evidence={**evidence, "delta_pp": round(delta, 6)},
+                        public_evidence={**submitted, "delta_pp": round(delta, 6)},
                         rules=["IPC-03"],
                     )
                 )
@@ -627,7 +662,7 @@ def _eval_comparisons(
                 label=spec["label"],
                 status="ok",
                 reason="Misma base, periodos contiguos y variación publicada.",
-                public_evidence=evidence,
+                public_evidence=submitted,
                 rules=["IPC-01", "IPC-02", "IPC-03"]
                 if published_spec
                 else ["IPC-01", "IPC-02"],
@@ -643,23 +678,24 @@ def _eval_comparisons(
 
 def build_series(parsed: Parsed, profile: dict[str, Any]) -> list[dict[str, Any]]:
     table = parsed.table
+    block = profile.get("comparability") or {}
     out: list[dict[str, Any]] = []
-    for spec in profile.get("series") or []:
-        column = spec["index_column"]
-        if column not in parsed.values:
+    for spec in block.get("series") or []:
+        field_name = spec["index"]
+        if field_name not in parsed.values:
             continue
-        col_spec = _column_of(profile, column)
-        index = _column_index(table, col_spec)
-        variation_column = spec.get("variation_column")
-        var_spec = _column_of(profile, variation_column) if variation_column else None
-        var_index = _column_index(table, var_spec) if var_spec else None
+        entry = _column_of(profile, field_name)
+        index = _field_index(table, entry)
+        variation_field = spec.get("variation")
+        var_entry = _column_of(profile, variation_field) if variation_field else None
+        var_index = _field_index(table, var_entry) if var_entry else None
 
         points = []
         for period in declared_periods(profile):
             row = parsed.row_of_period.get(period)
             if row is None:
                 continue
-            value = parsed.values[column].get(row)
+            value = parsed.values[field_name].get(row)
             if value is None:
                 continue
             point: dict[str, Any] = {
@@ -667,8 +703,8 @@ def build_series(parsed: Parsed, profile: dict[str, Any]) -> list[dict[str, Any]
                 "value": value,
                 "cell": _cell_ref(table, row, index).get("cell"),
             }
-            if var_spec is not None:
-                variation = parsed.values.get(variation_column, {}).get(row)
+            if var_entry is not None:
+                variation = parsed.values.get(variation_field, {}).get(row)
                 point["published_variation_pct"] = variation
                 point["variation_cell"] = _cell_ref(table, row, var_index).get("cell")
             points.append(point)
@@ -677,11 +713,11 @@ def build_series(parsed: Parsed, profile: dict[str, Any]) -> list[dict[str, Any]
             {
                 "series_id": spec["id"],
                 "label": spec.get("label", spec["id"]),
-                "base": col_spec.get("base"),
-                "unit": col_spec.get("unit") or profile.get("unit"),
+                "base": spec.get("base"),
+                "unit": block.get("unit"),
                 "comparable": bool(spec.get("comparable", True)),
-                "not_comparable_reason": spec.get("not_comparable_reason"),
-                "has_published_variation": var_spec is not None,
+                "not_comparable_reason": spec.get("reason"),
+                "has_published_variation": var_entry is not None,
                 "points": points,
             }
         )
@@ -809,7 +845,7 @@ def _basis_digest(
             "files": files,
             "profile": {
                 "id": clean["profile_id"],
-                "version": clean["version"],
+                "version": str(clean["version"]),
                 "content_sha256": digest(clean),
             },
             "rules": {
@@ -835,7 +871,7 @@ def validate(subject_id: str, write_receipt: bool = True) -> ValidationResult:
 
 
 def validate_subject(subject: Subject, write_receipt: bool = True) -> ValidationResult:
-    profile = config.load_profile(subject.profile_id, case_id=subject.case_id)
+    profile = profiles.load_profile(subject.profile_id, case_id=subject.case_id)
     rules_doc = config.load_rules()
     meta = config.rule_meta(rules_doc)
 
@@ -848,6 +884,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
 
     if subject.method == "identity_pair":
         findings, identity_evidence, files = _eval_identity(subject, meta)
+        primary_item = config.manifest_item(subject.resources[0]["manifest_item"])
         entity = {
             "kind": "par de recursos",
             "label": subject.label,
@@ -858,9 +895,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
             "same_bytes": identity_evidence.get("same_bytes"),
             "sha256": identity_evidence.get("sha256"),
             "profile": f"{profile['profile_id']}@{profile['version']}",
-            "license": config.manifest_item(subject.resources[0]["manifest_item"]).get(
-                "license", {}
-            ),
+            "license": primary_item.get("license", {}),
             "topic": profile.get("topic"),
             "display": profile.get("display", {}),
         }
@@ -958,10 +993,15 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
         table: Table | None = None
         parsed: Parsed | None = None
         read_failure: str | None = None
-        is_xlsx = profile["kind"] == "xlsx"
+        is_workbook = profile["kind"] == "xlsx"
 
         try:
-            table = read_table(path, profile["kind"], profile.get("expected_sheet"))
+            table = read_table(
+                path,
+                profile["kind"],
+                profile.get("expected_sheet"),
+                int(profile.get("header_row") or 1),
+            )
         except UnexpectedSheet as exc:
             findings.append(
                 _finding(
@@ -978,7 +1018,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
             read_failure = "hoja inesperada"
         except ReadError as exc:
             read_failure = "archivo ilegible"
-            if is_xlsx:
+            if is_workbook:
                 findings.append(
                     _finding(
                         meta,
@@ -989,7 +1029,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
                     )
                 )
 
-        if table is not None and is_xlsx:
+        if table is not None and is_workbook:
             if table.sheet is None:
                 findings.append(
                     _finding(
@@ -1014,6 +1054,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
                         {
                             "expected_sheet": profile.get("expected_sheet"),
                             "observed_sheets": [table.sheet],
+                            "header_row": table.header_row,
                         },
                     )
                 )

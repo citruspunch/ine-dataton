@@ -1,0 +1,59 @@
+profile_id: contrato_mensual_xlsx_v1
+version: "2.0.0"
+kind: xlsx
+topic: sintetico
+title: Contrato mensual (XLSX)
+description: >
+  El mismo contrato del perfil contrato_mensual_v1, pero en un XLSX de una hoja
+  llamada Datos. Añadir este perfil no requirió tocar el motor.
+
+expected_sheet: Datos
+header_row: 1
+
+schema:
+  - name: year
+    column: anio
+    type: integer
+    role: period_year
+  - name: month
+    column: mes
+    type: integer
+    role: period_month
+  - name: indicator
+    column: indicador
+    type: string
+  - name: value
+    column: valor
+    type: float
+  - name: unit
+    column: unidad
+    type: string
+
+types: [integer, float, string]
+
+grain: [year, month, indicator]
+
+dates:
+  year: year
+  month: month
+  month_format: number
+  expected:
+    - "2025-01"
+    - "2025-02"
+    - "2025-03"
+
+comparability:
+  unit: indice
+  unit_field: unit
+  series:
+    - id: valor
+      label: "Serie mensual"
+      index: value
+      base: "2025=100"
+      comparable: true
+  checks: []
+
+display:
+  period: "enero a marzo de 2025"
+  base: "2025=100 (serie sintética, no es una base oficial)"
+  unit: "índice"

@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from . import config
-from .engine import validate
+from .rules import validate
 from .model import WARNING, FAILURE, NOT_EVALUATED, ValidationResult
 
 APPROVED = ("habilitado", "aprobar_con_excepcion")

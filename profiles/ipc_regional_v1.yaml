@@ -1,0 +1,117 @@
+profile_id: ipc_regional_v1
+version: "2.0.0"
+kind: xlsx
+topic: ipc
+title: IPC por Región
+description: >
+  Segundo recurso real y segundo perfil declarativo, con una forma distinta:
+  tabla ancha (una columna por región), hoja Hoja1, sin columna de variación
+  publicada y con un rango de periodos en vez de dos meses sueltos. Se evalúa
+  con el mismo motor, sin tocar código.
+
+expected_sheet: Hoja1
+header_row: 1
+
+schema:
+  - name: year
+    column: "Año"
+    type: integer
+    role: period_year
+  - name: month
+    column: "Mes"
+    type: string
+    role: period_month
+  - name: republica
+    column: "República"
+    type: float
+  - name: region_1
+    column: "Región I"
+    type: float
+  - name: region_2
+    column: "Región II"
+    type: float
+  - name: region_3
+    column: "Región III"
+    type: float
+  - name: region_4
+    column: "Región IV"
+    type: float
+  - name: region_5
+    column: "Región V"
+    type: float
+  - name: region_6
+    column: "Región VI"
+    type: float
+  - name: region_7
+    column: "Región VII"
+    type: float
+  - name: region_8
+    column: "Región VIII"
+    type: float
+
+types: [integer, float, string]
+
+grain: [year, month]
+
+dates:
+  year: year
+  month: month
+  month_format: name_es
+  range:
+    from: "2025-01"
+    to: "2026-10"
+
+comparability:
+  unit: índice
+  series:
+    - id: republica
+      label: "República"
+      index: republica
+      base: "2024=100"
+      comparable: true
+    - id: region_1
+      label: "Región I"
+      index: region_1
+      base: "2024=100"
+      comparable: true
+    - id: region_2
+      label: "Región II"
+      index: region_2
+      base: "2024=100"
+      comparable: true
+    - id: region_3
+      label: "Región III"
+      index: region_3
+      base: "2024=100"
+      comparable: true
+    - id: region_4
+      label: "Región IV"
+      index: region_4
+      base: "2024=100"
+      comparable: true
+    - id: region_5
+      label: "Región V"
+      index: region_5
+      base: "2024=100"
+      comparable: true
+    - id: region_6
+      label: "Región VI"
+      index: region_6
+      base: "2024=100"
+      comparable: true
+    - id: region_7
+      label: "Región VII"
+      index: region_7
+      base: "2024=100"
+      comparable: true
+    - id: region_8
+      label: "Región VIII"
+      index: region_8
+      base: "2024=100"
+      comparable: true
+  checks: []
+
+display:
+  period: "enero 2025 a octubre 2026"
+  base: "2024=100 en todas las columnas"
+  unit: "índice"

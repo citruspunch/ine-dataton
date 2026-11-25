@@ -1,6 +1,7 @@
-profile_id: identidad_recursos
-version: "1.0.0"
+profile_id: identidad_recursos_v1
+version: "2.0.0"
 kind: pair
+topic: identidad
 title: Identidad entre dos recursos
 description: >
   Perfil mínimo para el caso de identidad: no hay contrato de columnas, solo

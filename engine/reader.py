@@ -1,7 +1,8 @@
-"""Reading of the three accepted shapes: delimited CSV, XLSX and legacy XLS.
+"""Reading of the accepted shapes: delimited CSV, XLSX and legacy XLS.
 
 No free URLs: the path comes from the closed-list manifest and is resolved
-inside the repository.
+inside the repository. The header row is declared by the profile, never
+inferred.
 """
 
 from __future__ import annotations
@@ -49,6 +50,7 @@ class Table:
     path: Path
     sheet: str | None
     header: list[str]
+    header_row: int = 1
     rows: list[dict[str, Any]] = field(default_factory=list)
     row_numbers: list[int] = field(default_factory=list)
     cells: dict[int, list[Any]] = field(default_factory=dict)
@@ -87,24 +89,36 @@ class Table:
         return None
 
 
-def read_table(path: Path, kind: str, expected_sheet: str | None = None) -> Table:
+def read_table(
+    path: Path,
+    kind: str,
+    expected_sheet: str | None = None,
+    header_row: int = 1,
+) -> Table:
     if not path.exists():
         raise ReadError(f"archivo no encontrado: {path.name}")
     suffix = path.suffix.lower()
     if suffix == ".csv":
-        return _read_csv(path)
+        return _read_csv(path, header_row)
     if suffix == ".xls":
-        return _read_xls(path, expected_sheet)
+        return _read_xls(path, expected_sheet, header_row)
     if suffix in (".xlsx", ".xlsm"):
-        return _read_xlsx(path, expected_sheet)
+        return _read_xlsx(path, expected_sheet, header_row)
     if kind == "delimited":
-        return _read_csv(path)
+        return _read_csv(path, header_row)
     if kind == "xlsx":
-        return _read_xlsx(path, expected_sheet)
+        return _read_xlsx(path, expected_sheet, header_row)
     raise ReadError(f"tipo de archivo no soportado: {kind}")
 
 
-def _read_xls(path: Path, expected_sheet: str | None) -> Table:
+def _blank_row(values: list[Any]) -> bool:
+    return all(
+        value is None or (isinstance(value, str) and not value.strip())
+        for value in values
+    )
+
+
+def _read_xls(path: Path, expected_sheet: str | None, header_row: int) -> Table:
     """Legacy .xls (BIFF) format, read with xlrd."""
     try:
         import xlrd
@@ -124,14 +138,14 @@ def _read_xls(path: Path, expected_sheet: str | None) -> Table:
 
     sheet_name = expected_sheet or names[0]
     sheet = book.sheet_by_name(sheet_name)
-    if sheet.nrows == 0:
-        raise ReadError(".xls sin fila de encabezado")
+    if sheet.nrows < header_row:
+        raise ReadError(f".xls sin fila de encabezado {header_row}")
 
-    header = [str(cell.value).strip() for cell in sheet.row(0)]
-    table = Table(path=path, sheet=sheet_name, header=header)
-    for index in range(1, sheet.nrows):
+    header = [str(cell.value).strip() for cell in sheet.row(header_row - 1)]
+    table = Table(path=path, sheet=sheet_name, header=header, header_row=header_row)
+    for index in range(header_row, sheet.nrows):
         values = sheet.row_values(index)
-        if all(value in (None, "") for value in values):
+        if _blank_row(values):
             continue
         row_number = index + 1
         table.rows.append(dict(zip(header, values)))
@@ -140,19 +154,19 @@ def _read_xls(path: Path, expected_sheet: str | None) -> Table:
     return table
 
 
-def _read_csv(path: Path) -> Table:
+def _read_csv(path: Path, header_row: int) -> Table:
     try:
         with open(path, "r", encoding="utf-8-sig", newline="") as fh:
-            reader = csv.reader(fh)
-            raw = list(reader)
+            raw = list(csv.reader(fh))
     except (OSError, UnicodeDecodeError, csv.Error) as exc:
         raise ReadError(f"CSV ilegible: {exc}") from exc
-    if not raw:
-        raise ReadError("CSV vacío")
-    header = [h.strip() for h in raw[0]]
-    table = Table(path=path, sheet=None, header=header)
-    for offset, values in enumerate(raw[1:], start=2):
-        if not any(v.strip() for v in values):
+    if len(raw) < header_row:
+        raise ReadError("CSV vacío o sin la fila de encabezado declarada")
+
+    header = [h.strip() for h in raw[header_row - 1]]
+    table = Table(path=path, sheet=None, header=header, header_row=header_row)
+    for offset, values in enumerate(raw[header_row:], start=header_row + 1):
+        if _blank_row(values):
             continue
         table.rows.append(dict(zip(header, values)))
         table.row_numbers.append(offset)
@@ -160,7 +174,7 @@ def _read_csv(path: Path) -> Table:
     return table
 
 
-def _read_xlsx(path: Path, expected_sheet: str | None) -> Table:
+def _read_xlsx(path: Path, expected_sheet: str | None, header_row: int) -> Table:
     try:
         from openpyxl import load_workbook
     except ImportError as exc:  # pragma: no cover
@@ -181,64 +195,70 @@ def _read_xlsx(path: Path, expected_sheet: str | None) -> Table:
         ws = wb[sheet_name]
 
         header: list[str] | None = None
-        table = Table(path=path, sheet=sheet_name, header=[])
+        table = Table(path=path, sheet=sheet_name, header=[], header_row=header_row)
         for idx, row in enumerate(ws.iter_rows(values_only=True), start=1):
+            if idx < header_row:
+                continue
             if header is None:
                 header = ["" if v is None else str(v).strip() for v in row]
                 table.header = header
                 continue
-            if all(v is None or (isinstance(v, str) and not v.strip()) for v in row):
+            if _blank_row(list(row)):
                 continue
             table.rows.append(dict(zip(header, row)))
             table.row_numbers.append(idx)
             table.cells[idx] = list(row)
         if header is None:
-            raise ReadError("XLSX sin fila de encabezado")
+            raise ReadError(f"XLSX sin fila de encabezado {header_row}")
         return table
     finally:
         wb.close()
 
 
 def coerce(value: Any, type_name: str) -> Any:
-    """Coerce a raw value to the declared type. Raises ValueError if it does not
-    parse."""
-    if value is None:
+    """Coerce a raw value to a declared type. Raises ValueError if it fails."""
+    if value is None or (isinstance(value, str) and not value.strip()):
         raise ValueError("valor vacío")
-    if isinstance(value, str):
-        text = value.strip()
-        if text == "":
-            raise ValueError("valor vacío")
-    else:
-        text = None
 
     if type_name == "string":
         return str(value).strip()
 
-    if type_name == "number":
+    if type_name == "float":
         if isinstance(value, (int, float)) and not isinstance(value, bool):
             return float(value)
-        return float(str(text).replace(",", "."))
+        return float(str(value).strip().replace(",", "."))
 
     if type_name == "integer":
         if isinstance(value, (int, float)) and not isinstance(value, bool):
             number = float(value)
         else:
-            number = float(str(text).replace(",", "."))
+            number = float(str(value).strip().replace(",", "."))
         if not number.is_integer():
             raise ValueError(f"{value!r} no es entero")
         return int(number)
-
-    if type_name == "month_name":
-        key = str(value).strip().lower()
-        if key not in MONTH_NAMES:
-            raise ValueError(f"{value!r} no es un mes en español")
-        return MONTH_NAMES[key]
 
     if type_name == "date":
         if isinstance(value, dt.datetime):
             return value.date().isoformat()
         if isinstance(value, dt.date):
             return value.isoformat()
-        return dt.date.fromisoformat(str(text)).isoformat()
+        return dt.date.fromisoformat(str(value).strip()).isoformat()
 
     raise ValueError(f"tipo no soportado: {type_name}")
+
+
+def coerce_month(value: Any, month_format: str) -> int:
+    """Coerce a month cell to 1..12 using the declared convention."""
+    if value is None or (isinstance(value, str) and not value.strip()):
+        raise ValueError("mes vacío")
+    if month_format == "number":
+        number = (
+            int(float(str(value).strip())) if isinstance(value, str) else int(value)
+        )
+        if not 1 <= number <= 12:
+            raise ValueError(f"{value!r} no es un mes entre 1 y 12")
+        return number
+    key = str(value).strip().lower()
+    if key not in MONTH_NAMES:
+        raise ValueError(f"{value!r} no es un mes en español")
+    return MONTH_NAMES[key]
