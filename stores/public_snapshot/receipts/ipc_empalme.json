@@ -1,12 +1,12 @@
 {
   "decision_log": {
-    "decided_at_utc": "2026-11-25T00:30:18Z",
+    "decided_at_utc": "2026-11-25T01:17:42Z",
     "decision_basis_digest": "b7f2f80f1ea904f2cb86192d0622772a823dd21ea22a7efa29326af2d80bc35f",
     "gate_decision": "habilitado",
     "operator": "Técnico de publicaciones (prototipo)",
     "rationale": "Ficha oficial cotejada: la variación publicada en G504 coincide con la calculada desde F503 y F504; el cruce entre bases queda bloqueado."
   },
-  "generated_at_utc": "2026-11-25T00:30:18Z",
+  "generated_at_utc": "2026-11-25T01:17:42Z",
   "receipt_id": "rec-snap-2026-11-23-ipc_empalme",
   "technical_payload": {
     "base": "Cada columna declara su propia base; la serie de trabajo es F, base 2024=100",

@@ -1,6 +1,6 @@
 {
   "decision_log": {
-    "decided_at_utc": "2026-11-25T00:30:18Z",
+    "decided_at_utc": "2026-11-25T01:17:42Z",
     "decision_basis_digest": "e52a1c7a52cf38928bacd0bdc681f0628b806dce5f0a1c68550a943d94767d6d",
     "decision_id": "dec-csv_ok-001",
     "gate_decision": "habilitado",
@@ -9,7 +9,7 @@
     "rationale": "Contrato sintético correcto; se usa para demostrar el flujo de habilitación.",
     "still_valid": true
   },
-  "generated_at_utc": "2026-11-25T00:30:18Z",
+  "generated_at_utc": "2026-11-25T01:17:42Z",
   "receipt_id": "rec-snap-2026-11-23-csv_ok",
   "technical_payload": {
     "base": "2025=100 (serie sintética, no es una base oficial)",

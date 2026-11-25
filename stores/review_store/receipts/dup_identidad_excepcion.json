@@ -1,6 +1,6 @@
 {
   "decision_log": {
-    "decided_at_utc": "2026-11-25T00:30:18Z",
+    "decided_at_utc": "2026-11-25T01:17:42Z",
     "decision_basis_digest": "f9e4919c9932f960f57bbf6570e3dafa1d85c942ad314397fc26e712d46a144e",
     "decision_id": "dec-dup_identidad_excepcion-001",
     "gate_decision": "habilitado",
@@ -9,7 +9,7 @@
     "rationale": "POL-DUP-2026-01 aplicada: reutilización intencional del mismo archivo, documentada con dueño, fecha y motivo.",
     "still_valid": true
   },
-  "generated_at_utc": "2026-11-25T00:50:10Z",
+  "generated_at_utc": "2026-11-25T01:17:42Z",
   "receipt_id": "rec-snap-2026-11-23-dup_identidad_excepcion",
   "technical_payload": {
     "base": "no aplica",
