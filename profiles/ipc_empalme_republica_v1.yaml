@@ -5,10 +5,9 @@ topic: ipc
 title: IPC, empalme República
 description: >
   Contrato del XLSX oficial de empalme del IPC por República, hoja Hoja2.
-  Las columnas se resuelven por encabezado y los periodos por año y mes: no hay
-  coordenadas de fila ni de columna escritas en el perfil. Las celdas que
-  aparecen en la evidencia se descubren al leer el archivo y son solo metadato
-  informativo.
+  Las columnas se resuelven por encabezado y los periodos por año y mes. El
+  perfil no declara coordenadas de fila ni de columna. Las celdas de la
+  evidencia se descubren al leer el archivo y solo sirven como referencia.
 
 expected_sheet: Hoja2
 header_row: 1
@@ -91,5 +90,5 @@ comparability:
 
 display:
   period: "diciembre 2024 y enero 2025"
-  base: "Cada columna declara su propia base; la serie de trabajo es F, base 2024=100"
-  unit: "índice (F y E) y porcentaje (G)"
+  base: "Cada columna declara su propia base. La serie de trabajo es F, base 2024=100"
+  unit: "índice en F y E, porcentaje en G"

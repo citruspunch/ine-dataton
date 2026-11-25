@@ -44,9 +44,9 @@ export default async function PublicDetailPage({ params }: PageProps) {
   const series: Series[] = entity.series ?? [];
 
   const facts = [
-    { label: "Periodo", value: entity.display.period ?? "—", icon: CalendarDots },
-    { label: "Base", value: entity.display.base ?? "—", icon: Hash },
-    { label: "Unidad", value: entity.display.unit ?? "—", icon: Stack },
+    { label: "Periodo", value: entity.display.period ?? "Sin dato", icon: CalendarDots },
+    { label: "Base", value: entity.display.base ?? "Sin dato", icon: Hash },
+    { label: "Unidad", value: entity.display.unit ?? "Sin dato", icon: Stack },
     {
       label: "Licencia",
       value: entity.license.id || "sin licencia",
@@ -69,11 +69,11 @@ export default async function PublicDetailPage({ params }: PageProps) {
         title={entity.title || aggregate.label}
         description={
           <>
-            Agregado publicado por el INE y habilitado para consulta el{" "}
+            El INE publicó este agregado y la validación lo habilitó para consulta el{" "}
             <span className="font-mono text-[12.5px]">
               {aggregate.published_at_utc?.slice(0, 10)}
             </span>
-            . La validación es técnica y no sustituye la revisión oficial.
+            . Esta validación no sustituye la revisión oficial.
           </>
         }
         actions={
@@ -123,7 +123,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
       <section className="space-y-4">
         <SectionHeading
           title="Series publicadas"
-          description="Valores tomados de la fuente oficial, con la celda que los respalda."
+          description="Valores de la fuente oficial. La columna Celda indica dónde aparece cada uno."
         />
         {series.length ? (
           <div className="space-y-4">
@@ -174,7 +174,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
                               </td>
                             ) : null}
                             <td className="px-5 py-2 text-right font-mono text-[11.5px] text-muted">
-                              {point.cell ?? "—"}
+                              {point.cell ?? "Sin celda"}
                             </td>
                           </tr>
                         ))}
@@ -209,7 +209,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
           <CardHeader>
             <CardTitle>Ficha técnica</CardTitle>
             <p className="mt-1 text-[13px] text-muted">
-              Metadatos de procedencia y huella del archivo.
+              Datos de procedencia y digest del archivo.
             </p>
           </CardHeader>
           <CardContent className="p-0">
@@ -229,19 +229,19 @@ export default async function PublicDetailPage({ params }: PageProps) {
                     <ArrowUpRight className="ml-0.5 inline h-3 w-3" aria-hidden />
                   </a>
                 ) : (
-                  "—"
+                  "Sin URL"
                 )}
               </DataRow>
-              <DataRow label="Descargado (UTC)">
+              <DataRow label="Descarga UTC">
                 <span className="font-mono text-[12px]">
-                  {entity.downloaded_at_utc || "—"}
+                  {entity.downloaded_at_utc || "Sin registro"}
                 </span>
               </DataRow>
               <DataRow label="SHA-256">
                 <span className="break-all font-mono text-[11.5px]">{entity.sha256}</span>
               </DataRow>
               <DataRow label="Licencia">
-                {entity.license.id || "—"} · {entity.license.attribution || "—"}
+                {entity.license.id || "Sin licencia"} · {entity.license.attribution || "Sin atribución"}
               </DataRow>
               <DataRow label="Perfil">
                 <span className="font-mono text-[12px]">{entity.profile}</span>

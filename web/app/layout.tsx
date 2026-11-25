@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s · INE Data Trust",
   },
   description:
-    "Validación técnica, con trazabilidad y decisión humana, de los agregados estadísticos publicados por el INE.",
+    "Validación técnica de los agregados estadísticos del INE, con la decisión humana registrada.",
   applicationName: "INE Data Trust",
 };
 

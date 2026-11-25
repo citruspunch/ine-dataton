@@ -32,7 +32,7 @@ const DECISIONS = [
   {
     value: "rechazar",
     label: "Rechazar",
-    hint: "No se publica. Si ya estaba publicado, se retira del portal.",
+    hint: "Deja el agregado fuera del portal. Si estaba publicado, lo retira.",
   },
 ];
 
@@ -52,7 +52,6 @@ export function GateForm({
   const [decision, setDecision] = useState(blocked ? "rechazar" : "aprobar");
   const [rationale, setRationale] = useState("");
 
-  const pendingWarnings = warnings.filter((warning) => !warning.justified);
   const selected = DECISIONS.find((item) => item.value === decision);
 
   return (
@@ -61,7 +60,7 @@ export function GateForm({
         <div className="rounded-lg border border-[#ffb699] bg-fail-bg px-4 py-3 text-[13px] text-fail">
           <p className="flex items-center gap-1.5 font-semibold">
             <WarningCircle className="h-4 w-4" aria-hidden />
-            No habilitable todavía
+            Todavía no se puede habilitar
           </p>
           <ul className="mt-1.5 list-disc space-y-0.5 pl-5">
             {blocking.map((reason) => (
@@ -69,7 +68,7 @@ export function GateForm({
             ))}
           </ul>
           <p className="mt-2 text-[12px]">
-            El bloqueo lo imponen las reglas y el estado del recurso, no la interfaz.
+            Las reglas y el estado del recurso impiden habilitarlo. La interfaz no lo bloquea.
           </p>
         </div>
       ) : null}
@@ -83,7 +82,7 @@ export function GateForm({
             <div>
               <p className="text-[13px] font-semibold text-ink">Advertencias por justificar</p>
               <p className="text-[12px] text-muted">
-                Cada advertencia necesita dueño y motivo antes de habilitar el agregado.
+                Cada advertencia necesita un responsable y un motivo antes de habilitar el agregado.
               </p>
             </div>
             {warnings.map((warning) => (
@@ -103,7 +102,7 @@ export function GateForm({
                 {warning.justified ? null : (
                   <div className="grid gap-2 sm:grid-cols-2">
                     <div>
-                      <Label htmlFor={`just_owner__${warning.rule_id}`}>Dueño / responsable</Label>
+                      <Label htmlFor={`just_owner__${warning.rule_id}`}>Responsable</Label>
                       <Input
                         id={`just_owner__${warning.rule_id}`}
                         name={`just_owner__${warning.rule_id}`}
@@ -118,7 +117,7 @@ export function GateForm({
                       <Input
                         id={`just_policy__${warning.rule_id}`}
                         name={`just_policy__${warning.rule_id}`}
-                        placeholder="POL-2026-01 (opcional)"
+                        placeholder="POL-2026-01, opcional"
                       />
                     </div>
                     <div className="sm:col-span-2">
@@ -141,7 +140,7 @@ export function GateForm({
         ) : null}
 
         <div>
-          <Label htmlFor="operator">Responsable del gate</Label>
+          <Label htmlFor="operator">Responsable de la decisión</Label>
           <Input
             id="operator"
             name="operator"
@@ -226,7 +225,7 @@ export function GateForm({
           )}
         </Button>
         <p className="text-center text-[11.5px] text-muted">
-          La decisión queda ligada al digest de validación y se registra en el recibo.
+          El recibo guarda la decisión y el digest que la respalda.
         </p>
       </form>
     </div>

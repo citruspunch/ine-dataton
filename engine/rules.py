@@ -582,7 +582,7 @@ def _eval_comparisons(
                         "display_public": False,
                         "note": (
                             "Se calculó solo para la pantalla de revisión. El número no "
-                            "se copia al snapshot público, ni al export, ni a la ficha."
+                            "se copia al corte público, ni al export, ni a la ficha."
                         ),
                     },
                     rules=["IPC-01"],
@@ -934,7 +934,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
                         meta,
                         "SNAP-01",
                         OK,
-                        "Bytes y SHA-256 coinciden con el manifiesto del snapshot.",
+                        "Bytes y SHA-256 coinciden con el manifiesto del corte.",
                         {
                             "sha256": actual_sha,
                             "bytes": size,

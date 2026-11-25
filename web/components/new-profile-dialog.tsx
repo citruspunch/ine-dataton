@@ -435,8 +435,8 @@ export function NewProfileDialog() {
           <DialogHeader className="mb-0">
             <DialogTitle>Nuevo perfil declarativo</DialogTitle>
             <DialogDescription>
-              Defina el contrato con el formulario. El motor valida los campos, el grano, los
-              periodos y la comparabilidad antes de guardarlo en <code>profiles/</code>.
+              El formulario construye el contrato. La validación revisa campos, grano,
+              periodos y comparabilidad antes de guardar el archivo en <code>profiles/</code>.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -478,7 +478,7 @@ export function NewProfileDialog() {
                     placeholder="IPC mensual, República"
                   />
                 </Field>
-                <Field label="Tema" hint="opcional; se usa para agrupar (por ejemplo, ipc)">
+                <Field label="Tema" hint="Opcional. Agrupa perfiles por tema, por ejemplo ipc.">
                   <Input
                     value={draft.topic}
                     onChange={(event) => update("topic", event.target.value)}
@@ -505,7 +505,7 @@ export function NewProfileDialog() {
                     onChange={(value) => update("kind", value as Draft["kind"])}
                     options={[
                       { value: "delimited", label: "CSV / delimitado" },
-                      { value: "xlsx", label: "Excel (XLSX / XLS)" },
+                      { value: "xlsx", label: "Libro de Excel" },
                     ]}
                   />
                 </Field>
@@ -662,12 +662,12 @@ export function NewProfileDialog() {
                       update("monthFormat", value as Draft["monthFormat"])
                     }
                     options={[
-                      { value: "number", label: "Número (1–12)" },
+                      { value: "number", label: "Número del 1 al 12" },
                       { value: "name_es", label: "Nombre en español" },
                     ]}
                   />
                 </Field>
-                <Field label="Campo adicional del grano" hint="opcional, por ejemplo un indicador">
+                <Field label="Campo adicional del grano" hint="Opcional. Por ejemplo, un indicador.">
                   <DraftSelect
                     value={draft.grainExtra || "none"}
                     onChange={(value) => update("grainExtra", value === "none" ? "" : value)}
@@ -729,7 +729,7 @@ export function NewProfileDialog() {
                   />
                 </Field>
                 <div className="flex items-end pb-2 text-[12px] text-muted">
-                  Una serie solo se publica como comparable si declara su base.
+                  Una serie solo es comparable si declara su base.
                 </div>
               </div>
 
@@ -976,7 +976,7 @@ export function NewProfileDialog() {
                           placeholder="2024-12"
                         />
                       </Field>
-                      <Field label="Variación publicada (campo)" hint="opcional">
+                      <Field label="Campo de variación publicada" hint="opcional">
                         <DraftSelect
                           value={check.publishedField || "none"}
                           onChange={(value) =>
@@ -996,7 +996,7 @@ export function NewProfileDialog() {
                           placeholder="2025-01"
                         />
                       </Field>
-                      <Field label="Tolerancia (puntos porcentuales)">
+                      <Field label="Tolerancia en puntos porcentuales">
                         <Input
                           value={check.tolerance}
                           onChange={(event) =>
@@ -1021,7 +1021,7 @@ export function NewProfileDialog() {
             <Section
               number="06"
               title="Presentación pública"
-              description="Texto que verá la persona que consulta el agregado. Si se deja vacío, se usa lo declarado arriba."
+              description="Texto que verá quien consulta el agregado. Si queda vacío, el formulario usa lo declarado arriba."
             >
               <div className="grid gap-4 sm:grid-cols-3">
                 <Field label="Periodo mostrado">
@@ -1065,7 +1065,7 @@ export function NewProfileDialog() {
             ) : null}
             {errors.length ? (
               <AlertList
-                title="El motor encontró errores"
+                title="La validación encontró errores"
                 items={errors.map((error) => `${error.field}: ${error.message}`)}
               />
             ) : null}
@@ -1084,7 +1084,7 @@ export function NewProfileDialog() {
                 ) : liveValid ? (
                   <>
                     <CheckCircle className="h-3.5 w-3.5" aria-hidden />
-                    El contrato es válido y puede guardarse.
+                    El contrato es válido. Puede guardarlo.
                   </>
                 ) : (
                   <>
@@ -1281,7 +1281,7 @@ function PeriodsInput({
           ))}
         </div>
       ) : (
-        <FieldHint>Sin periodos: el motor no podrá verificar la cobertura temporal.</FieldHint>
+        <FieldHint>Sin periodos, la validación no podrá verificar la cobertura temporal.</FieldHint>
       )}
     </div>
   );

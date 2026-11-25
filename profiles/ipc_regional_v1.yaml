@@ -4,10 +4,9 @@ kind: xlsx
 topic: ipc
 title: IPC por Región
 description: >
-  Segundo recurso real y segundo perfil declarativo, con una forma distinta:
-  tabla ancha (una columna por región), hoja Hoja1, sin columna de variación
-  publicada y con un rango de periodos en vez de dos meses sueltos. Se evalúa
-  con el mismo motor, sin tocar código.
+  Contrato del XLSX oficial del IPC por Región, hoja Hoja1. La tabla tiene una
+  columna por región, no incluye variación publicada y declara un rango de
+  periodos. Se evalúa con el mismo motor que los demás perfiles.
 
 expected_sheet: Hoja1
 header_row: 1

@@ -274,7 +274,7 @@ def write_public_aggregate(result: ValidationResult) -> Path:
     if result.state != "habilitado_para_consulta":
         raise GateError(
             f"no se publica un agregado en estado {result.state}: "
-            "solo habilitado_para_consulta entra al snapshot público"
+            "solo habilitado_para_consulta entra al corte público"
         )
     path = aggregate_path(result.case_id)
     path.parent.mkdir(parents=True, exist_ok=True)

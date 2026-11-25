@@ -65,8 +65,9 @@ export default async function FichaPage({ params }: PageProps) {
             {entity.title || aggregate.label}
           </h1>
           <p className="mt-1 text-[12.5px] text-muted">
-            Documento para adjuntar al ticket de publicación (procedimiento 18, pasos 4 a 6,
-            como propuesta). No certifica el dato ni sustituye la revisión del productor.
+            Documento para adjuntar al ticket de publicación. Sigue la propuesta de
+            procedimiento 18, pasos 4 a 6. No certifica el dato ni sustituye la revisión del
+            productor.
           </p>
         </div>
         <div className="text-right text-[11.5px] text-muted">
@@ -78,7 +79,7 @@ export default async function FichaPage({ params }: PageProps) {
             className="ml-auto h-20 w-auto"
           />
           <p className="mt-2 font-mono">{aggregate.case_id}</p>
-          <p className="font-mono">snapshot {String(technical?.snapshot_id ?? "—")}</p>
+          <p className="font-mono">corte {String(technical?.snapshot_id ?? "Sin dato")}</p>
         </div>
       </header>
 
@@ -97,22 +98,22 @@ export default async function FichaPage({ params }: PageProps) {
         <DataRow label="Base">{entity.display.base}</DataRow>
         <DataRow label="Unidad">{entity.display.unit}</DataRow>
         <DataRow label="URL oficial">
-          <span className="break-all font-mono text-[11.5px]">{entity.source_url || "—"}</span>
+          <span className="break-all font-mono text-[11.5px]">{entity.source_url || "Sin URL"}</span>
         </DataRow>
-        <DataRow label="Descargado (UTC)">
-          <span className="font-mono">{entity.downloaded_at_utc || "—"}</span>
+        <DataRow label="Descarga UTC">
+          <span className="font-mono">{entity.downloaded_at_utc || "Sin registro"}</span>
         </DataRow>
         <DataRow label="SHA-256 del archivo">
           <span className="break-all font-mono text-[11.5px]">{entity.sha256}</span>
         </DataRow>
         <DataRow label="Licencia">
-          {entity.license.id || "—"} · {entity.license.attribution || "—"}
+          {entity.license.id || "Sin licencia"} · {entity.license.attribution || "Sin atribución"}
         </DataRow>
         <DataRow label="Perfil declarativo">
           <span className="font-mono">{entity.profile}</span>
         </DataRow>
         <DataRow label="Versión de reglas">
-          <span className="font-mono">{rulesVersion ?? "—"}</span>
+          <span className="font-mono">{rulesVersion ?? "Sin registro"}</span>
         </DataRow>
         <DataRow label="Digest de validación">
           <span className="break-all font-mono text-[11.5px]">{aggregate.digest}</span>
@@ -199,7 +200,7 @@ export default async function FichaPage({ params }: PageProps) {
           <DataList>
             <DataRow label="Resultado del gate">{decision.gate_decision}</DataRow>
             <DataRow label="Responsable">{decision.operator}</DataRow>
-            <DataRow label="Fecha (UTC)">
+            <DataRow label="Fecha UTC">
               <span className="font-mono">{decision.decided_at_utc}</span>
             </DataRow>
             <DataRow label="Motivo">{decision.rationale}</DataRow>
@@ -231,8 +232,8 @@ export default async function FichaPage({ params }: PageProps) {
 
       <p className="border-t border-line pt-3 text-[11px] leading-relaxed text-muted">
         La habilitación corresponde a INE Data Trust, no al INE. Este documento no certifica.
-        El digest no incluye timestamps de ejecución ni de decisión. Los datos conservan su
-        licencia {entity.license.id || "original"}.
+        El digest no incluye marcas de tiempo de ejecución ni de decisión. Los datos
+        mantienen su licencia {entity.license.id || "original"}.
       </p>
     </div>
   );

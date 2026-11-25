@@ -11,8 +11,8 @@ export default function NotFound() {
       </span>
       <h1 className="text-2xl font-semibold tracking-tight">No encontramos ese recurso</h1>
       <p className="text-[14px] leading-relaxed text-muted">
-        El agregado no está publicado, el caso no existe en la bandeja o el enlace dejó de ser
-        válido. Solo los agregados habilitados están disponibles en la consulta pública.
+        El agregado no está publicado o el enlace ya no es válido. Solo los agregados
+        habilitados aparecen en la consulta pública.
       </p>
       <div className="flex gap-2">
         <Link href="/" className={buttonVariants({ variant: "default" })}>

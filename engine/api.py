@@ -82,7 +82,7 @@ def _case_rows() -> list[dict[str, Any]]:
                     "state_text": f"Error: {exc}",
                     "profile": case["profile"],
                     "origin": "caso",
-                    "critical": "—",
+                    "critical": "Sin dato",
                     "override": False,
                 }
             )

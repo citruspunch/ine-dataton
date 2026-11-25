@@ -1,7 +1,7 @@
 # INE Data Trust
 
 Validación técnica de agregados estadísticos ya publicados. El sistema comprueba
-un archivo candidato contra un contrato declarativo en YAML, marca identidades
+un archivo candidato contra un contrato declarativo en YAML. Marca identidades
 incompatibles por SHA-256, bloquea comparaciones entre bases del IPC que no son
 comparables, registra el visto bueno humano y exporta un recibo reproducible.
 
@@ -96,8 +96,7 @@ Ambos del conjunto CKAN **IPC Base Anual 2024=100**
 
 URLs completas en `data/sources.json` y `data/manifest.json`.
 
-**Por qué el empalme.** Permite exponer un error metodológico real y
-verificable:
+**Por qué el empalme.** Expone un error metodológico real y verificable:
 
 | Celda | Valor | Qué es |
 |---|---|---|
@@ -165,7 +164,7 @@ Reglas versionadas en `rules/rules.json`: `SNAP-01` integridad, `LIC-01` licenci
   No incluye comparador de periodos.
 
 Estados: `borrador`, `no_habilitado`, `en_revision`,
-`habilitado_para_consulta`, `cerrado`. No existe “aprobado por el INE”.
+`habilitado_para_consulta`, `cerrado`. No existe "aprobado por el INE".
 
 ### Identidad visual
 

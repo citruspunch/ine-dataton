@@ -18,7 +18,7 @@ export default function ErrorPage({
       </span>
       <h1 className="text-2xl font-semibold tracking-tight">Algo falló al cargar la página</h1>
       <p className="text-[14px] leading-relaxed text-muted">
-        {error.message || "El motor de validación no respondió. Intente de nuevo."}
+        {error.message || "El servicio de validación no respondió. Intente de nuevo."}
       </p>
       <Button onClick={reset}>Reintentar</Button>
     </div>

@@ -1,18 +1,18 @@
 # Contratos declarativos (`profiles/`)
 
-Cada archivo `.yaml` de esta carpeta es un contrato que el motor evalúa contra un
-archivo candidato. Añadir un contrato **no requiere tocar código**: basta con
+Cada archivo `.yaml` de esta carpeta es un contrato que la validación evalúa contra
+un archivo candidato. Añadir un contrato **no requiere tocar código**. Basta con
 declarar columnas, grano, fechas y comparabilidad.
 
-El validador vive en `engine/profiles.py` y se puede ejecutar sin la interfaz:
+El validador está en `engine/profiles.py` y se puede ejecutar sin la interfaz:
 
 ```bash
 uv run python -m engine.profiles                      # valida todos los contratos
 uv run python -m engine.profiles profiles/mi_contrato.yaml
 ```
 
-La misma validación se aplica al guardar desde la interfaz (**Nueva regla**), donde
-un formulario guiado construye el YAML y devuelve errores por campo (`schema[2].type`,
+La interfaz aplica la misma validación al guardar desde **Nueva regla**, donde un
+formulario guiado construye el YAML y devuelve errores por campo (`schema[2].type`,
 `dates.expected[0]`, …).
 
 ## Campos obligatorios

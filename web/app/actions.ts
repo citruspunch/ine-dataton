@@ -83,7 +83,7 @@ export async function verifyAll() {
         "warn",
       );
     }
-    flash("/review", "Verificación correcta: todas las decisiones vigentes.");
+    flash("/review", "Verificación correcta. Todas las decisiones están vigentes.");
   } catch (error) {
     const detail = errorDetail(error);
     flash("/review", detail.message, "err");

@@ -39,7 +39,7 @@ def _table(headers: list[str], rows: list[list[str]], indent: str = "") -> str:
 
 def _fmt_pct(value: Any) -> str:
     if value is None:
-        return "—"
+        return "Sin dato"
     try:
         return f"{float(value):+.2f}%".replace(".", ",")
     except (TypeError, ValueError):

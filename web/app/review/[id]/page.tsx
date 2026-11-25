@@ -132,7 +132,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                 Ficha del recurso
               </CardTitle>
               <CardDescription>
-                Identidad, procedencia y huella del archivo evaluado.
+                Datos de procedencia y digest del archivo evaluado.
               </CardDescription>
             </CardHeader>
             <CardContent className="p-0">
@@ -160,7 +160,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                     <DataRow label="Origen">
                       {entity.origin === "upload"
                         ? "archivo cargado en la sesión"
-                        : "recurso registrado en el snapshot"}
+                        : "recurso registrado en el corte"}
                     </DataRow>
                     <DataRow label="Periodo">{entity.display.period}</DataRow>
                     <DataRow label="Base">{entity.display.base}</DataRow>
@@ -176,12 +176,12 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                           {entity.source_url}
                         </a>
                       ) : (
-                        "—"
+                        "Sin URL"
                       )}
                     </DataRow>
-                    <DataRow label="Descargado (UTC)">
+                    <DataRow label="Descarga UTC">
                       <span className="font-mono text-[12px]">
-                        {entity.downloaded_at_utc || "—"}
+                        {entity.downloaded_at_utc || "Sin registro"}
                       </span>
                     </DataRow>
                     <DataRow label="SHA-256">
@@ -189,7 +189,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                     </DataRow>
                     <DataRow label="Licencia">
                       {entity.license.id || "sin licencia verificada"} ·{" "}
-                      {entity.license.attribution || "—"}
+                      {entity.license.attribution || "Sin atribución"}
                     </DataRow>
                   </>
                 )}
@@ -226,8 +226,8 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                   Comparaciones
                 </CardTitle>
                 <CardDescription>
-                  Valores calculados solo para revisión. Los bloqueados nunca se copian al
-                  snapshot público.
+                  Valores calculados para la revisión. El sistema no copia los bloqueados al
+                  corte público.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -269,7 +269,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                               ? formatPct(evidence.published_pct as number)
                               : computed !== undefined
                                 ? formatPct(computed as number)
-                                : "—"}
+                                : "Sin dato"}
                           </p>
                           {comparison.status === "ok" && evidence.published_cell ? (
                             <p className="font-mono text-[11px] text-muted">
@@ -306,7 +306,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
               <CardHeader>
                 <CardTitle>Última decisión</CardTitle>
                 <CardDescription>
-                  Registro que sostiene el estado actual del agregado.
+                  La decisión que fijó el estado actual del agregado.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2.5 text-[13px]">
@@ -331,7 +331,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                 </p>
                 <p className="leading-relaxed text-muted">{data.decision.rationale}</p>
                 <p className="break-all font-mono text-[11px] text-muted/80">
-                  basis {data.decision.decision_basis_digest}
+                  digest de la base {data.decision.decision_basis_digest}
                 </p>
               </CardContent>
             </Card>
@@ -339,11 +339,11 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
 
           <Card>
             <CardHeader>
-              <CardTitle>Gate humano</CardTitle>
+              <CardTitle>Decisión humana</CardTitle>
               <CardDescription>
                 {data.decision
-                  ? "Puede registrar una nueva decisión; la anterior queda en el historial."
-                  : "La habilitación exige una decisión explícita y trazable."}
+                  ? "Puede registrar otra decisión. La anterior queda en el historial."
+                  : "Para habilitar el agregado, registre el responsable y el motivo."}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -358,8 +358,8 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
           <div className="flex gap-2.5 rounded-lg border border-line bg-white px-4 py-3 text-[12px] leading-relaxed text-muted">
             <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand" aria-hidden />
             <p>
-              Habilitar no certifica el dato: registra que el archivo coincidió con su
-              contrato, que la licencia está verificada y que una persona asumió la decisión.
+              Habilitar no certifica el dato. Solo registra que el archivo coincidió con su
+              contrato, que la licencia está verificada y que una persona tomó la decisión.
             </p>
           </div>
         </aside>

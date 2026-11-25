@@ -61,7 +61,7 @@ def get_aggregate_receipt(case_id: str) -> dict[str, Any]:
         return {
             "status": "bloqueada",
             "code": "no_publicado",
-            "message": "El agregado no está en el snapshot público.",
+            "message": "El agregado no está en el corte público.",
             "case_id": case_id,
         }
 

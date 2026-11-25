@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPct(value: number | null | undefined): string {
-  if (value === null || value === undefined) return "—";
+  if (value === null || value === undefined) return "Sin dato";
   const text = value.toFixed(2);
   return `${value > 0 ? "+" : ""}${text.replace(".", ",")}%`;
 }
@@ -17,6 +17,6 @@ const numberFormat = new Intl.NumberFormat("es-GT", {
 });
 
 export function formatNumber(value: number | null | undefined): string {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  if (value === null || value === undefined || Number.isNaN(value)) return "Sin dato";
   return numberFormat.format(value);
 }

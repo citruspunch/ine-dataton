@@ -25,7 +25,7 @@ const LICENSES = [
   {
     value: "sin-licencia",
     label: "Sin licencia verificada",
-    hint: "El recurso queda cerrado por defecto hasta documentar una licencia.",
+    hint: "Sin una licencia documentada, la validación cierra el recurso.",
   },
 ];
 
@@ -182,12 +182,12 @@ export function UploadForm({ profiles }: { profiles: ProfileSummary[] }) {
               }`}
             {!selectedProfile.valid ? (
               <span className="mt-1 block font-medium text-fail">
-                Este perfil tiene errores de validación; el motor lo rechazará.
+                La validación rechazará este perfil porque tiene errores.
               </span>
             ) : null}
           </FieldHint>
         ) : (
-          <FieldHint>Sin perfiles disponibles. Cree uno con el editor de reglas.</FieldHint>
+          <FieldHint>No hay perfiles. Cree uno con el formulario de nueva regla.</FieldHint>
         )}
       </div>
 

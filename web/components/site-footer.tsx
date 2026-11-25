@@ -19,13 +19,13 @@ export function SiteFooter() {
             </span>
           </div>
           <p className="mt-4 max-w-2xl text-[12.5px] leading-relaxed text-muted">
-            Validación técnica de los agregados estadísticos publicados por el Instituto
-            Nacional de Estadística de Guatemala. Cada cifra conserva su fuente, su
-            licencia y el registro de la decisión humana que la habilitó.
+            Validación técnica de los agregados estadísticos que publica el Instituto
+            Nacional de Estadística de Guatemala. La ficha de cada cifra muestra la fuente,
+            la licencia y la decisión humana que la habilitó.
           </p>
           <p className="mt-3 max-w-2xl text-[12px] leading-relaxed text-muted">
             Este sistema no certifica, no corrige, no publica en CKAN y no constituye una
-            aprobación del INE. Las cifras y los datos conservan su licencia original.
+            aprobación del INE. Los datos mantienen su licencia original.
           </p>
         </div>
         <div className="text-[12.5px] text-muted">

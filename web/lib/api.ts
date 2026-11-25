@@ -60,7 +60,7 @@ export function errorDetail(error: unknown): { errors?: { field: string; message
     if (typeof error.detail === "string") {
       return { message: error.detail };
     }
-    return { message: `El motor respondió ${error.status}` };
+    return { message: `El servicio de validación respondió ${error.status}` };
   }
-  return { message: "No se pudo contactar el motor de validación." };
+  return { message: "No se pudo contactar el servicio de validación." };
 }

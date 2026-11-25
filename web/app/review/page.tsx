@@ -45,7 +45,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
     profiles = profilesResponse.profiles;
   } catch {
     error =
-      "El motor de validación no está disponible. Verifique el servicio local antes de continuar.";
+      "El servicio de validación no responde. Inicie el servicio local y vuelva a cargar la página.";
   }
 
   const pendingCount = cases.filter((row) => row.state === "en_revision").length;
@@ -56,7 +56,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
       <PageHeader
         eyebrow="Revisión técnica"
         title="Bandeja de validación"
-        description="Cola privada donde cada archivo se contrasta con un contrato declarativo, se justifica y recibe una decisión humana. Solo lo habilitado aquí llega a la consulta pública."
+        description="Aquí un revisor contrasta cada archivo con un contrato declarativo, justifica las advertencias y registra la decisión. Solo los agregados habilitados llegan a la consulta pública."
         actions={
           <form action={verifyAll}>
             <VerifyButton />
@@ -85,8 +85,8 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
               Cargar un archivo
             </CardTitle>
             <CardDescription>
-              Se calcula su SHA-256 al recibirlo y se evalúa contra el perfil declarado
-              elegido. El archivo original no se modifica.
+              La validación calcula el SHA-256 al recibir el archivo y lo evalúa contra el
+              perfil elegido. No modifica el archivo original.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -102,7 +102,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                 Perfiles declarativos
               </CardTitle>
               <CardDescription>
-                Contratos que el motor aplica. {profiles.length} disponibles.
+                Hay {profiles.length} contratos disponibles para la validación.
               </CardDescription>
             </div>
             <NewProfileDialog />
@@ -133,13 +133,12 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
               </ul>
             ) : (
               <p className="px-5 py-6 text-[13px] text-muted">
-                No hay perfiles. Cree el primero con el editor de reglas.
+                No hay perfiles. Cree el primero con el formulario de nueva regla.
               </p>
             )}
             {invalidProfiles ? (
               <p className="border-t border-line bg-fail-bg/60 px-5 py-2.5 text-[12px] text-fail">
-                {invalidProfiles} perfil(es) no pasan la validación y serán rechazados por el
-                motor.
+                Hay {invalidProfiles} perfiles con errores. La validación los rechazará.
               </p>
             ) : null}
             <div className="border-t border-line bg-[#fafafa] px-5 py-4">
@@ -149,7 +148,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
               <ol className="mt-2 space-y-1.5 text-[12px] leading-relaxed text-muted">
                 <li>1. Cargue el archivo y elija su contrato.</li>
                 <li>2. Revise los hallazgos y justifique las advertencias.</li>
-                <li>3. Registre la decisión: solo lo habilitado se publica.</li>
+                <li>3. Registre la decisión. Solo lo habilitado llega a la consulta pública.</li>
               </ol>
             </div>
           </CardContent>
