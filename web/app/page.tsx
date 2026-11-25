@@ -110,7 +110,7 @@ export default async function PublicIndexPage() {
                 <ul className="list-disc space-y-1 pl-4 text-[13px]">
                   <li>Muestra la cifra publicada por el INE, con su celda de origen.</li>
                   <li>Separa base, periodo y unidad en cada respuesta.</li>
-                  <li>Bloquea cruces que no son una variación.</li>
+                  <li>Solo publica agregados con decisión vigente.</li>
                 </ul>
               </TD>
               <TD>
