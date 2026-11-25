@@ -53,6 +53,10 @@ Scripts disponibles (definidos en `package.json`):
 
 Después de `uv sync` y `pnpm install`, todo funciona **sin red**.
 
+> `pnpm run seed` reinicia la cola: borra cargas, enmiendas, cuarentena, recibos
+> y decisiones, y vuelve a habilitar los cuatro casos base. El estado versionado
+> de la demo se recupera con `git restore stores`.
+
 ## 3. Arquitectura de carpetas
 
 ```text
