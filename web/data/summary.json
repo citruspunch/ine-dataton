@@ -1,0 +1,3110 @@
+{
+  "generatedAt": "2026-11-25T05:20:30Z",
+  "groups": {
+    "DPIR": {
+      "id": "DPIR",
+      "label": "Precios de Referencia",
+      "shortLabel": "DPIR",
+      "tagline": "Precios observados en compras públicas",
+      "description": "Precios de referencia registrados por el INE a partir de operaciones de compra pública. Se usan como banda orientativa antes de cotizar; no son una serie mensual continua.",
+      "status": "frozen",
+      "statusLabel": "Serie congelada",
+      "cutoff": "2023-08-04",
+      "granularity": "day",
+      "recordCount": 9452,
+      "canonicalCount": 5074,
+      "flaggedCount": 4378,
+      "datasets": [
+        "dpir-2022",
+        "dpir-2023"
+      ],
+      "metrics": [
+        {
+          "key": "precio-de-referencia",
+          "metric": "Precio de referencia",
+          "valueKind": "price",
+          "currency": "GTQ",
+          "count": 5074,
+          "min": 0.02,
+          "p25": 3.36,
+          "median": 17.515,
+          "p75": 48.9925,
+          "max": 6868507.64,
+          "mean": 6416.211988569176,
+          "cutoff": "2023-08-04",
+          "unit": "Q (todas las presentaciones)",
+          "unitGroups": [
+            {
+              "count": 2173,
+              "min": 0.1,
+              "p25": 10.83,
+              "median": 32.16,
+              "p75": 134.42,
+              "max": 6868507.64,
+              "mean": 14442.327321675104,
+              "cutoff": "2023-08-04",
+              "unit": "Unidad",
+              "key": "unidad"
+            },
+            {
+              "count": 373,
+              "min": 1.03,
+              "p25": 10.0,
+              "median": 39.7,
+              "p75": 191.0,
+              "max": 20369.92,
+              "mean": 611.2226273458446,
+              "cutoff": "2022-03-14",
+              "unit": "Vial",
+              "key": "vial"
+            },
+            {
+              "count": 345,
+              "min": 0.05,
+              "p25": 0.3,
+              "median": 0.8,
+              "p75": 2.11,
+              "max": 87.65,
+              "mean": 2.0704927536231885,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta/Comprimido",
+              "key": "tableta comprimido"
+            },
+            {
+              "count": 252,
+              "min": 17.5,
+              "p25": 21.87,
+              "median": 24.695,
+              "p75": 26.5225,
+              "max": 32.5,
+              "mean": 24.356190476190477,
+              "cutoff": "2018-05-17",
+              "unit": "Ración",
+              "key": "racion"
+            },
+            {
+              "count": 251,
+              "min": 0.17,
+              "p25": 1.065,
+              "median": 2.58,
+              "p75": 5.08,
+              "max": 276.06,
+              "mean": 6.709402390438247,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta recubierta/Comprimido recubierto",
+              "key": "tableta recubierta comprimido recubierto"
+            },
+            {
+              "count": 236,
+              "min": 0.6,
+              "p25": 3.5675,
+              "median": 9.855,
+              "p75": 36.35,
+              "max": 2688.32,
+              "mean": 47.932203389830505,
+              "cutoff": "2022-03-14",
+              "unit": "Ampolla",
+              "key": "ampolla"
+            },
+            {
+              "count": 214,
+              "min": 1.26,
+              "p25": 8.075,
+              "median": 20.314999999999998,
+              "p75": 189.7,
+              "max": 4698.0,
+              "mean": 315.5737850467289,
+              "cutoff": "2022-03-14",
+              "unit": "Frasco",
+              "key": "frasco"
+            },
+            {
+              "count": 148,
+              "min": 0.13,
+              "p25": 0.9474999999999999,
+              "median": 2.43,
+              "p75": 5.67,
+              "max": 4369.47,
+              "mean": 122.15729729729729,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula",
+              "key": "capsula"
+            },
+            {
+              "count": 103,
+              "min": 0.02,
+              "p25": 0.21,
+              "median": 0.3,
+              "p75": 0.49,
+              "max": 5.63,
+              "mean": 0.7528155339805824,
+              "cutoff": "2022-09-26",
+              "unit": "Gramo",
+              "key": "gramo"
+            },
+            {
+              "count": 100,
+              "min": 0.65,
+              "p25": 7.03,
+              "median": 10.605,
+              "p75": 104.1825,
+              "max": 2848.86,
+              "mean": 195.43259999999998,
+              "cutoff": "2022-03-14",
+              "unit": "Bolsa",
+              "key": "bolsa"
+            },
+            {
+              "count": 83,
+              "min": 0.02,
+              "p25": 0.1,
+              "median": 0.21,
+              "p75": 0.6799999999999999,
+              "max": 51.03,
+              "mean": 1.7518072289156628,
+              "cutoff": "2022-09-26",
+              "unit": "Mililitro",
+              "key": "mililitro"
+            },
+            {
+              "count": 66,
+              "min": 0.1,
+              "p25": 2.5,
+              "median": 5.045,
+              "p75": 53.269999999999996,
+              "max": 600.0,
+              "mean": 61.56075757575757,
+              "cutoff": "2021-05-18",
+              "unit": "Tableta",
+              "key": "tableta"
+            },
+            {
+              "count": 45,
+              "min": 0.51,
+              "p25": 1.49,
+              "median": 5.46,
+              "p75": 8.28,
+              "max": 317.26,
+              "mean": 20.118,
+              "cutoff": "2021-06-10",
+              "unit": "Tubo",
+              "key": "tubo"
+            },
+            {
+              "count": 38,
+              "min": 27.75,
+              "p25": 37.8825,
+              "median": 95.155,
+              "p75": 2377.135,
+              "max": 14406.07,
+              "mean": 1617.573947368421,
+              "cutoff": "2021-12-01",
+              "unit": "Jeringa Prellenada",
+              "key": "jeringa prellenada"
+            },
+            {
+              "count": 35,
+              "min": 1.0,
+              "p25": 4.9,
+              "median": 79.04,
+              "p75": 231.255,
+              "max": 600.0,
+              "mean": 129.67514285714287,
+              "cutoff": "2020-08-18",
+              "unit": "Par",
+              "key": "par"
+            },
+            {
+              "count": 27,
+              "min": 4.71,
+              "p25": 13.18,
+              "median": 27.67,
+              "p75": 65.0,
+              "max": 419.3,
+              "mean": 56.026296296296294,
+              "cutoff": "2021-06-10",
+              "unit": "Galon",
+              "key": "galon"
+            },
+            {
+              "count": 22,
+              "min": 14.46,
+              "p25": 38.0925,
+              "median": 49.425,
+              "p75": 109.53000000000002,
+              "max": 1370.0,
+              "mean": 268.76272727272726,
+              "cutoff": "2023-08-04",
+              "unit": "Litro",
+              "key": "litro"
+            },
+            {
+              "count": 21,
+              "min": 2.16,
+              "p25": 5.17,
+              "median": 23.22,
+              "p75": 37.79,
+              "max": 2553.25,
+              "mean": 199.61333333333334,
+              "cutoff": "2022-03-28",
+              "unit": "Rollo",
+              "key": "rollo"
+            },
+            {
+              "count": 20,
+              "min": 0.8,
+              "p25": 2.7350000000000003,
+              "median": 4.325,
+              "p75": 10.49,
+              "max": 67.85,
+              "mean": 12.61,
+              "cutoff": "2022-09-26",
+              "unit": "Libra",
+              "key": "libra"
+            },
+            {
+              "count": 17,
+              "min": 12.94,
+              "p25": 19.25,
+              "median": 41.57,
+              "p75": 132.62,
+              "max": 635.72,
+              "mean": 123.11470588235295,
+              "cutoff": "2022-12-10",
+              "unit": "Segundos",
+              "key": "segundos"
+            },
+            {
+              "count": 16,
+              "min": 31.01,
+              "p25": 61.96000000000001,
+              "median": 284.885,
+              "p75": 1484.5825,
+              "max": 1828.93,
+              "mean": 671.196875,
+              "cutoff": "2018-07-31",
+              "unit": "Caja",
+              "key": "caja"
+            },
+            {
+              "count": 16,
+              "min": 1.09,
+              "p25": 2.04,
+              "median": 7.34,
+              "p75": 11.997499999999999,
+              "max": 21.99,
+              "mean": 7.56625,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula de gelatina suave",
+              "key": "capsula de gelatina suave"
+            },
+            {
+              "count": 15,
+              "min": 1.08,
+              "p25": 1.14,
+              "median": 1.48,
+              "p75": 4.025,
+              "max": 4.92,
+              "mean": 2.5926666666666667,
+              "cutoff": "2017-10-09",
+              "unit": "Pie cúbico estandar",
+              "key": "pie cubico estandar"
+            },
+            {
+              "count": 15,
+              "min": 0.77,
+              "p25": 1.3250000000000002,
+              "median": 2.15,
+              "p75": 4.95,
+              "max": 14.79,
+              "mean": 4.462666666666666,
+              "cutoff": "2021-06-01",
+              "unit": "Óvulo",
+              "key": "ovulo"
+            },
+            {
+              "count": 14,
+              "min": 0.83,
+              "p25": 1.01,
+              "median": 1.28,
+              "p75": 3.2,
+              "max": 5.24,
+              "mean": 2.0414285714285714,
+              "cutoff": "2022-08-22",
+              "unit": "PIE CÚBICO",
+              "key": "pie cubico"
+            },
+            {
+              "count": 12,
+              "min": 174.56,
+              "p25": 280.5525,
+              "median": 318.67,
+              "p75": 326.6375,
+              "max": 343.36,
+              "mean": 297.25,
+              "cutoff": "2019-05-28",
+              "unit": "Sistema",
+              "key": "sistema"
+            },
+            {
+              "count": 11,
+              "min": 0.67,
+              "p25": 1.02,
+              "median": 1.06,
+              "p75": 1.4849999999999999,
+              "max": 20.26,
+              "mean": 3.3618181818181823,
+              "cutoff": "2022-03-14",
+              "unit": "CÁPSULA DE GELATINA BLANDA",
+              "key": "capsula de gelatina blanda"
+            },
+            {
+              "count": 11,
+              "min": 12.07,
+              "p25": 14.77,
+              "median": 229.25,
+              "p75": 599.095,
+              "max": 1293.87,
+              "mean": 379.2863636363636,
+              "cutoff": "2023-08-04",
+              "unit": "Kilogramo",
+              "key": "kilogramo"
+            },
+            {
+              "count": 9,
+              "min": 0.24,
+              "p25": 0.54,
+              "median": 14.96,
+              "p75": 31.2,
+              "max": 34.0,
+              "mean": 16.035555555555554,
+              "cutoff": "2022-03-14",
+              "unit": "TABLETA DE LIBERACIÓN RETARDADA/COMPRIMIDO D",
+              "key": "tableta de liberacion retardada comprimido d"
+            },
+            {
+              "count": 8,
+              "min": 2.78,
+              "p25": 7.5424999999999995,
+              "median": 11.715,
+              "p75": 28.405,
+              "max": 93.62,
+              "mean": 25.0125,
+              "cutoff": "2022-03-14",
+              "unit": "Frasco gotero",
+              "key": "frasco gotero"
+            },
+            {
+              "count": 8,
+              "min": 23.2,
+              "p25": 38.1475,
+              "median": 48.305,
+              "p75": 65.16499999999999,
+              "max": 104.9,
+              "mean": 55.22,
+              "cutoff": "2018-04-12",
+              "unit": "Paquete de 100 unidades",
+              "key": "paquete de 100 unidades"
+            },
+            {
+              "count": 8,
+              "min": 129.3,
+              "p25": 137.4475,
+              "median": 197.625,
+              "p75": 335.1025,
+              "max": 383.54,
+              "mean": 233.25875,
+              "cutoff": "2019-05-31",
+              "unit": "Quintal",
+              "key": "quintal"
+            },
+            {
+              "count": 8,
+              "min": 0.68,
+              "p25": 1.1625,
+              "median": 3.5999999999999996,
+              "p75": 4.505,
+              "max": 10.27,
+              "mean": 3.7024999999999997,
+              "cutoff": "2022-03-14",
+              "unit": "Sobre",
+              "key": "sobre"
+            },
+            {
+              "count": 8,
+              "min": 1.4,
+              "p25": 1.7275,
+              "median": 3.91,
+              "p75": 6.145,
+              "max": 7.43,
+              "mean": 4.0875,
+              "cutoff": "2018-07-05",
+              "unit": "Tableta Vaginal",
+              "key": "tableta vaginal"
+            },
+            {
+              "count": 7,
+              "min": 325.33,
+              "p25": 954.6600000000001,
+              "median": 1699.08,
+              "p75": 3656.165,
+              "max": 36949.4,
+              "mean": 6885.065714285714,
+              "cutoff": "2022-03-14",
+              "unit": "Frasco vial",
+              "key": "frasco vial"
+            },
+            {
+              "count": 7,
+              "min": 23.29,
+              "p25": 25.32,
+              "median": 28.0,
+              "p75": 7303.335,
+              "max": 7800.0,
+              "mean": 3215.5142857142855,
+              "cutoff": "2022-03-28",
+              "unit": "Resma",
+              "key": "resma"
+            },
+            {
+              "count": 6,
+              "min": 3.23,
+              "p25": 3.9224999999999994,
+              "median": 5.71,
+              "p75": 299.39750000000004,
+              "max": 396.82,
+              "mean": 135.34833333333333,
+              "cutoff": "2021-06-17",
+              "unit": "Ampolla plástica",
+              "key": "ampolla plastica"
+            },
+            {
+              "count": 6,
+              "min": 7.26,
+              "p25": 7.425,
+              "median": 7.47,
+              "p75": 7.5,
+              "max": 7.95,
+              "mean": 7.511666666666667,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 375 gramos",
+              "key": "bolsa de 375 gramos"
+            },
+            {
+              "count": 6,
+              "min": 1.99,
+              "p25": 2.5,
+              "median": 2.795,
+              "p75": 57.7275,
+              "max": 102.8,
+              "mean": 31.47,
+              "cutoff": "2021-06-17",
+              "unit": "Cartucho",
+              "key": "cartucho"
+            },
+            {
+              "count": 6,
+              "min": 0.18,
+              "p25": 0.25,
+              "median": 0.255,
+              "p75": 0.5149999999999999,
+              "max": 2.42,
+              "mean": 0.66,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula de liberación retardada",
+              "key": "capsula de liberacion retardada"
+            },
+            {
+              "count": 6,
+              "min": 0.3,
+              "p25": 0.52,
+              "median": 1.1800000000000002,
+              "p75": 2.7925000000000004,
+              "max": 7.89,
+              "mean": 2.3633333333333333,
+              "cutoff": "2021-06-10",
+              "unit": "Tableta de Liberación prolongada/Comprimido",
+              "key": "tableta de liberacion prolongada comprimido"
+            },
+            {
+              "count": 6,
+              "min": 0.06,
+              "p25": 0.12250000000000001,
+              "median": 0.2,
+              "p75": 0.9524999999999999,
+              "max": 9.29,
+              "mean": 1.8416666666666666,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta masticable/Comprimido masticable",
+              "key": "tableta masticable comprimido masticable"
+            },
+            {
+              "count": 5,
+              "min": 13.94,
+              "p25": 14.72,
+              "median": 17.81,
+              "p75": 18.86,
+              "max": 19.86,
+              "mean": 17.038,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 5 libras",
+              "key": "bolsa de 5 libras"
+            },
+            {
+              "count": 5,
+              "min": 5.71,
+              "p25": 7.6,
+              "median": 47.82,
+              "p75": 69.46,
+              "max": 73.92,
+              "mean": 40.902,
+              "cutoff": "2021-06-10",
+              "unit": "Comprimido",
+              "key": "comprimido"
+            },
+            {
+              "count": 5,
+              "min": 0.67,
+              "p25": 0.99,
+              "median": 1.06,
+              "p75": 1.06,
+              "max": 1.2,
+              "mean": 0.9960000000000001,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula gelatina blanda",
+              "key": "capsula gelatina blanda"
+            },
+            {
+              "count": 5,
+              "min": 9581.33,
+              "p25": 12722.66,
+              "median": 14713.5,
+              "p75": 20809.53,
+              "max": 22117.5,
+              "mean": 15988.904,
+              "cutoff": "2022-12-10",
+              "unit": "Media página",
+              "key": "media pagina"
+            },
+            {
+              "count": 5,
+              "min": 130.95,
+              "p25": 146.26,
+              "median": 234.48,
+              "p75": 250.0,
+              "max": 254.09,
+              "mean": 203.156,
+              "cutoff": "2019-05-28",
+              "unit": "Paquete de ropa",
+              "key": "paquete de ropa"
+            },
+            {
+              "count": 5,
+              "min": 19562.67,
+              "p25": 25242.19,
+              "median": 25570.8,
+              "p75": 38689.09,
+              "max": 44623.34,
+              "mean": 30737.618,
+              "cutoff": "2022-12-10",
+              "unit": "Página completa",
+              "key": "pagina completa"
+            },
+            {
+              "count": 5,
+              "min": 0.28,
+              "p25": 0.28,
+              "median": 0.31,
+              "p75": 20.53,
+              "max": 126.7,
+              "mean": 29.619999999999997,
+              "cutoff": "2021-12-01",
+              "unit": "Tableta dispersable/Comprimido dispersable",
+              "key": "tableta dispersable comprimido dispersable"
+            },
+            {
+              "count": 5,
+              "min": 0.78,
+              "p25": 0.78,
+              "median": 2.17,
+              "p75": 2.17,
+              "max": 6.74,
+              "mean": 2.528,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta/Comprimido de liberación prolongada",
+              "key": "tableta comprimido de liberacion prolongada"
+            },
+            {
+              "count": 5,
+              "min": 9.23,
+              "p25": 9.25,
+              "median": 11.0,
+              "p75": 25.56,
+              "max": 175.0,
+              "mean": 46.007999999999996,
+              "cutoff": "2021-06-10",
+              "unit": "Tarro",
+              "key": "tarro"
+            },
+            {
+              "count": 4,
+              "min": 1.61,
+              "p25": 1.6700000000000002,
+              "median": 1.7,
+              "p75": 1.7175,
+              "max": 1.74,
+              "mean": 1.6875,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 200 gramos",
+              "key": "bolsa de 200 gramos"
+            },
+            {
+              "count": 4,
+              "min": 3.65,
+              "p25": 3.8375,
+              "median": 4.545,
+              "p75": 5.3325,
+              "max": 5.76,
+              "mean": 4.625,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 400 gramos",
+              "key": "bolsa de 400 gramos"
+            },
+            {
+              "count": 4,
+              "min": 32.74,
+              "p25": 39.0925,
+              "median": 42.335,
+              "p75": 44.004999999999995,
+              "max": 45.64,
+              "mean": 40.7625,
+              "cutoff": "2019-05-31",
+              "unit": "Caja de 24 unidades de 200 ml",
+              "key": "caja de 24 unidades de 200 ml"
+            },
+            {
+              "count": 4,
+              "min": 1.58,
+              "p25": 10.145,
+              "median": 13.385,
+              "p75": 139.3675,
+              "max": 516.16,
+              "mean": 136.1275,
+              "cutoff": "2021-06-10",
+              "unit": "Comprimido recubierto",
+              "key": "comprimido recubierto"
+            },
+            {
+              "count": 4,
+              "min": 12.57,
+              "p25": 12.6,
+              "median": 24.99,
+              "p75": 38.747499999999995,
+              "max": 42.88,
+              "mean": 26.3575,
+              "cutoff": "2021-06-10",
+              "unit": "Cápsula de gelatina suave con microemulsión",
+              "key": "capsula de gelatina suave con microemulsion"
+            },
+            {
+              "count": 4,
+              "min": 6.38,
+              "p25": 9.6125,
+              "median": 10.73,
+              "p75": 12.342500000000001,
+              "max": 17.06,
+              "mean": 11.225,
+              "cutoff": "2018-08-08",
+              "unit": "Cápsula de liberación prolongada",
+              "key": "capsula de liberacion prolongada"
+            },
+            {
+              "count": 4,
+              "min": 1.05,
+              "p25": 1.7325,
+              "median": 3.075,
+              "p75": 4.3100000000000005,
+              "max": 4.67,
+              "mean": 2.9675000000000002,
+              "cutoff": "2022-03-14",
+              "unit": "Microgramo",
+              "key": "microgramo"
+            },
+            {
+              "count": 4,
+              "min": 16.84,
+              "p25": 20.605,
+              "median": 22.965,
+              "p75": 25.995,
+              "max": 31.77,
+              "mean": 23.634999999999998,
+              "cutoff": "2018-05-29",
+              "unit": "Paquete",
+              "key": "paquete"
+            },
+            {
+              "count": 4,
+              "min": 7.79,
+              "p25": 7.8575,
+              "median": 7.984999999999999,
+              "p75": 8.125,
+              "max": 8.23,
+              "mean": 7.9975000000000005,
+              "cutoff": "2019-05-31",
+              "unit": "Paquete de 425 gramos",
+              "key": "paquete de 425 gramos"
+            },
+            {
+              "count": 4,
+              "min": 4.24,
+              "p25": 4.555,
+              "median": 6.175000000000001,
+              "p75": 9.2125,
+              "max": 13.78,
+              "mean": 7.5925,
+              "cutoff": "2018-04-17",
+              "unit": "Pliego",
+              "key": "pliego"
+            },
+            {
+              "count": 4,
+              "min": 1.37,
+              "p25": 1.445,
+              "median": 1.755,
+              "p75": 3.1425,
+              "max": 6.45,
+              "mean": 2.8325,
+              "cutoff": "2022-03-14",
+              "unit": "Supositorio",
+              "key": "supositorio"
+            },
+            {
+              "count": 4,
+              "min": 3.87,
+              "p25": 14.0925,
+              "median": 22.9,
+              "p75": 28.4725,
+              "max": 28.99,
+              "mean": 19.665,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta bucodispersable/Comprimido bucodisper",
+              "key": "tableta bucodispersable comprimido bucodisper"
+            },
+            {
+              "count": 4,
+              "min": 0.24,
+              "p25": 0.27,
+              "median": 0.41000000000000003,
+              "p75": 8.205,
+              "max": 31.2,
+              "mean": 8.065,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta de Liberación retardada/Comprimido de",
+              "key": "tableta de liberacion retardada comprimido de"
+            },
+            {
+              "count": 4,
+              "min": 6.76,
+              "p25": 6.805,
+              "median": 7.82,
+              "p75": 15.115,
+              "max": 34.0,
+              "mean": 14.1,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta de liberación prolongada",
+              "key": "tableta de liberacion prolongada"
+            },
+            {
+              "count": 4,
+              "min": 0.44,
+              "p25": 0.4475,
+              "median": 0.6,
+              "p75": 0.77,
+              "max": 0.83,
+              "mean": 0.6174999999999999,
+              "cutoff": "2021-12-01",
+              "unit": "Tableta masticable",
+              "key": "tableta masticable"
+            },
+            {
+              "count": 4,
+              "min": 4.59,
+              "p25": 139.455,
+              "median": 347.51,
+              "p75": 521.3875,
+              "max": 553.72,
+              "mean": 313.3325,
+              "cutoff": "2021-06-10",
+              "unit": "Tableta recubierta",
+              "key": "tableta recubierta"
+            },
+            {
+              "count": 4,
+              "min": 2.56,
+              "p25": 2.56,
+              "median": 3.19,
+              "p75": 4.0424999999999995,
+              "max": 4.71,
+              "mean": 3.4125,
+              "cutoff": "2021-06-17",
+              "unit": "Vial plástico",
+              "key": "vial plastico"
+            },
+            {
+              "count": 3,
+              "min": 5.06,
+              "p25": 5.195,
+              "median": 5.33,
+              "p75": 6.535,
+              "max": 7.74,
+              "mean": 6.043333333333333,
+              "cutoff": "2018-06-21",
+              "unit": "Bolsa de 285 gramos",
+              "key": "bolsa de 285 gramos"
+            },
+            {
+              "count": 3,
+              "min": 12.68,
+              "p25": 12.68,
+              "median": 12.68,
+              "p75": 12.855,
+              "max": 13.03,
+              "mean": 12.796666666666667,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 2;000 gramos",
+              "key": "bolsa de 2 000 gramos"
+            },
+            {
+              "count": 3,
+              "min": 1.25,
+              "p25": 1.83,
+              "median": 2.41,
+              "p75": 2.475,
+              "max": 2.54,
+              "mean": 2.066666666666667,
+              "cutoff": "2019-05-31",
+              "unit": "Empaque individual",
+              "key": "empaque individual"
+            },
+            {
+              "count": 3,
+              "min": 4.3,
+              "p25": 4.3,
+              "median": 4.3,
+              "p75": 13.15,
+              "max": 22.0,
+              "mean": 10.200000000000001,
+              "cutoff": "2021-06-17",
+              "unit": "Minibag plus con adaptador para Vial",
+              "key": "minibag plus con adaptador para vial"
+            },
+            {
+              "count": 3,
+              "min": 230.0,
+              "p25": 299.66999999999996,
+              "median": 369.34,
+              "p75": 387.80499999999995,
+              "max": 406.27,
+              "mean": 335.2033333333333,
+              "cutoff": "2018-04-06",
+              "unit": "Set de catéter",
+              "key": "set de cateter"
+            },
+            {
+              "count": 3,
+              "min": 0.23,
+              "p25": 0.29,
+              "median": 0.35,
+              "p75": 0.46499999999999997,
+              "max": 0.58,
+              "mean": 0.38666666666666666,
+              "cutoff": "2021-05-18",
+              "unit": "Tableta de liberación retardada/Comprimido li",
+              "key": "tableta de liberacion retardada comprimido li"
+            },
+            {
+              "count": 3,
+              "min": 0.69,
+              "p25": 1.255,
+              "median": 1.82,
+              "p75": 11.2,
+              "max": 20.58,
+              "mean": 7.696666666666666,
+              "cutoff": "2018-07-05",
+              "unit": "Tableta recubierto/Comprimido recubierto",
+              "key": "tableta recubierto comprimido recubierto"
+            },
+            {
+              "count": 3,
+              "min": 42.68,
+              "p25": 45.79,
+              "median": 48.9,
+              "p75": 60.224999999999994,
+              "max": 71.55,
+              "mean": 54.376666666666665,
+              "cutoff": "2022-03-14",
+              "unit": "Unidades internacionales",
+              "key": "unidades internacionales"
+            },
+            {
+              "count": 2,
+              "min": 83.48,
+              "p25": 83.6125,
+              "median": 83.745,
+              "p75": 83.87750000000001,
+              "max": 84.01,
+              "mean": 83.745,
+              "cutoff": "2019-05-31",
+              "unit": "Arroba",
+              "key": "arroba"
+            },
+            {
+              "count": 2,
+              "min": 31.0,
+              "p25": 31.555,
+              "median": 32.11,
+              "p75": 32.665,
+              "max": 33.22,
+              "mean": 32.11,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 10 libras",
+              "key": "bolsa de 10 libras"
+            },
+            {
+              "count": 2,
+              "min": 4.56,
+              "p25": 4.5925,
+              "median": 4.625,
+              "p75": 4.6575,
+              "max": 4.69,
+              "mean": 4.625,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 120 gramos",
+              "key": "bolsa de 120 gramos"
+            },
+            {
+              "count": 2,
+              "min": 5.9,
+              "p25": 5.972500000000001,
+              "median": 6.045,
+              "p75": 6.1175,
+              "max": 6.19,
+              "mean": 6.045,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 2 libras",
+              "key": "bolsa de 2 libras"
+            },
+            {
+              "count": 2,
+              "min": 97.86,
+              "p25": 99.8825,
+              "median": 101.905,
+              "p75": 103.92750000000001,
+              "max": 105.95,
+              "mean": 101.905,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 2;200 gramos",
+              "key": "bolsa de 2 200 gramos"
+            },
+            {
+              "count": 2,
+              "min": 15.58,
+              "p25": 15.7425,
+              "median": 15.905000000000001,
+              "p75": 16.0675,
+              "max": 16.23,
+              "mean": 15.905000000000001,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 2;500 gramos",
+              "key": "bolsa de 2 500 gramos"
+            },
+            {
+              "count": 2,
+              "min": 4.98,
+              "p25": 5.022500000000001,
+              "median": 5.065,
+              "p75": 5.1075,
+              "max": 5.15,
+              "mean": 5.065,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 350 gramos",
+              "key": "bolsa de 350 gramos"
+            },
+            {
+              "count": 2,
+              "min": 19.77,
+              "p25": 19.830000000000002,
+              "median": 19.89,
+              "p75": 19.95,
+              "max": 20.01,
+              "mean": 19.89,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 360 gramos",
+              "key": "bolsa de 360 gramos"
+            },
+            {
+              "count": 2,
+              "min": 2.5,
+              "p25": 2.525,
+              "median": 2.55,
+              "p75": 2.575,
+              "max": 2.6,
+              "mean": 2.55,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 4 onzas",
+              "key": "bolsa de 4 onzas"
+            },
+            {
+              "count": 2,
+              "min": 3.3,
+              "p25": 3.3,
+              "median": 3.3,
+              "p75": 3.3,
+              "max": 3.3,
+              "mean": 3.3,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 500 gramos",
+              "key": "bolsa de 500 gramos"
+            },
+            {
+              "count": 2,
+              "min": 5.09,
+              "p25": 5.1425,
+              "median": 5.195,
+              "p75": 5.2475,
+              "max": 5.3,
+              "mean": 5.195,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 8 onzas",
+              "key": "bolsa de 8 onzas"
+            },
+            {
+              "count": 2,
+              "min": 43.08,
+              "p25": 44.13,
+              "median": 45.18,
+              "p75": 46.230000000000004,
+              "max": 47.28,
+              "mean": 45.18,
+              "cutoff": "2019-05-31",
+              "unit": "Bolsa de 800 gramos",
+              "key": "bolsa de 800 gramos"
+            },
+            {
+              "count": 2,
+              "min": 15.57,
+              "p25": 25.2325,
+              "median": 34.894999999999996,
+              "p75": 44.5575,
+              "max": 54.22,
+              "mean": 34.894999999999996,
+              "cutoff": "2018-06-21",
+              "unit": "Bolsa de un kilogramo",
+              "key": "bolsa de un kilogramo"
+            },
+            {
+              "count": 2,
+              "min": 6.31,
+              "p25": 9.4825,
+              "median": 12.655,
+              "p75": 15.8275,
+              "max": 19.0,
+              "mean": 12.655,
+              "cutoff": "2020-05-12",
+              "unit": "Bote",
+              "key": "bote"
+            },
+            {
+              "count": 2,
+              "min": 12.0,
+              "p25": 12.1325,
+              "median": 12.265,
+              "p75": 12.397499999999999,
+              "max": 12.53,
+              "mean": 12.265,
+              "cutoff": "2018-04-12",
+              "unit": "Bote de 400 mililitros",
+              "key": "bote de 400 mililitros"
+            },
+            {
+              "count": 2,
+              "min": 6.71,
+              "p25": 6.9075,
+              "median": 7.105,
+              "p75": 7.3025,
+              "max": 7.5,
+              "mean": 7.105,
+              "cutoff": "2018-04-12",
+              "unit": "Bote de 600 gramos",
+              "key": "bote de 600 gramos"
+            },
+            {
+              "count": 2,
+              "min": 11.89,
+              "p25": 14.822500000000002,
+              "median": 17.755000000000003,
+              "p75": 20.6875,
+              "max": 23.62,
+              "mean": 17.755000000000003,
+              "cutoff": "2018-04-12",
+              "unit": "Bote de un litro",
+              "key": "bote de un litro"
+            },
+            {
+              "count": 2,
+              "min": 1.76,
+              "p25": 1.7750000000000001,
+              "median": 1.79,
+              "p75": 1.805,
+              "max": 1.82,
+              "mean": 1.79,
+              "cutoff": "2019-05-31",
+              "unit": "Botella de 20 onzas",
+              "key": "botella de 20 onzas"
+            },
+            {
+              "count": 2,
+              "min": 4.87,
+              "p25": 7.29,
+              "median": 9.71,
+              "p75": 12.13,
+              "max": 14.55,
+              "mean": 9.71,
+              "cutoff": "2018-04-12",
+              "unit": "Botella de un litro",
+              "key": "botella de un litro"
+            },
+            {
+              "count": 2,
+              "min": 14.9,
+              "p25": 29.0675,
+              "median": 43.235,
+              "p75": 57.402499999999996,
+              "max": 71.57,
+              "mean": 43.235,
+              "cutoff": "2018-05-29",
+              "unit": "Caja de 100 unidades",
+              "key": "caja de 100 unidades"
+            },
+            {
+              "count": 2,
+              "min": 171.2,
+              "p25": 171.89999999999998,
+              "median": 172.6,
+              "p75": 173.3,
+              "max": 174.0,
+              "mean": 172.6,
+              "cutoff": "2017-06-16",
+              "unit": "Caja de 12 Unidades",
+              "key": "caja de 12 unidades"
+            },
+            {
+              "count": 2,
+              "min": 0.18,
+              "p25": 0.195,
+              "median": 0.21,
+              "p75": 0.22499999999999998,
+              "max": 0.24,
+              "mean": 0.21,
+              "cutoff": "2018-04-06",
+              "unit": "Ciento",
+              "key": "ciento"
+            },
+            {
+              "count": 2,
+              "min": 1.31,
+              "p25": 1.4849999999999999,
+              "median": 1.66,
+              "p75": 1.835,
+              "max": 2.01,
+              "mean": 1.66,
+              "cutoff": "2017-11-30",
+              "unit": "Cotizar por Tableta/Comprimido",
+              "key": "cotizar por tableta comprimido"
+            },
+            {
+              "count": 2,
+              "min": 4.26,
+              "p25": 4.7875,
+              "median": 5.3149999999999995,
+              "p75": 5.842499999999999,
+              "max": 6.37,
+              "mean": 5.3149999999999995,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula con gránulos de liberación prolongada",
+              "key": "capsula con granulos de liberacion prolongada"
+            },
+            {
+              "count": 2,
+              "min": 1.09,
+              "p25": 1.2375,
+              "median": 1.385,
+              "p75": 1.5325,
+              "max": 1.68,
+              "mean": 1.385,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula gelatina suave",
+              "key": "capsula gelatina suave"
+            },
+            {
+              "count": 2,
+              "min": 9.66,
+              "p25": 9.7525,
+              "median": 9.844999999999999,
+              "p75": 9.9375,
+              "max": 10.03,
+              "mean": 9.844999999999999,
+              "cutoff": "2019-05-31",
+              "unit": "Envase de 800 mililitros",
+              "key": "envase de 800 mililitros"
+            },
+            {
+              "count": 2,
+              "min": 5.33,
+              "p25": 6.3725000000000005,
+              "median": 7.415,
+              "p75": 8.4575,
+              "max": 9.5,
+              "mean": 7.415,
+              "cutoff": "2020-05-12",
+              "unit": "Gragea",
+              "key": "gragea"
+            },
+            {
+              "count": 2,
+              "min": 56362.5,
+              "p25": 57204.22,
+              "median": 58045.94,
+              "p75": 58887.659999999996,
+              "max": 59729.38,
+              "mean": 58045.94,
+              "cutoff": "2022-12-10",
+              "unit": "Media falsa portada",
+              "key": "media falsa portada"
+            },
+            {
+              "count": 2,
+              "min": 78011.82,
+              "p25": 93139.99,
+              "median": 108268.16,
+              "p75": 123396.33,
+              "max": 138524.5,
+              "mean": 108268.16,
+              "cutoff": "2022-12-10",
+              "unit": "Mensual",
+              "key": "mensual"
+            },
+            {
+              "count": 2,
+              "min": 0.32,
+              "p25": 0.355,
+              "median": 0.39,
+              "p75": 0.42500000000000004,
+              "max": 0.46,
+              "mean": 0.39,
+              "cutoff": "2022-03-14",
+              "unit": "ONZA",
+              "key": "onza"
+            },
+            {
+              "count": 2,
+              "min": 7.1,
+              "p25": 7.107499999999999,
+              "median": 7.115,
+              "p75": 7.1225000000000005,
+              "max": 7.13,
+              "mean": 7.115,
+              "cutoff": "2019-05-31",
+              "unit": "Paquete de 12 unidades",
+              "key": "paquete de 12 unidades"
+            },
+            {
+              "count": 2,
+              "min": 1.58,
+              "p25": 1.6,
+              "median": 1.62,
+              "p75": 1.64,
+              "max": 1.66,
+              "mean": 1.62,
+              "cutoff": "2019-05-31",
+              "unit": "Paquete de 150 gramos",
+              "key": "paquete de 150 gramos"
+            },
+            {
+              "count": 2,
+              "min": 5.04,
+              "p25": 5.0625,
+              "median": 5.085,
+              "p75": 5.1075,
+              "max": 5.13,
+              "mean": 5.085,
+              "cutoff": "2019-05-31",
+              "unit": "Paquete de 190 gramos",
+              "key": "paquete de 190 gramos"
+            },
+            {
+              "count": 2,
+              "min": 1.68,
+              "p25": 1.7,
+              "median": 1.72,
+              "p75": 1.74,
+              "max": 1.76,
+              "mean": 1.72,
+              "cutoff": "2019-05-31",
+              "unit": "Paquete de 200 gramos",
+              "key": "paquete de 200 gramos"
+            },
+            {
+              "count": 2,
+              "min": 9.49,
+              "p25": 9.495,
+              "median": 9.5,
+              "p75": 9.505,
+              "max": 9.51,
+              "mean": 9.5,
+              "cutoff": "2019-05-31",
+              "unit": "Paquete de 350 gramos",
+              "key": "paquete de 350 gramos"
+            },
+            {
+              "count": 2,
+              "min": 8.32,
+              "p25": 8.6675,
+              "median": 9.015,
+              "p75": 9.3625,
+              "max": 9.71,
+              "mean": 9.015,
+              "cutoff": "2018-04-12",
+              "unit": "Paquete de tres unidades",
+              "key": "paquete de tres unidades"
+            },
+            {
+              "count": 2,
+              "min": 16.83,
+              "p25": 63.0775,
+              "median": 109.32499999999999,
+              "p75": 155.57250000000002,
+              "max": 201.82,
+              "mean": 109.32499999999999,
+              "cutoff": "2018-08-08",
+              "unit": "Parche transdérmico",
+              "key": "parche transdermico"
+            },
+            {
+              "count": 2,
+              "min": 1640.09,
+              "p25": 2176.9425,
+              "median": 2713.795,
+              "p75": 3250.6475,
+              "max": 3787.5,
+              "mean": 2713.795,
+              "cutoff": "2021-06-10",
+              "unit": "Pluma Precargada",
+              "key": "pluma precargada"
+            },
+            {
+              "count": 2,
+              "min": 0.47,
+              "p25": 2.9225,
+              "median": 5.375,
+              "p75": 7.827499999999999,
+              "max": 10.28,
+              "mean": 5.375,
+              "cutoff": "2018-09-18",
+              "unit": "Tableta de Liberación prolongada/Comprimido d",
+              "key": "tableta de liberacion prolongada comprimido d"
+            },
+            {
+              "count": 2,
+              "min": 2.26,
+              "p25": 5.765000000000001,
+              "median": 9.27,
+              "p75": 12.775,
+              "max": 16.28,
+              "mean": 9.27,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta recubierta de liberación prolongada/",
+              "key": "tableta recubierta de liberacion prolongada"
+            },
+            {
+              "count": 2,
+              "min": 0.21,
+              "p25": 0.3,
+              "median": 0.38999999999999996,
+              "p75": 0.48,
+              "max": 0.57,
+              "mean": 0.38999999999999996,
+              "cutoff": "2021-05-18",
+              "unit": "Tableta recubierta/Comprimdo recubierto",
+              "key": "tableta recubierta comprimdo recubierto"
+            },
+            {
+              "count": 2,
+              "min": 0.14,
+              "p25": 0.53,
+              "median": 0.9199999999999999,
+              "p75": 1.3099999999999998,
+              "max": 1.7,
+              "mean": 0.9199999999999999,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta recubierta/Comprimido recubierto/ Gra",
+              "key": "tableta recubierta comprimido recubierto gra"
+            },
+            {
+              "count": 2,
+              "min": 1.17,
+              "p25": 1.6,
+              "median": 2.0300000000000002,
+              "p75": 2.46,
+              "max": 2.89,
+              "mean": 2.0300000000000002,
+              "cutoff": "2021-05-18",
+              "unit": "Tabletas recubiertas /Comprimidos recubiertos",
+              "key": "tabletas recubiertas comprimidos recubiertos"
+            },
+            {
+              "count": 1,
+              "min": 72.43,
+              "p25": 72.43,
+              "median": 72.43,
+              "p75": 72.43,
+              "max": 72.43,
+              "mean": 72.43,
+              "cutoff": "2021-05-18",
+              "unit": "Ampolla de 1 ml",
+              "key": "ampolla de 1 ml"
+            },
+            {
+              "count": 1,
+              "min": 170.59,
+              "p25": 170.59,
+              "median": 170.59,
+              "p75": 170.59,
+              "max": 170.59,
+              "mean": 170.59,
+              "cutoff": "2018-04-06",
+              "unit": "Bobina",
+              "key": "bobina"
+            },
+            {
+              "count": 1,
+              "min": 7.14,
+              "p25": 7.14,
+              "median": 7.14,
+              "p75": 7.14,
+              "max": 7.14,
+              "mean": 7.14,
+              "cutoff": "2018-04-12",
+              "unit": "Bolsa de 1 kilogramo",
+              "key": "bolsa de 1 kilogramo"
+            },
+            {
+              "count": 1,
+              "min": 21.72,
+              "p25": 21.72,
+              "median": 21.72,
+              "p75": 21.72,
+              "max": 21.72,
+              "mean": 21.72,
+              "cutoff": "2018-06-21",
+              "unit": "Bolsa de 1.3 Kilogramos",
+              "key": "bolsa de 1 3 kilogramos"
+            },
+            {
+              "count": 1,
+              "min": 6.58,
+              "p25": 6.58,
+              "median": 6.58,
+              "p75": 6.58,
+              "max": 6.58,
+              "mean": 6.58,
+              "cutoff": "2018-05-29",
+              "unit": "Bolsa de 100 unidades",
+              "key": "bolsa de 100 unidades"
+            },
+            {
+              "count": 1,
+              "min": 24.29,
+              "p25": 24.29,
+              "median": 24.29,
+              "p75": 24.29,
+              "max": 24.29,
+              "mean": 24.29,
+              "cutoff": "2018-04-12",
+              "unit": "Bolsa de 2.7 kilogramos",
+              "key": "bolsa de 2 7 kilogramos"
+            },
+            {
+              "count": 1,
+              "min": 94.76,
+              "p25": 94.76,
+              "median": 94.76,
+              "p75": 94.76,
+              "max": 94.76,
+              "mean": 94.76,
+              "cutoff": "2018-04-12",
+              "unit": "Bolsa de 25 libras",
+              "key": "bolsa de 25 libras"
+            },
+            {
+              "count": 1,
+              "min": 7.23,
+              "p25": 7.23,
+              "median": 7.23,
+              "p75": 7.23,
+              "max": 7.23,
+              "mean": 7.23,
+              "cutoff": "2018-06-21",
+              "unit": "Bolsa de 450 gramos",
+              "key": "bolsa de 450 gramos"
+            },
+            {
+              "count": 1,
+              "min": 10.18,
+              "p25": 10.18,
+              "median": 10.18,
+              "p75": 10.18,
+              "max": 10.18,
+              "mean": 10.18,
+              "cutoff": "2018-04-12",
+              "unit": "Bolsa de 900 gramos",
+              "key": "bolsa de 900 gramos"
+            },
+            {
+              "count": 1,
+              "min": 15.57,
+              "p25": 15.57,
+              "median": 15.57,
+              "p75": 15.57,
+              "max": 15.57,
+              "mean": 15.57,
+              "cutoff": "2018-06-21",
+              "unit": "Bolsa de un (1) Kilogramo",
+              "key": "bolsa de un 1 kilogramo"
+            },
+            {
+              "count": 1,
+              "min": 7.92,
+              "p25": 7.92,
+              "median": 7.92,
+              "p75": 7.92,
+              "max": 7.92,
+              "mean": 7.92,
+              "cutoff": "2018-06-21",
+              "unit": "Bolsa de veintinueve (29) onzas",
+              "key": "bolsa de veintinueve 29 onzas"
+            },
+            {
+              "count": 1,
+              "min": 16.42,
+              "p25": 16.42,
+              "median": 16.42,
+              "p75": 16.42,
+              "max": 16.42,
+              "mean": 16.42,
+              "cutoff": "2018-04-12",
+              "unit": "Bote de 450 mililitros",
+              "key": "bote de 450 mililitros"
+            },
+            {
+              "count": 1,
+              "min": 945.0,
+              "p25": 945.0,
+              "median": 945.0,
+              "p75": 945.0,
+              "max": 945.0,
+              "mean": 945.0,
+              "cutoff": "2018-04-12",
+              "unit": "Bote de 50 kilogramos",
+              "key": "bote de 50 kilogramos"
+            },
+            {
+              "count": 1,
+              "min": 27.94,
+              "p25": 27.94,
+              "median": 27.94,
+              "p75": 27.94,
+              "max": 27.94,
+              "mean": 27.94,
+              "cutoff": "2018-04-12",
+              "unit": "Bote de 500 mililitros",
+              "key": "bote de 500 mililitros"
+            },
+            {
+              "count": 1,
+              "min": 7.29,
+              "p25": 7.29,
+              "median": 7.29,
+              "p75": 7.29,
+              "max": 7.29,
+              "mean": 7.29,
+              "cutoff": "2018-04-12",
+              "unit": "Bote de 750 mililitros",
+              "key": "bote de 750 mililitros"
+            },
+            {
+              "count": 1,
+              "min": 6.68,
+              "p25": 6.68,
+              "median": 6.68,
+              "p75": 6.68,
+              "max": 6.68,
+              "mean": 6.68,
+              "cutoff": "2018-04-12",
+              "unit": "Bote de una libra",
+              "key": "bote de una libra"
+            },
+            {
+              "count": 1,
+              "min": 1.17,
+              "p25": 1.17,
+              "median": 1.17,
+              "p75": 1.17,
+              "max": 1.17,
+              "mean": 1.17,
+              "cutoff": "2018-06-21",
+              "unit": "Botella de 10 onzas",
+              "key": "botella de 10 onzas"
+            },
+            {
+              "count": 1,
+              "min": 1.49,
+              "p25": 1.49,
+              "median": 1.49,
+              "p75": 1.49,
+              "max": 1.49,
+              "mean": 1.49,
+              "cutoff": "2019-05-31",
+              "unit": "Botella de 300 mililitros",
+              "key": "botella de 300 mililitros"
+            },
+            {
+              "count": 1,
+              "min": 32.5,
+              "p25": 32.5,
+              "median": 32.5,
+              "p75": 32.5,
+              "max": 32.5,
+              "mean": 32.5,
+              "cutoff": "2018-04-12",
+              "unit": "Caja de 50 unidades",
+              "key": "caja de 50 unidades"
+            },
+            {
+              "count": 1,
+              "min": 13.59,
+              "p25": 13.59,
+              "median": 13.59,
+              "p75": 13.59,
+              "max": 13.59,
+              "mean": 13.59,
+              "cutoff": "2018-06-21",
+              "unit": "Caja de 620 gramos",
+              "key": "caja de 620 gramos"
+            },
+            {
+              "count": 1,
+              "min": 4.26,
+              "p25": 4.26,
+              "median": 4.26,
+              "p75": 4.26,
+              "max": 4.26,
+              "mean": 4.26,
+              "cutoff": "2021-05-18",
+              "unit": "Capsulas con granulos de liberación prolongad",
+              "key": "capsulas con granulos de liberacion prolongad"
+            },
+            {
+              "count": 1,
+              "min": 33125.0,
+              "p25": 33125.0,
+              "median": 33125.0,
+              "p75": 33125.0,
+              "max": 33125.0,
+              "mean": 33125.0,
+              "cutoff": "2022-12-10",
+              "unit": "Catorcena",
+              "key": "catorcena"
+            },
+            {
+              "count": 1,
+              "min": 4.86,
+              "p25": 4.86,
+              "median": 4.86,
+              "p75": 4.86,
+              "max": 4.86,
+              "mean": 4.86,
+              "cutoff": "2022-03-14",
+              "unit": "Comprimido con recubierta gastrorresistente",
+              "key": "comprimido con recubierta gastrorresistente"
+            },
+            {
+              "count": 1,
+              "min": 6.91,
+              "p25": 6.91,
+              "median": 6.91,
+              "p75": 6.91,
+              "max": 6.91,
+              "mean": 6.91,
+              "cutoff": "2022-03-14",
+              "unit": "Comprimido gastrorresistente",
+              "key": "comprimido gastrorresistente"
+            },
+            {
+              "count": 1,
+              "min": 5.71,
+              "p25": 5.71,
+              "median": 5.71,
+              "p75": 5.71,
+              "max": 5.71,
+              "mean": 5.71,
+              "cutoff": "2020-05-12",
+              "unit": "Coprimido",
+              "key": "coprimido"
+            },
+            {
+              "count": 1,
+              "min": 3.78,
+              "p25": 3.78,
+              "median": 3.78,
+              "p75": 3.78,
+              "max": 3.78,
+              "mean": 3.78,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula con gránulos de liberación retardada",
+              "key": "capsula con granulos de liberacion retardada"
+            },
+            {
+              "count": 1,
+              "min": 0.35,
+              "p25": 0.35,
+              "median": 0.35,
+              "p75": 0.35,
+              "max": 0.35,
+              "mean": 0.35,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula con gránulos entéricos",
+              "key": "capsula con granulos entericos"
+            },
+            {
+              "count": 1,
+              "min": 0.32,
+              "p25": 0.32,
+              "median": 0.32,
+              "p75": 0.32,
+              "max": 0.32,
+              "mean": 0.32,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula con microgránulos con recubrimiento e",
+              "key": "capsula con microgranulos con recubrimiento e"
+            },
+            {
+              "count": 1,
+              "min": 16.32,
+              "p25": 16.32,
+              "median": 16.32,
+              "p75": 16.32,
+              "max": 16.32,
+              "mean": 16.32,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula con microgránulos gastrorresistentes",
+              "key": "capsula con microgranulos gastrorresistentes"
+            },
+            {
+              "count": 1,
+              "min": 1.0,
+              "p25": 1.0,
+              "median": 1.0,
+              "p75": 1.0,
+              "max": 1.0,
+              "mean": 1.0,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula con pellets entéricos",
+              "key": "capsula con pellets entericos"
+            },
+            {
+              "count": 1,
+              "min": 0.56,
+              "p25": 0.56,
+              "median": 0.56,
+              "p75": 0.56,
+              "max": 0.56,
+              "mean": 0.56,
+              "cutoff": "2022-03-14",
+              "unit": "Cápsula gastrorresistente",
+              "key": "capsula gastrorresistente"
+            },
+            {
+              "count": 1,
+              "min": 16.23,
+              "p25": 16.23,
+              "median": 16.23,
+              "p75": 16.23,
+              "max": 16.23,
+              "mean": 16.23,
+              "cutoff": "2018-04-12",
+              "unit": "Envase con atomizador de 476 mililitros",
+              "key": "envase con atomizador de 476 mililitros"
+            },
+            {
+              "count": 1,
+              "min": 5.72,
+              "p25": 5.72,
+              "median": 5.72,
+              "p75": 5.72,
+              "max": 5.72,
+              "mean": 5.72,
+              "cutoff": "2018-06-21",
+              "unit": "Envase de 1 galón",
+              "key": "envase de 1 galon"
+            },
+            {
+              "count": 1,
+              "min": 958.72,
+              "p25": 958.72,
+              "median": 958.72,
+              "p75": 958.72,
+              "max": 958.72,
+              "mean": 958.72,
+              "cutoff": "2018-04-12",
+              "unit": "Envase de 100 libras",
+              "key": "envase de 100 libras"
+            },
+            {
+              "count": 1,
+              "min": 8.46,
+              "p25": 8.46,
+              "median": 8.46,
+              "p75": 8.46,
+              "max": 8.46,
+              "mean": 8.46,
+              "cutoff": "2018-04-12",
+              "unit": "Envase de 500 gramos",
+              "key": "envase de 500 gramos"
+            },
+            {
+              "count": 1,
+              "min": 8.75,
+              "p25": 8.75,
+              "median": 8.75,
+              "p75": 8.75,
+              "max": 8.75,
+              "mean": 8.75,
+              "cutoff": "2018-04-12",
+              "unit": "Envase de 500 mililitros",
+              "key": "envase de 500 mililitros"
+            },
+            {
+              "count": 1,
+              "min": 41.58,
+              "p25": 41.58,
+              "median": 41.58,
+              "p75": 41.58,
+              "max": 41.58,
+              "mean": 41.58,
+              "cutoff": "2018-04-12",
+              "unit": "Envase de 590 mililitros",
+              "key": "envase de 590 mililitros"
+            },
+            {
+              "count": 1,
+              "min": 37.88,
+              "p25": 37.88,
+              "median": 37.88,
+              "p75": 37.88,
+              "max": 37.88,
+              "mean": 37.88,
+              "cutoff": "2018-04-12",
+              "unit": "Envase de un galon",
+              "key": "envase de un galon"
+            },
+            {
+              "count": 1,
+              "min": 9.86,
+              "p25": 9.86,
+              "median": 9.86,
+              "p75": 9.86,
+              "max": 9.86,
+              "mean": 9.86,
+              "cutoff": "2018-04-12",
+              "unit": "Envase de un litro",
+              "key": "envase de un litro"
+            },
+            {
+              "count": 1,
+              "min": 16.0,
+              "p25": 16.0,
+              "median": 16.0,
+              "p75": 16.0,
+              "max": 16.0,
+              "mean": 16.0,
+              "cutoff": "2021-06-10",
+              "unit": "Frasco aspersor",
+              "key": "frasco aspersor"
+            },
+            {
+              "count": 1,
+              "min": 13.57,
+              "p25": 13.57,
+              "median": 13.57,
+              "p75": 13.57,
+              "max": 13.57,
+              "mean": 13.57,
+              "cutoff": "2021-06-01",
+              "unit": "Frasco con gotero calibrado",
+              "key": "frasco con gotero calibrado"
+            },
+            {
+              "count": 1,
+              "min": 12.66,
+              "p25": 12.66,
+              "median": 12.66,
+              "p75": 12.66,
+              "max": 12.66,
+              "mean": 12.66,
+              "cutoff": "2018-06-21",
+              "unit": "Garrafón",
+              "key": "garrafon"
+            },
+            {
+              "count": 1,
+              "min": 0.46,
+              "p25": 0.46,
+              "median": 0.46,
+              "p75": 0.46,
+              "max": 0.46,
+              "mean": 0.46,
+              "cutoff": "2022-03-14",
+              "unit": "Gragea simple",
+              "key": "gragea simple"
+            },
+            {
+              "count": 1,
+              "min": 137.36,
+              "p25": 137.36,
+              "median": 137.36,
+              "p75": 137.36,
+              "max": 137.36,
+              "mean": 137.36,
+              "cutoff": "2020-05-12",
+              "unit": "Jeringa",
+              "key": "jeringa"
+            },
+            {
+              "count": 1,
+              "min": 1785.97,
+              "p25": 1785.97,
+              "median": 1785.97,
+              "p75": 1785.97,
+              "max": 1785.97,
+              "mean": 1785.97,
+              "cutoff": "2021-06-10",
+              "unit": "Jeringa Precargada",
+              "key": "jeringa precargada"
+            },
+            {
+              "count": 1,
+              "min": 6431.32,
+              "p25": 6431.32,
+              "median": 6431.32,
+              "p75": 6431.32,
+              "max": 6431.32,
+              "mean": 6431.32,
+              "cutoff": "2018-09-18",
+              "unit": "Jeringa Prellenada 40mg/0.4ml",
+              "key": "jeringa prellenada 40mg 0 4ml"
+            },
+            {
+              "count": 1,
+              "min": 7856.13,
+              "p25": 7856.13,
+              "median": 7856.13,
+              "p75": 7856.13,
+              "max": 7856.13,
+              "mean": 7856.13,
+              "cutoff": "2018-09-18",
+              "unit": "Jeringa Prellenada 40mg/0.8ml",
+              "key": "jeringa prellenada 40mg 0 8ml"
+            },
+            {
+              "count": 1,
+              "min": 466.65,
+              "p25": 466.65,
+              "median": 466.65,
+              "p75": 466.65,
+              "max": 466.65,
+              "mean": 466.65,
+              "cutoff": "2017-11-24",
+              "unit": "Jeringa prellena",
+              "key": "jeringa prellena"
+            },
+            {
+              "count": 1,
+              "min": 951.78,
+              "p25": 951.78,
+              "median": 951.78,
+              "p75": 951.78,
+              "max": 951.78,
+              "mean": 951.78,
+              "cutoff": "2017-11-30",
+              "unit": "Kit",
+              "key": "kit"
+            },
+            {
+              "count": 1,
+              "min": 5.88,
+              "p25": 5.88,
+              "median": 5.88,
+              "p75": 5.88,
+              "max": 5.88,
+              "mean": 5.88,
+              "cutoff": "2021-06-10",
+              "unit": "Lata",
+              "key": "lata"
+            },
+            {
+              "count": 1,
+              "min": 18.81,
+              "p25": 18.81,
+              "median": 18.81,
+              "p75": 18.81,
+              "max": 18.81,
+              "mean": 18.81,
+              "cutoff": "2017-11-30",
+              "unit": "Miligramo",
+              "key": "miligramo"
+            },
+            {
+              "count": 1,
+              "min": 1.14,
+              "p25": 1.14,
+              "median": 1.14,
+              "p75": 1.14,
+              "max": 1.14,
+              "mean": 1.14,
+              "cutoff": "2017-11-30",
+              "unit": "Mililitros",
+              "key": "mililitros"
+            },
+            {
+              "count": 1,
+              "min": 16.94,
+              "p25": 16.94,
+              "median": 16.94,
+              "p75": 16.94,
+              "max": 16.94,
+              "mean": 16.94,
+              "cutoff": "2018-04-12",
+              "unit": "Paquete de 6 unidades",
+              "key": "paquete de 6 unidades"
+            },
+            {
+              "count": 1,
+              "min": 47.04,
+              "p25": 47.04,
+              "median": 47.04,
+              "p75": 47.04,
+              "max": 47.04,
+              "mean": 47.04,
+              "cutoff": "2020-05-12",
+              "unit": "Parche",
+              "key": "parche"
+            },
+            {
+              "count": 1,
+              "min": 3.63,
+              "p25": 3.63,
+              "median": 3.63,
+              "p75": 3.63,
+              "max": 3.63,
+              "mean": 3.63,
+              "cutoff": "2018-04-12",
+              "unit": "Pastilla 60 gramos",
+              "key": "pastilla 60 gramos"
+            },
+            {
+              "count": 1,
+              "min": 2.75,
+              "p25": 2.75,
+              "median": 2.75,
+              "p75": 2.75,
+              "max": 2.75,
+              "mean": 2.75,
+              "cutoff": "2018-04-12",
+              "unit": "Pastilla de 50 gramos",
+              "key": "pastilla de 50 gramos"
+            },
+            {
+              "count": 1,
+              "min": 8711.24,
+              "p25": 8711.24,
+              "median": 8711.24,
+              "p75": 8711.24,
+              "max": 8711.24,
+              "mean": 8711.24,
+              "cutoff": "2018-09-18",
+              "unit": "Pluma Precargada 40mg/0.4ml",
+              "key": "pluma precargada 40mg 0 4ml"
+            },
+            {
+              "count": 1,
+              "min": 14.59,
+              "p25": 14.59,
+              "median": 14.59,
+              "p75": 14.59,
+              "max": 14.59,
+              "mean": 14.59,
+              "cutoff": "2021-06-01",
+              "unit": "Presentación que incluya las dos ampollas de",
+              "key": "presentacion que incluya las dos ampollas de"
+            },
+            {
+              "count": 1,
+              "min": 81.16,
+              "p25": 81.16,
+              "median": 81.16,
+              "p75": 81.16,
+              "max": 81.16,
+              "mean": 81.16,
+              "cutoff": "2018-05-29",
+              "unit": "Set",
+              "key": "set"
+            },
+            {
+              "count": 1,
+              "min": 0.38,
+              "p25": 0.38,
+              "median": 0.38,
+              "p75": 0.38,
+              "max": 0.38,
+              "mean": 0.38,
+              "cutoff": "2021-06-01",
+              "unit": "TABLETA VAGINAL CON APLICADOR",
+              "key": "tableta vaginal con aplicador"
+            },
+            {
+              "count": 1,
+              "min": 1.7,
+              "p25": 1.7,
+              "median": 1.7,
+              "p75": 1.7,
+              "max": 1.7,
+              "mean": 1.7,
+              "cutoff": "2021-05-18",
+              "unit": "Tableta Recubierta/Comprimido Recubierto/Grag",
+              "key": "tableta recubierta comprimido recubierto grag"
+            },
+            {
+              "count": 1,
+              "min": 3.87,
+              "p25": 3.87,
+              "median": 3.87,
+              "p75": 3.87,
+              "max": 3.87,
+              "mean": 3.87,
+              "cutoff": "2017-11-22",
+              "unit": "Tableta bucodispensable/Comprimido bucodispen",
+              "key": "tableta bucodispensable comprimido bucodispen"
+            },
+            {
+              "count": 1,
+              "min": 27.58,
+              "p25": 27.58,
+              "median": 27.58,
+              "p75": 27.58,
+              "max": 27.58,
+              "mean": 27.58,
+              "cutoff": "2021-06-10",
+              "unit": "Tableta recubierta/Comprimido",
+              "key": "tableta recubierta comprimido"
+            },
+            {
+              "count": 1,
+              "min": 1.23,
+              "p25": 1.23,
+              "median": 1.23,
+              "p75": 1.23,
+              "max": 1.23,
+              "mean": 1.23,
+              "cutoff": "2021-05-18",
+              "unit": "Tableta recubierta/Comprimido recubieto",
+              "key": "tableta recubierta comprimido recubieto"
+            },
+            {
+              "count": 1,
+              "min": 0.38,
+              "p25": 0.38,
+              "median": 0.38,
+              "p75": 0.38,
+              "max": 0.38,
+              "mean": 0.38,
+              "cutoff": "2021-06-01",
+              "unit": "Tableta vagina con aplicador",
+              "key": "tableta vagina con aplicador"
+            },
+            {
+              "count": 1,
+              "min": 0.91,
+              "p25": 0.91,
+              "median": 0.91,
+              "p75": 0.91,
+              "max": 0.91,
+              "mean": 0.91,
+              "cutoff": "2017-11-28",
+              "unit": "Tableta/Comprido",
+              "key": "tableta comprido"
+            },
+            {
+              "count": 1,
+              "min": 0.71,
+              "p25": 0.71,
+              "median": 0.71,
+              "p75": 0.71,
+              "max": 0.71,
+              "mean": 0.71,
+              "cutoff": "2022-03-14",
+              "unit": "Tableta/Comprimido/Caplet",
+              "key": "tableta comprimido caplet"
+            },
+            {
+              "count": 1,
+              "min": 4.98,
+              "p25": 4.98,
+              "median": 4.98,
+              "p75": 4.98,
+              "max": 4.98,
+              "mean": 4.98,
+              "cutoff": "2021-06-10",
+              "unit": "Tabletas recubiertas/ Comprimidos recubierto",
+              "key": "tabletas recubiertas comprimidos recubierto"
+            },
+            {
+              "count": 1,
+              "min": 4.26,
+              "p25": 4.26,
+              "median": 4.26,
+              "p75": 4.26,
+              "max": 4.26,
+              "mean": 4.26,
+              "cutoff": "2021-05-18",
+              "unit": "Tabletas/Comprimidos",
+              "key": "tabletas comprimidos"
+            },
+            {
+              "count": 1,
+              "min": 7.5,
+              "p25": 7.5,
+              "median": 7.5,
+              "p75": 7.5,
+              "max": 7.5,
+              "mean": 7.5,
+              "cutoff": "2018-04-12",
+              "unit": "Tarro de 450 gramos",
+              "key": "tarro de 450 gramos"
+            },
+            {
+              "count": 1,
+              "min": 47.06,
+              "p25": 47.06,
+              "median": 47.06,
+              "p75": 47.06,
+              "max": 47.06,
+              "mean": 47.06,
+              "cutoff": "2018-04-12",
+              "unit": "Tarro de 5 libras",
+              "key": "tarro de 5 libras"
+            },
+            {
+              "count": 1,
+              "min": 7.5,
+              "p25": 7.5,
+              "median": 7.5,
+              "p75": 7.5,
+              "max": 7.5,
+              "mean": 7.5,
+              "cutoff": "2018-04-12",
+              "unit": "Tarro de 500 gramos",
+              "key": "tarro de 500 gramos"
+            },
+            {
+              "count": 1,
+              "min": 12.0,
+              "p25": 12.0,
+              "median": 12.0,
+              "p75": 12.0,
+              "max": 12.0,
+              "mean": 12.0,
+              "cutoff": "2021-06-10",
+              "unit": "Tubo colapsible",
+              "key": "tubo colapsible"
+            }
+          ],
+          "sources": [
+            "DPIR"
+          ],
+          "levels": []
+        }
+      ],
+      "quality": {
+        "totalRecords": 9452,
+        "canonicalRecords": 5074,
+        "excludedFromStats": 4378,
+        "invalidDate": 0,
+        "missingDate": 0,
+        "duplicates": 4368,
+        "thousandsComma": 633,
+        "missingNog": 3,
+        "missingValue": 10,
+        "missingProduct": 0
+      },
+      "coverageNote": "Dos instantáneas congeladas (junio 2022 y agosto 2023). No es una serie mensual continua. Los registros que aparecen en ambos archivos se deduplican: se conserva la copia con NOG completo y, en empate, la del archivo 2023; las demás se excluyen de los resúmenes.",
+      "categories": [
+        {
+          "value": "Salud e insumos hospitalarios",
+          "count": 1455
+        },
+        {
+          "value": "Alimentos y semillas",
+          "count": 314
+        },
+        {
+          "value": "Computación y telecomunicaciones",
+          "count": 212
+        },
+        {
+          "value": "MATERIAL DE SUTURA: SUTURA ABSORBIBLE ORGÁNICA",
+          "count": 153
+        },
+        {
+          "value": "SALUD E INSUMOS HOSPITALARIOS",
+          "count": 123
+        },
+        {
+          "value": "Limpieza; fumigación y artículos afines",
+          "count": 120
+        },
+        {
+          "value": "ELECTROLITOS Y SOLUCIONES INTRAVENOSAS",
+          "count": 117
+        },
+        {
+          "value": "Transporte; repuestos y combustibles",
+          "count": 100
+        },
+        {
+          "value": "EQUIPO PARA TERAPIA RESPIRATORIA",
+          "count": 98
+        },
+        {
+          "value": "ANTINEOPLASICOS, INMUNOSUPRESORES Y ADYUVANTES",
+          "count": 85
+        },
+        {
+          "value": "ANTIBIOTICOS ANTIMICROBIANOS",
+          "count": 79
+        },
+        {
+          "value": "ALIMENTOS PARA PERSONAS REGIÓN 1CIUDAD DE GUATEMALA",
+          "count": 41
+        }
+      ],
+      "items": [
+        {
+          "value": "Ibuprofeno 400 mg",
+          "count": 12
+        },
+        {
+          "value": "Omeprazol 20mg",
+          "count": 11
+        },
+        {
+          "value": "Diclofenaco Potásico 50 mg",
+          "count": 11
+        },
+        {
+          "value": "DESAYUNOS ( Capacitaciones. Talleres y Eventos escolares) Categoría A, Día 4",
+          "count": 11
+        },
+        {
+          "value": "REFACCIONES PARA ADULTO (Capacitaciones. Talleres y Eventos escolares) Categoría A, Día 1",
+          "count": 11
+        },
+        {
+          "value": "REFACCIONES PARA ADULTO (Capacitaciones. Talleres y Eventos escolares) Categoría A, Día 2",
+          "count": 11
+        },
+        {
+          "value": "REFACCIONES PARA ADULTO (Capacitaciones. Talleres y Eventos escolares) Categoría A, Día 3",
+          "count": 11
+        },
+        {
+          "value": "REFACCIONES PARA ADULTO (Capacitaciones. Talleres y Eventos escolares) Categoría A, Día 4",
+          "count": 11
+        },
+        {
+          "value": "REFACCIONES PARA ADULTO (Capacitaciones. Talleres y Eventos escolares) Categoría A, Día 5",
+          "count": 11
+        },
+        {
+          "value": "ALMUERZOS (Eventos deportivos) Categoría B, Día 2",
+          "count": 11
+        },
+        {
+          "value": "ALMUERZOS (Eventos deportivos) Categoría B, Día 4",
+          "count": 11
+        },
+        {
+          "value": "CENAS (Eventos deportivos) Categoría B, Día 2",
+          "count": 11
+        }
+      ]
+    },
+    "IPMC": {
+      "id": "IPMC",
+      "label": "Materiales de construcción",
+      "shortLabel": "IPMC",
+      "tagline": "Índice de precios de 89 materiales",
+      "description": "Índice de Precios de Materiales de Construcción, base diciembre 2018 = 100. Mide variación de precios de 89 materiales y servicios; no es un precio en quetzales.",
+      "status": "current",
+      "statusLabel": "Actualización mensual",
+      "cutoff": "2026-10-01",
+      "granularity": "month",
+      "recordCount": 8366,
+      "canonicalCount": 8366,
+      "flaggedCount": 0,
+      "datasets": [
+        "ipmc-history"
+      ],
+      "metrics": [
+        {
+          "key": "indice-ipmc",
+          "metric": "Índice IPMC",
+          "valueKind": "index",
+          "currency": null,
+          "count": 8366,
+          "min": 61.73,
+          "p25": 101.93,
+          "median": 111.34,
+          "p75": 126.76,
+          "max": 255.33,
+          "mean": 116.4947129793065,
+          "cutoff": "2026-10-01",
+          "unit": "Índice (base dic-2018 = 100)",
+          "unitGroups": [
+            {
+              "count": 8366,
+              "min": 61.73,
+              "p25": 101.93,
+              "median": 111.34,
+              "p75": 126.76,
+              "max": 255.33,
+              "mean": 116.4947129793065,
+              "cutoff": "2026-10-01",
+              "unit": "Índice (base dic-2018 = 100)",
+              "key": "indice base dic 2018 100"
+            }
+          ],
+          "sources": [
+            "IPMC"
+          ],
+          "levels": [
+            "Material"
+          ]
+        }
+      ],
+      "quality": {
+        "totalRecords": 8366,
+        "canonicalRecords": 8366,
+        "excludedFromStats": 0,
+        "invalidDate": 0,
+        "missingDate": 0,
+        "duplicates": 0,
+        "thousandsComma": 0,
+        "missingNog": 0,
+        "missingValue": 0,
+        "missingProduct": 0
+      },
+      "coverageNote": "Índice mensual de 89 materiales y servicios, base diciembre 2018 = 100. Cobertura Región I Metropolitana y municipios seleccionados. No es un precio en quetzales.",
+      "categories": [
+        {
+          "value": "MATERIALES PARA INSTALACIONES DE AGUA POTABLE O DRENAJES",
+          "count": 752
+        },
+        {
+          "value": "CUBIERTAS PARA TECHO",
+          "count": 658
+        },
+        {
+          "value": "MAQUINARIA Y EQUIPO EN ALQUILER /2",
+          "count": 658
+        },
+        {
+          "value": "PISOS Y AZULEJOS",
+          "count": 658
+        },
+        {
+          "value": "DERIVADOS DEL PETRÓLEO",
+          "count": 564
+        },
+        {
+          "value": "MATERIALES PARA ELECTRICIDAD",
+          "count": 564
+        },
+        {
+          "value": "AGREGADOS Y AGLOMERANTES",
+          "count": 470
+        },
+        {
+          "value": "MATERIALES PARA MAMPOSTERÍA",
+          "count": 470
+        },
+        {
+          "value": "PINTURAS Y SELLADORES",
+          "count": 470
+        },
+        {
+          "value": "MATERIALES VARIOS",
+          "count": 470
+        },
+        {
+          "value": "ACERO ESTRUCTURAL",
+          "count": 376
+        },
+        {
+          "value": "MADERA Y AGLOMERADOS",
+          "count": 376
+        }
+      ],
+      "items": [
+        {
+          "value": "Angular laminado en frío de 6 m de largo x 1/8\" espesor de 1 1/4\"",
+          "count": 94
+        },
+        {
+          "value": "Tubo industrial cuadrado de 6 m de largo chapa de 20 de 1\"",
+          "count": 94
+        },
+        {
+          "value": "Tubo de metal corrugado redondo de 24\" x 0.86 m calibre 16 (incluye accesorios)",
+          "count": 94
+        },
+        {
+          "value": "Alambre de acero calibre 16 (de amarre)",
+          "count": 94
+        },
+        {
+          "value": "Inodoro de porcelana color blanco, tipo económico, con accesorios",
+          "count": 94
+        },
+        {
+          "value": "Lavamanos de porcelana color blanco, tipo económico, de empotrar, con accesorios",
+          "count": 94
+        },
+        {
+          "value": "Arena de río",
+          "count": 94
+        },
+        {
+          "value": "Arena amarilla",
+          "count": 94
+        },
+        {
+          "value": "Cal hidratada",
+          "count": 94
+        },
+        {
+          "value": "Piedrín de 3/8\"",
+          "count": 94
+        },
+        {
+          "value": "Material selecto",
+          "count": 94
+        },
+        {
+          "value": "Cemento gris (Cemento hidráulico tipo UGC, para uso general en la construcción).",
+          "count": 94
+        }
+      ]
+    },
+    "ICC": {
+      "id": "ICC",
+      "label": "Costo de construcción",
+      "shortLabel": "ICC",
+      "tagline": "Índice de costos de vivienda social",
+      "description": "Índice de Costos de Construcción de la Vivienda Social Básica, referencia 2025 = 100. Solo 2026 y Región I; combina materiales, mano de obra, herramienta y equipo.",
+      "status": "limited",
+      "statusLabel": "Cobertura parcial",
+      "cutoff": "2026-10-01",
+      "granularity": "month",
+      "recordCount": 360,
+      "canonicalCount": 360,
+      "flaggedCount": 0,
+      "datasets": [
+        "icc-2026"
+      ],
+      "metrics": [
+        {
+          "key": "indice-icc",
+          "metric": "Índice ICC",
+          "valueKind": "index",
+          "currency": null,
+          "count": 360,
+          "min": 99.50726018121071,
+          "p25": 101.77804586714083,
+          "median": 103.89868357550125,
+          "p75": 107.5,
+          "max": 108.5725082234161,
+          "mean": 104.22885355332049,
+          "cutoff": "2026-10-01",
+          "unit": "Índice (base 2025 = 100)",
+          "unitGroups": [
+            {
+              "count": 360,
+              "min": 99.50726018121071,
+              "p25": 101.77804586714083,
+              "median": 103.89868357550125,
+              "p75": 107.5,
+              "max": 108.5725082234161,
+              "mean": 104.22885355332049,
+              "cutoff": "2026-10-01",
+              "unit": "Índice (base 2025 = 100)",
+              "key": "indice base 2025 100"
+            }
+          ],
+          "sources": [
+            "ICC"
+          ],
+          "levels": [
+            "Componente",
+            "Etapa",
+            "Recurso",
+            "Tipo"
+          ]
+        }
+      ],
+      "quality": {
+        "totalRecords": 360,
+        "canonicalRecords": 360,
+        "excludedFromStats": 0,
+        "invalidDate": 0,
+        "missingDate": 0,
+        "duplicates": 0,
+        "thousandsComma": 0,
+        "missingNog": 0,
+        "missingValue": 0,
+        "missingProduct": 0
+      },
+      "coverageNote": "Índice de costos de la Vivienda Social Básica, 2026 y Región I únicamente. Período de referencia 2025 = 100. No es un precio de mercado.",
+      "categories": [
+        {
+          "value": "Vivienda Social Básica",
+          "count": 360
+        }
+      ],
+      "items": [
+        {
+          "value": "Herramienta y Equipo",
+          "count": 80
+        },
+        {
+          "value": "Materiales",
+          "count": 80
+        },
+        {
+          "value": "Mano de obra",
+          "count": 80
+        },
+        {
+          "value": "VIVIENDA SOCIAL BÁSICA",
+          "count": 10
+        },
+        {
+          "value": "Herramienta y Equipo (Total)",
+          "count": 10
+        },
+        {
+          "value": "Materiales (Total)",
+          "count": 10
+        },
+        {
+          "value": "Mano de Obra (Total)",
+          "count": 10
+        },
+        {
+          "value": "Preliminares",
+          "count": 10
+        },
+        {
+          "value": "Cimentación",
+          "count": 10
+        },
+        {
+          "value": "Levantado de muros",
+          "count": 10
+        },
+        {
+          "value": "Sistema eléctrico",
+          "count": 10
+        },
+        {
+          "value": "Sistema hidráulico",
+          "count": 10
+        }
+      ]
+    },
+    "BASKETS": {
+      "id": "BASKETS",
+      "label": "Canastas básicas",
+      "shortLabel": "CBAU / CBAR",
+      "tagline": "Costo de la canasta alimentaria",
+      "description": "Costo per cápita y por producto de la Canasta Básica Alimentaria urbana y rural. La ventana disponible es 2024–2026; el costo de canasta no es un precio de mercado individual.",
+      "status": "limited",
+      "statusLabel": "Ventana 2024–2026",
+      "cutoff": "2026-10-01",
+      "granularity": "month",
+      "recordCount": 5236,
+      "canonicalCount": 5236,
+      "flaggedCount": 0,
+      "datasets": [
+        "cbar-history",
+        "cbar-percapita",
+        "cbau-history",
+        "cbau-percapita"
+      ],
+      "metrics": [
+        {
+          "key": "precio-por-unidad-base",
+          "metric": "Precio por unidad base",
+          "valueKind": "price",
+          "currency": "GTQ",
+          "count": 4284,
+          "min": 0.968478260869565,
+          "p25": 6.52625,
+          "median": 10.896,
+          "p75": 22.054861000000002,
+          "max": 129.10625,
+          "mean": 17.37226048924469,
+          "cutoff": "2026-10-01",
+          "unit": "Q por unidad base (presentaciones distintas)",
+          "unitGroups": [
+            {
+              "count": 3196,
+              "min": 0.968478260869565,
+              "p25": 5.99999999999999,
+              "median": 10.318234499999999,
+              "p75": 22.0,
+              "max": 129.10625,
+              "mean": 16.498404667996518,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 454 Gramos",
+              "key": "q por 454 gramos"
+            },
+            {
+              "count": 306,
+              "min": 5.58333333333333,
+              "p25": 7.0,
+              "median": 13.40277777777775,
+              "p75": 14.0,
+              "max": 24.375,
+              "mean": 12.873895556738129,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 1000 Mililitros",
+              "key": "q por 1000 mililitros"
+            },
+            {
+              "count": 136,
+              "min": 41.4,
+              "p25": 43.075,
+              "median": 44.0,
+              "p75": 58.4392361111111,
+              "max": 113.846153,
+              "mean": 60.33466712165124,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 1000 Gramos",
+              "key": "q por 1000 gramos"
+            },
+            {
+              "count": 136,
+              "min": 8.0,
+              "p25": 8.3,
+              "median": 8.424999999999995,
+              "p75": 8.6,
+              "max": 9.0,
+              "mean": 8.474411745098038,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 400 Gramos",
+              "key": "q por 400 gramos"
+            },
+            {
+              "count": 68,
+              "min": 11.0,
+              "p25": 12.0,
+              "median": 12.0,
+              "p75": 12.9,
+              "max": 13.0,
+              "mean": 12.266764705882352,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 225 Gramos",
+              "key": "q por 225 gramos"
+            },
+            {
+              "count": 68,
+              "min": 6.99999999999999,
+              "p25": 8.0,
+              "median": 9.0,
+              "p75": 9.0,
+              "max": 9.5,
+              "mean": 8.551470588235292,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 300 Gramos",
+              "key": "q por 300 gramos"
+            },
+            {
+              "count": 68,
+              "min": 18.0,
+              "p25": 22.9999999999999,
+              "median": 23.99999999999995,
+              "p75": 24.9999999999999,
+              "max": 25.0,
+              "mean": 23.14705882352937,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 425.4 Gramos",
+              "key": "q por 425 4 gramos"
+            },
+            {
+              "count": 68,
+              "min": 1.44999999999999,
+              "p25": 1.479166,
+              "median": 1.5,
+              "p75": 1.5166666666666624,
+              "max": 1.54666666666667,
+              "mean": 1.4997058235294103,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 54 Gramos",
+              "key": "q por 54 gramos"
+            },
+            {
+              "count": 68,
+              "min": 16.153846153846,
+              "p25": 18.7351574599897,
+              "median": 18.894230769230752,
+              "p75": 19.127516778523425,
+              "max": 20.0,
+              "mean": 18.79149132828205,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 600 Gramos",
+              "key": "q por 600 gramos"
+            },
+            {
+              "count": 68,
+              "min": 35.0,
+              "p25": 42.0,
+              "median": 45.0,
+              "p75": 45.0,
+              "max": 55.0,
+              "mean": 44.24882352941176,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 832.5 Gramos",
+              "key": "q por 832 5 gramos"
+            },
+            {
+              "count": 34,
+              "min": 9.2,
+              "p25": 9.79999999999999,
+              "median": 9.89999999999999,
+              "p75": 10.0,
+              "max": 10.0,
+              "mean": 9.864836601307186,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 100 Gramos",
+              "key": "q por 100 gramos"
+            },
+            {
+              "count": 34,
+              "min": 14.5,
+              "p25": 14.5625,
+              "median": 14.75,
+              "p75": 14.85,
+              "max": 15.0,
+              "mean": 14.738235294117647,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 200 Gramos",
+              "key": "q por 200 gramos"
+            },
+            {
+              "count": 34,
+              "min": 4.5,
+              "p25": 5.0024999999999995,
+              "median": 5.49999999999999,
+              "p75": 5.49999999999999,
+              "max": 6.0,
+              "mean": 5.339705882352936,
+              "cutoff": "2026-10-01",
+              "unit": "Q por 355 Mililitros",
+              "key": "q por 355 mililitros"
+            }
+          ],
+          "sources": [
+            "CBAR",
+            "CBAU"
+          ],
+          "levels": [
+            "Producto"
+          ]
+        },
+        {
+          "key": "costo-mensual-del-grupo",
+          "metric": "Costo mensual del grupo",
+          "valueKind": "cost",
+          "currency": "GTQ",
+          "count": 884,
+          "min": 6.360585090645567,
+          "p25": 16.85195178218662,
+          "median": 27.272804098664423,
+          "p75": 114.43236348419026,
+          "max": 225.297512807782,
+          "mean": 62.03011574055874,
+          "cutoff": "2026-10-01",
+          "unit": "Q por persona al mes",
+          "unitGroups": [
+            {
+              "count": 884,
+              "min": 6.360585090645567,
+              "p25": 16.85195178218662,
+              "median": 27.272804098664423,
+              "p75": 114.43236348419026,
+              "max": 225.297512807782,
+              "mean": 62.03011574055874,
+              "cutoff": "2026-10-01",
+              "unit": "Q por persona al mes",
+              "key": "q por persona al mes"
+            }
+          ],
+          "sources": [
+            "CBAR",
+            "CBAU"
+          ],
+          "levels": [
+            "Grupo alimenticio"
+          ]
+        },
+        {
+          "key": "costo-mensual-per-capita",
+          "metric": "Costo mensual per cápita",
+          "valueKind": "cost",
+          "currency": "GTQ",
+          "count": 68,
+          "min": 647.79,
+          "p25": 706.1605055492836,
+          "median": 803.901359234444,
+          "p75": 916.4061227235632,
+          "max": 986.948361999563,
+          "mean": 806.4168697507342,
+          "cutoff": "2026-10-01",
+          "unit": "Q por persona al mes",
+          "unitGroups": [
+            {
+              "count": 68,
+              "min": 647.79,
+              "p25": 706.1605055492836,
+              "median": 803.901359234444,
+              "p75": 916.4061227235632,
+              "max": 986.948361999563,
+              "mean": 806.4168697507342,
+              "cutoff": "2026-10-01",
+              "unit": "Q por persona al mes",
+              "key": "q por persona al mes"
+            }
+          ],
+          "sources": [
+            "CBAR",
+            "CBAU"
+          ],
+          "levels": [
+            "Per cápita"
+          ]
+        }
+      ],
+      "quality": {
+        "totalRecords": 5236,
+        "canonicalRecords": 5236,
+        "excludedFromStats": 0,
+        "invalidDate": 0,
+        "missingDate": 0,
+        "duplicates": 0,
+        "thousandsComma": 0,
+        "missingNog": 0,
+        "missingValue": 0,
+        "missingProduct": 0
+      },
+      "coverageNote": "Ventana 2024–2026. El costo per cápita y por grupo es un costo de canasta, no una cotización de mercado; el precio por producto es implícito y corresponde a la cantidad base indicada.",
+      "categories": [
+        {
+          "value": "Canasta Básica Alimentaria Urbana",
+          "count": 2720
+        },
+        {
+          "value": "Canasta Básica Alimentaria Rural",
+          "count": 2516
+        }
+      ],
+      "items": [
+        {
+          "value": "Granos básicos",
+          "count": 68
+        },
+        {
+          "value": "Arroz corriente",
+          "count": 68
+        },
+        {
+          "value": "Pan y cereales",
+          "count": 68
+        },
+        {
+          "value": "Arroz precocido",
+          "count": 68
+        },
+        {
+          "value": "Leguminosas",
+          "count": 68
+        },
+        {
+          "value": "Vegetales (verduras u hortalizas)",
+          "count": 68
+        },
+        {
+          "value": "Raíces y tubérculos",
+          "count": 68
+        },
+        {
+          "value": "Frutas",
+          "count": 68
+        },
+        {
+          "value": "Pan francés",
+          "count": 68
+        },
+        {
+          "value": "Azucares",
+          "count": 68
+        },
+        {
+          "value": "Pan dulce",
+          "count": 68
+        },
+        {
+          "value": "Grasas y aceites",
+          "count": 68
+        }
+      ]
+    }
+  },
+  "totalRecords": 23414,
+  "order": [
+    "DPIR",
+    "IPMC",
+    "ICC",
+    "BASKETS"
+  ]
+}

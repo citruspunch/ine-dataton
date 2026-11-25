@@ -1,0 +1,293 @@
+{
+  "generatedAt": "2026-11-25T05:20:26Z",
+  "datasets": {
+    "dpir-2022": {
+      "id": "dpir-2022",
+      "group": "DPIR",
+      "title": "Precios de Referencia — corte junio 2022",
+      "fileName": "base-de-datos-pr-actualizados-hasta-junio-2022.csv",
+      "path": "data/raw/base-de-datos-pr-actualizados-hasta-junio-2022.csv",
+      "sourcePage": "https://datos.ine.gob.gt/dataset/precios-de-referencia",
+      "publisher": "INE — Departamento de Análisis de Precios",
+      "license": {
+        "id": "odc-by",
+        "title": "Open Data Commons Attribution License (ODC-BY)",
+        "url": "http://www.opendefinition.org/licenses/odc-by"
+      },
+      "ckanModified": "2023-10-05T20:57:34Z",
+      "retrieval": "local-cache",
+      "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/aec255ce-11f0-4d6c-90d2-af41b1a49870/download/base-de-datos-pr-actualizados-hasta-junio-2022.csv",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/aec255ce-11f0-4d6c-90d2-af41b1a49870/download/base-de-datos-pr-actualizados-hasta-junio-2022.csv",
+          "status": 200,
+          "bytes": 2319169,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "downloadedAtUtc": "2026-11-25T04:29:43Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "sha256": "a5f4cb9ca17311acd2f3c69df1da41874c74c6d57e842d4d75815343812ebb3f",
+      "bytes": 2319169,
+      "httpStatus": 200,
+      "contentType": "text/csv"
+    },
+    "dpir-2023": {
+      "id": "dpir-2023",
+      "group": "DPIR",
+      "title": "Precios de Referencia — corte agosto 2023",
+      "fileName": "precios-de-referencia-al-02102023.xlsx",
+      "path": "data/raw/precios-de-referencia-al-02102023.xlsx",
+      "sourcePage": "https://datos.ine.gob.gt/dataset/precios-de-referencia",
+      "publisher": "INE — Departamento de Análisis de Precios",
+      "license": {
+        "id": "odc-by",
+        "title": "Open Data Commons Attribution License (ODC-BY)",
+        "url": "http://www.opendefinition.org/licenses/odc-by"
+      },
+      "ckanModified": "2023-10-05T20:57:13Z",
+      "retrieval": "local-cache",
+      "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/d2c5d27a-a4e1-4263-9f3a-10b344884d28/download/precios-de-referencia-al-02102023.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/d2c5d27a-a4e1-4263-9f3a-10b344884d28/download/precios-de-referencia-al-02102023.xlsx",
+          "status": 200,
+          "bytes": 498676,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "downloadedAtUtc": "2026-11-25T04:29:43Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "sha256": "e299291f5caf41706bd9c4633e5839c5e7773d31bb3d6680143ddcd822094a7d",
+      "bytes": 498676,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    "dpir-dictionary": {
+      "id": "dpir-dictionary",
+      "group": "DPIR",
+      "title": "Diccionario de Precios de Referencia",
+      "fileName": "diccionario-pr.xlsx",
+      "path": "data/raw/diccionario-pr.xlsx",
+      "sourcePage": "https://datos.ine.gob.gt/dataset/precios-de-referencia",
+      "publisher": "INE — Departamento de Análisis de Precios",
+      "license": {
+        "id": "odc-by",
+        "title": "Open Data Commons Attribution License (ODC-BY)",
+        "url": "http://www.opendefinition.org/licenses/odc-by"
+      },
+      "ckanModified": "2022-09-19T18:44:11Z",
+      "retrieval": "local-cache",
+      "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/024bd9b2-9fb0-45c8-9635-0056f81dd6b0/download/diccionario-pr.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/024bd9b2-9fb0-45c8-9635-0056f81dd6b0/download/diccionario-pr.xlsx",
+          "status": 200,
+          "bytes": 725350,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "downloadedAtUtc": "2026-11-25T04:29:45Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "sha256": "01afdf1f3e4373263f0368916417f2959179c572f92387e8c61c9d82a919888e",
+      "bytes": 725350,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    "ipmc-history": {
+      "id": "ipmc-history",
+      "group": "IPMC",
+      "title": "IPMC — histórico de 89 materiales",
+      "fileName": "HISTORICO-OCTUBRE.xlsx",
+      "path": "data/raw/HISTORICO-OCTUBRE.xlsx",
+      "sourcePage": "https://www.ine.gob.gt/indice-de-materiales-de-construccion/",
+      "publisher": "INE — Sección de Otros Índices y Precios Sectoriales",
+      "license": {
+        "id": "cc-by",
+        "title": "Creative Commons Attribution (CC-BY)",
+        "url": "http://www.opendefinition.org/licenses/cc-by"
+      },
+      "ckanModified": "2026-11-23T17:41:19Z",
+      "retrieval": "local-cache",
+      "url": "https://www.ine.gob.gt/ine/wp-content/uploads/2026/11/HISTORICO-OCTUBRE.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://www.ine.gob.gt/ine/wp-content/uploads/2026/11/HISTORICO-OCTUBRE.xlsx",
+          "status": 200,
+          "bytes": 87943,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "downloadedAtUtc": "2026-11-25T04:29:45Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "sha256": "744e99015d872dfaf2162044632cb6409d7bb80b8d4a5cfb3e1fd0c3b62310f6",
+      "bytes": 87943,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    "icc-2026": {
+      "id": "icc-2026",
+      "group": "ICC",
+      "title": "ICC Vivienda Social Básica — 2026",
+      "fileName": "Historico-ICC_VSB_OCTUBRE..xlsx",
+      "path": "data/raw/Historico-ICC_VSB_OCTUBRE..xlsx",
+      "sourcePage": "https://www.ine.gob.gt/indice-de-costos/",
+      "publisher": "INE — Índice de Costos de Construcción",
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "ckanModified": null,
+      "retrieval": "local-cache",
+      "url": "https://www.ine.gob.gt/ine/wp-content/uploads/2026/11/Historico-ICC_VSB_OCTUBRE..xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://www.ine.gob.gt/ine/wp-content/uploads/2026/11/Historico-ICC_VSB_OCTUBRE..xlsx",
+          "status": 200,
+          "bytes": 15121,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "downloadedAtUtc": "2026-11-25T04:29:46Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "sha256": "197c455d96410b915aa17b9127474643978acc5199d99fc89dd53f544be63d85",
+      "bytes": 15121,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    "cbau-percapita": {
+      "id": "cbau-percapita",
+      "group": "BASKETS",
+      "title": "CBA Urbana — costo per cápita 2024–2026",
+      "fileName": "costo-cba-percapita_u.xlsx",
+      "path": "data/raw/costo-cba-percapita_u.xlsx",
+      "sourcePage": "https://datos.ine.gob.gt/dataset/costos-de-la-cba-urbana-y-rural",
+      "publisher": "INE — Departamento de Estadísticas de Precios",
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "ckanModified": "2026-11-09T17:51:38Z",
+      "retrieval": "local-cache",
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/6721d034-7af0-4622-ae34-be10f0f2ac89/download/costo-cba-percapita_u.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/6721d034-7af0-4622-ae34-be10f0f2ac89/download/costo-cba-percapita_u.xlsx",
+          "status": 200,
+          "bytes": 11830,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "downloadedAtUtc": "2026-11-25T04:29:47Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "sha256": "2ad67b889e831c43714ed6a7e92ab62ba5c8561969c947ece636ec4714fd36f3",
+      "bytes": 11830,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    "cbar-percapita": {
+      "id": "cbar-percapita",
+      "group": "BASKETS",
+      "title": "CBA Rural — costo per cápita 2024–2026",
+      "fileName": "costo-cba-percapita_r.xlsx",
+      "path": "data/raw/costo-cba-percapita_r.xlsx",
+      "sourcePage": "https://datos.ine.gob.gt/dataset/costos-de-la-cba-urbana-y-rural",
+      "publisher": "INE — Departamento de Estadísticas de Precios",
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "ckanModified": "2026-11-09T17:50:46Z",
+      "retrieval": "local-cache",
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/69abf503-56da-4de5-9017-875009394843/download/costo-cba-percapita_r.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/69abf503-56da-4de5-9017-875009394843/download/costo-cba-percapita_r.xlsx",
+          "status": 200,
+          "bytes": 11780,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "downloadedAtUtc": "2026-11-25T04:29:47Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "sha256": "464e370e7bfa96d366baf1c70ab3d22a1df5d3e7af835e6f9092174d740aead5",
+      "bytes": 11780,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    "cbau-history": {
+      "id": "cbau-history",
+      "group": "BASKETS",
+      "title": "CBA Urbana — grupos y productos 2024–2026",
+      "fileName": "historico-cbau_es_2024-2026.xlsx",
+      "path": "data/raw/historico-cbau_es_2024-2026.xlsx",
+      "sourcePage": "https://datos.ine.gob.gt/dataset/costos-de-la-cba-urbana-y-rural",
+      "publisher": "INE — Departamento de Estadísticas de Precios",
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "ckanModified": "2026-11-09T17:52:11Z",
+      "retrieval": "local-cache",
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/595747ff-a866-4192-99fa-fc032a7795b7/download/historico-cbau_es_2024-2026.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/595747ff-a866-4192-99fa-fc032a7795b7/download/historico-cbau_es_2024-2026.xlsx",
+          "status": 200,
+          "bytes": 344962,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "downloadedAtUtc": "2026-11-25T04:29:48Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "sha256": "69a68a251527d6e689248ed0391fd32abc4163449d84d1bcd9c03017550d3206",
+      "bytes": 344962,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    },
+    "cbar-history": {
+      "id": "cbar-history",
+      "group": "BASKETS",
+      "title": "CBA Rural — grupos y productos 2024–2026",
+      "fileName": "historico-cbar_es_2024-2026.xlsx",
+      "path": "data/raw/historico-cbar_es_2024-2026.xlsx",
+      "sourcePage": "https://datos.ine.gob.gt/dataset/costos-de-la-cba-urbana-y-rural",
+      "publisher": "INE — Departamento de Estadísticas de Precios",
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "ckanModified": "2026-11-09T17:50:46Z",
+      "retrieval": "local-cache",
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/23cf94ba-25e9-457b-87fd-a5c7c1e92bcd/download/historico-cbar_es_2024-2026.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/23cf94ba-25e9-457b-87fd-a5c7c1e92bcd/download/historico-cbar_es_2024-2026.xlsx",
+          "status": 200,
+          "bytes": 316230,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "downloadedAtUtc": "2026-11-25T04:29:49Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "sha256": "c8c06b1c946336d5908aa8a1f386f2d9c5a6b2419e66c127be5f306032fea048",
+      "bytes": 316230,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    }
+  }
+}

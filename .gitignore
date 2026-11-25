@@ -49,3 +49,23 @@ next-env.d.ts
 
 # Descubrimiento INE (datos crudos, temporales)
 /discovery_ine/
+
+# Python (uv)
+/.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Next.js / pnpm (web/)
+web/node_modules/
+web/.next/
+web/out/
+web/.turbo/
+web/.env*.local
+web/next-env.d.ts
+
+# Generated data artifacts that are intentionally committed:
+# data/raw/, data/processed/*.parquet, data/provenance/, web/data/
+# Do not add them here: the app is designed to run offline from the cache.

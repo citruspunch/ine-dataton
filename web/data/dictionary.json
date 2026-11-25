@@ -1,0 +1,58 @@
+[
+  {
+    "variable": "NOG",
+    "description": "Número de Operación Guatecompras, con el cual se identifica un evento de compra en el Sistema Guatecompras."
+  },
+  {
+    "variable": "Evento",
+    "description": "Corresponde a la descripción de la compra del bien o serivicio requerido por la entidad requirente."
+  },
+  {
+    "variable": "Categoria",
+    "description": "Es la clasificación a la cual pertenece un evento dentro del Sistema Guatecompras."
+  },
+  {
+    "variable": "Entidad Requirente",
+    "description": "Es la entidad solicitante de un evento."
+  },
+  {
+    "variable": "Modalidad",
+    "description": "Hace referencia al tipo de modalidad de compra, utilizada según la Ley de Contrataciones del Estado."
+  },
+  {
+    "variable": "Producto",
+    "description": "Es el nombre del bien o servicio a adquirir por la entidad requirente."
+  },
+  {
+    "variable": "Características",
+    "description": "Corresponde a las especificaciones técnicas que hacen diferente al bien o servicio a adquirir por parte de la entidad requirente."
+  },
+  {
+    "variable": "Presentación",
+    "description": "Es la unidad de medida que corresponde al bien o servicio, se puede encontrar como, unidad, docena, ciento, jeringa, jeringa prellenada, frasco, bolsa, mililitro, cualquier otra medida que haga referencia al volumen y cantidad que describa a un producto."
+  },
+  {
+    "variable": "Precio de Referencia (Q)",
+    "description": "Valor pecuniario en que se estima un bien, insumo, material o servicio y que sirve como limite superior en los procesos y procedimientos establecidos en La Ley de Contrataciones del Estado."
+  },
+  {
+    "variable": "Fecha de Entrega",
+    "description": "Corresponde a la fecha en la que se hace entrega del o los precios de referencia a la entidad requirente."
+  },
+  {
+    "variable": "Precio Actualizado",
+    "description": "Es la primera actualización del precio de referencia."
+  },
+  {
+    "variable": "Fecha de Actualización de Precio",
+    "description": "Corresponde a la fecha en la que se llevo a cabo la primera actualización del precio de referencia."
+  },
+  {
+    "variable": "Precio Actualizado(2)",
+    "description": "Es la segunda actualización del precio de referencia."
+  },
+  {
+    "variable": "Fecha de Actualización de Precio(2)",
+    "description": "Corresponde a la fecha en la que se llevo a cabo la segunda actualización del precio de referencia."
+  }
+]

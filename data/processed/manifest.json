@@ -1,0 +1,448 @@
+{
+  "generatedAt": "2026-11-25T05:20:30Z",
+  "datasets": [
+    {
+      "id": "dpir-2022",
+      "group": "DPIR",
+      "title": "Precios de Referencia — corte junio 2022",
+      "fileName": "base-de-datos-pr-actualizados-hasta-junio-2022.csv",
+      "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/aec255ce-11f0-4d6c-90d2-af41b1a49870/download/base-de-datos-pr-actualizados-hasta-junio-2022.csv",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/aec255ce-11f0-4d6c-90d2-af41b1a49870/download/base-de-datos-pr-actualizados-hasta-junio-2022.csv",
+          "status": 200,
+          "bytes": 2319169,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "sourcePage": "https://datos.ine.gob.gt/dataset/precios-de-referencia",
+      "publisher": "INE — Departamento de Análisis de Precios",
+      "downloadedAtUtc": "2026-11-25T04:29:43Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "retrieval": "local-cache",
+      "sha256": "a5f4cb9ca17311acd2f3c69df1da41874c74c6d57e842d4d75815343812ebb3f",
+      "bytes": 2319169,
+      "httpStatus": 200,
+      "contentType": "text/csv",
+      "ckanModified": "2023-10-05T20:57:34Z",
+      "license": {
+        "id": "odc-by",
+        "title": "Open Data Commons Attribution License (ODC-BY)",
+        "url": "http://www.opendefinition.org/licenses/odc-by"
+      },
+      "status": "frozen",
+      "coverage": "Instantánea de precios de referencia observados en compras públicas hasta junio 2022. No es una serie mensual continua.",
+      "notes": "Archivo CKAN congelado. La mayoría de sus registros se repiten en el archivo 2023; se marcan como duplicados y no entran en los resúmenes. Cuando el archivo 2023 perdió el NOG, se conserva la copia 2022 completa.",
+      "cutoff": "2022-06-21",
+      "recordCount": 4457,
+      "canonicalCount": 127,
+      "isDictionary": false
+    },
+    {
+      "id": "dpir-2023",
+      "group": "DPIR",
+      "title": "Precios de Referencia — corte agosto 2023",
+      "fileName": "precios-de-referencia-al-02102023.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/d2c5d27a-a4e1-4263-9f3a-10b344884d28/download/precios-de-referencia-al-02102023.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/d2c5d27a-a4e1-4263-9f3a-10b344884d28/download/precios-de-referencia-al-02102023.xlsx",
+          "status": 200,
+          "bytes": 498676,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "sourcePage": "https://datos.ine.gob.gt/dataset/precios-de-referencia",
+      "publisher": "INE — Departamento de Análisis de Precios",
+      "downloadedAtUtc": "2026-11-25T04:29:43Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "retrieval": "local-cache",
+      "sha256": "e299291f5caf41706bd9c4633e5839c5e7773d31bb3d6680143ddcd822094a7d",
+      "bytes": 498676,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ckanModified": "2023-10-05T20:57:13Z",
+      "license": {
+        "id": "odc-by",
+        "title": "Open Data Commons Attribution License (ODC-BY)",
+        "url": "http://www.opendefinition.org/licenses/odc-by"
+      },
+      "status": "frozen",
+      "coverage": "Instantánea de precios de referencia hasta agosto 2023. Es la fuente preferente cuando un registro también aparece en el archivo 2022.",
+      "notes": "Archivo publicado como 'Precios de Referencia - Septiembre 2023'; el último dato válido observado es del 4 de agosto de 2023.",
+      "cutoff": "2023-08-04",
+      "recordCount": 4995,
+      "canonicalCount": 4947,
+      "isDictionary": false
+    },
+    {
+      "id": "dpir-dictionary",
+      "group": "DPIR",
+      "title": "Diccionario de Precios de Referencia",
+      "fileName": "diccionario-pr.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/024bd9b2-9fb0-45c8-9635-0056f81dd6b0/download/diccionario-pr.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/b247b9ac-e95f-4c32-acd3-fc4bdfb6185a/resource/024bd9b2-9fb0-45c8-9635-0056f81dd6b0/download/diccionario-pr.xlsx",
+          "status": 200,
+          "bytes": 725350,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "sourcePage": "https://datos.ine.gob.gt/dataset/precios-de-referencia",
+      "publisher": "INE — Departamento de Análisis de Precios",
+      "downloadedAtUtc": "2026-11-25T04:29:45Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "retrieval": "local-cache",
+      "sha256": "01afdf1f3e4373263f0368916417f2959179c572f92387e8c61c9d82a919888e",
+      "bytes": 725350,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ckanModified": "2022-09-19T18:44:11Z",
+      "license": {
+        "id": "odc-by",
+        "title": "Open Data Commons Attribution License (ODC-BY)",
+        "url": "http://www.opendefinition.org/licenses/odc-by"
+      },
+      "status": "frozen",
+      "coverage": "Diccionario de variables del DPIR (junio 2022).",
+      "notes": "Se usa para mostrar las definiciones de los campos; no aporta observaciones de precios.",
+      "cutoff": null,
+      "recordCount": 0,
+      "canonicalCount": 0,
+      "isDictionary": true
+    },
+    {
+      "id": "ipmc-history",
+      "group": "IPMC",
+      "title": "IPMC — histórico de 89 materiales",
+      "fileName": "HISTORICO-OCTUBRE.xlsx",
+      "url": "https://www.ine.gob.gt/ine/wp-content/uploads/2026/11/HISTORICO-OCTUBRE.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://www.ine.gob.gt/ine/wp-content/uploads/2026/11/HISTORICO-OCTUBRE.xlsx",
+          "status": 200,
+          "bytes": 87943,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "sourcePage": "https://www.ine.gob.gt/indice-de-materiales-de-construccion/",
+      "publisher": "INE — Sección de Otros Índices y Precios Sectoriales",
+      "downloadedAtUtc": "2026-11-25T04:29:45Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "retrieval": "local-cache",
+      "sha256": "744e99015d872dfaf2162044632cb6409d7bb80b8d4a5cfb3e1fd0c3b62310f6",
+      "bytes": 87943,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ckanModified": "2026-11-23T17:41:19Z",
+      "license": {
+        "id": "cc-by",
+        "title": "Creative Commons Attribution (CC-BY)",
+        "url": "http://www.opendefinition.org/licenses/cc-by"
+      },
+      "status": "current",
+      "coverage": "89 materiales y servicios, base diciembre 2018 = 100. Índice simple no ponderado; cobertura Región I Metropolitana y municipios seleccionados.",
+      "notes": "El archivo se publica mensualmente en el sitio del INE. El corte se lee de la última columna mensual con dato, no del nombre del archivo.",
+      "cutoff": "2026-10-01",
+      "recordCount": 8366,
+      "canonicalCount": 8366,
+      "isDictionary": false
+    },
+    {
+      "id": "icc-2026",
+      "group": "ICC",
+      "title": "ICC Vivienda Social Básica — 2026",
+      "fileName": "Historico-ICC_VSB_OCTUBRE..xlsx",
+      "url": "https://www.ine.gob.gt/ine/wp-content/uploads/2026/11/Historico-ICC_VSB_OCTUBRE..xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://www.ine.gob.gt/ine/wp-content/uploads/2026/11/Historico-ICC_VSB_OCTUBRE..xlsx",
+          "status": 200,
+          "bytes": 15121,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "sourcePage": "https://www.ine.gob.gt/indice-de-costos/",
+      "publisher": "INE — Índice de Costos de Construcción",
+      "downloadedAtUtc": "2026-11-25T04:29:46Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "retrieval": "local-cache",
+      "sha256": "197c455d96410b915aa17b9127474643978acc5199d99fc89dd53f544be63d85",
+      "bytes": 15121,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ckanModified": null,
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "status": "limited",
+      "coverage": "Solo 2026 (enero–octubre) y Región I. Índice encadenado con período de referencia 2025 = 100; no es un precio de mercado.",
+      "notes": "El ICC es un índice de costos de una vivienda social básica (materiales, mano de obra, herramienta y equipo), no un precio de un insumo individual.",
+      "cutoff": "2026-10-01",
+      "recordCount": 360,
+      "canonicalCount": 360,
+      "isDictionary": false
+    },
+    {
+      "id": "cbau-percapita",
+      "group": "BASKETS",
+      "title": "CBA Urbana — costo per cápita 2024–2026",
+      "fileName": "costo-cba-percapita_u.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/6721d034-7af0-4622-ae34-be10f0f2ac89/download/costo-cba-percapita_u.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/6721d034-7af0-4622-ae34-be10f0f2ac89/download/costo-cba-percapita_u.xlsx",
+          "status": 200,
+          "bytes": 11830,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "sourcePage": "https://datos.ine.gob.gt/dataset/costos-de-la-cba-urbana-y-rural",
+      "publisher": "INE — Departamento de Estadísticas de Precios",
+      "downloadedAtUtc": "2026-11-25T04:29:47Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "retrieval": "local-cache",
+      "sha256": "2ad67b889e831c43714ed6a7e92ab62ba5c8561969c947ece636ec4714fd36f3",
+      "bytes": 11830,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ckanModified": "2026-11-09T17:51:38Z",
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "status": "limited",
+      "coverage": "Costo diario y mensual por persona de la Canasta Básica Alimentaria urbana, 2024–2026.",
+      "notes": "Costo de la canasta, no precio de un producto individual. La ventana histórica disponible empieza en 2024.",
+      "cutoff": "2026-10-01",
+      "recordCount": 34,
+      "canonicalCount": 34,
+      "isDictionary": false
+    },
+    {
+      "id": "cbar-percapita",
+      "group": "BASKETS",
+      "title": "CBA Rural — costo per cápita 2024–2026",
+      "fileName": "costo-cba-percapita_r.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/69abf503-56da-4de5-9017-875009394843/download/costo-cba-percapita_r.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/69abf503-56da-4de5-9017-875009394843/download/costo-cba-percapita_r.xlsx",
+          "status": 200,
+          "bytes": 11780,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "sourcePage": "https://datos.ine.gob.gt/dataset/costos-de-la-cba-urbana-y-rural",
+      "publisher": "INE — Departamento de Estadísticas de Precios",
+      "downloadedAtUtc": "2026-11-25T04:29:47Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "retrieval": "local-cache",
+      "sha256": "464e370e7bfa96d366baf1c70ab3d22a1df5d3e7af835e6f9092174d740aead5",
+      "bytes": 11780,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ckanModified": "2026-11-09T17:50:46Z",
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "status": "limited",
+      "coverage": "Costo diario y mensual por persona de la Canasta Básica Alimentaria rural, 2024–2026.",
+      "notes": "Costo de la canasta, no precio de un producto individual. La ventana histórica disponible empieza en 2024.",
+      "cutoff": "2026-10-01",
+      "recordCount": 34,
+      "canonicalCount": 34,
+      "isDictionary": false
+    },
+    {
+      "id": "cbau-history",
+      "group": "BASKETS",
+      "title": "CBA Urbana — grupos y productos 2024–2026",
+      "fileName": "historico-cbau_es_2024-2026.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/595747ff-a866-4192-99fa-fc032a7795b7/download/historico-cbau_es_2024-2026.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/595747ff-a866-4192-99fa-fc032a7795b7/download/historico-cbau_es_2024-2026.xlsx",
+          "status": 200,
+          "bytes": 344962,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "sourcePage": "https://datos.ine.gob.gt/dataset/costos-de-la-cba-urbana-y-rural",
+      "publisher": "INE — Departamento de Estadísticas de Precios",
+      "downloadedAtUtc": "2026-11-25T04:29:48Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "retrieval": "local-cache",
+      "sha256": "69a68a251527d6e689248ed0391fd32abc4163449d84d1bcd9c03017550d3206",
+      "bytes": 344962,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ckanModified": "2026-11-09T17:52:11Z",
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "status": "limited",
+      "coverage": "Costo por grupo alimenticio y por producto de la CBA urbana, 2024–2026.",
+      "notes": "El precio por unidad base se deriva de la cantidad base y el costo; es un precio implícito de la canasta, no una cotización de mercado independiente.",
+      "cutoff": "2026-10-01",
+      "recordCount": 2686,
+      "canonicalCount": 2686,
+      "isDictionary": false
+    },
+    {
+      "id": "cbar-history",
+      "group": "BASKETS",
+      "title": "CBA Rural — grupos y productos 2024–2026",
+      "fileName": "historico-cbar_es_2024-2026.xlsx",
+      "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/23cf94ba-25e9-457b-87fd-a5c7c1e92bcd/download/historico-cbar_es_2024-2026.xlsx",
+      "attemptedUrls": [
+        {
+          "url": "https://datos.ine.gob.gt/dataset/0317e7b9-9563-4a9c-800f-c74473103063/resource/23cf94ba-25e9-457b-87fd-a5c7c1e92bcd/download/historico-cbar_es_2024-2026.xlsx",
+          "status": 200,
+          "bytes": 316230,
+          "ok": true,
+          "reason": "ok"
+        }
+      ],
+      "sourcePage": "https://datos.ine.gob.gt/dataset/costos-de-la-cba-urbana-y-rural",
+      "publisher": "INE — Departamento de Estadísticas de Precios",
+      "downloadedAtUtc": "2026-11-25T04:29:49Z",
+      "verifiedAtUtc": "2026-11-25T05:20:26Z",
+      "retrieval": "local-cache",
+      "sha256": "c8c06b1c946336d5908aa8a1f386f2d9c5a6b2419e66c127be5f306032fea048",
+      "bytes": 316230,
+      "httpStatus": 200,
+      "contentType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ckanModified": "2026-11-09T17:50:46Z",
+      "license": {
+        "id": "not-declared",
+        "title": "Licencia no declarada en el portal al momento de la descarga",
+        "url": null
+      },
+      "status": "limited",
+      "coverage": "Costo por grupo alimenticio y por producto de la CBA rural, 2024–2026.",
+      "notes": "El precio por unidad base se deriva de la cantidad base y el costo; es un precio implícito de la canasta, no una cotización de mercado independiente.",
+      "cutoff": "2026-10-01",
+      "recordCount": 2482,
+      "canonicalCount": 2482,
+      "isDictionary": false
+    }
+  ],
+  "dictionary": [
+    {
+      "variable": "NOG",
+      "description": "Número de Operación Guatecompras, con el cual se identifica un evento de compra en el Sistema Guatecompras."
+    },
+    {
+      "variable": "Evento",
+      "description": "Corresponde a la descripción de la compra del bien o serivicio requerido por la entidad requirente."
+    },
+    {
+      "variable": "Categoria",
+      "description": "Es la clasificación a la cual pertenece un evento dentro del Sistema Guatecompras."
+    },
+    {
+      "variable": "Entidad Requirente",
+      "description": "Es la entidad solicitante de un evento."
+    },
+    {
+      "variable": "Modalidad",
+      "description": "Hace referencia al tipo de modalidad de compra, utilizada según la Ley de Contrataciones del Estado."
+    },
+    {
+      "variable": "Producto",
+      "description": "Es el nombre del bien o servicio a adquirir por la entidad requirente."
+    },
+    {
+      "variable": "Características",
+      "description": "Corresponde a las especificaciones técnicas que hacen diferente al bien o servicio a adquirir por parte de la entidad requirente."
+    },
+    {
+      "variable": "Presentación",
+      "description": "Es la unidad de medida que corresponde al bien o servicio, se puede encontrar como, unidad, docena, ciento, jeringa, jeringa prellenada, frasco, bolsa, mililitro, cualquier otra medida que haga referencia al volumen y cantidad que describa a un producto."
+    },
+    {
+      "variable": "Precio de Referencia (Q)",
+      "description": "Valor pecuniario en que se estima un bien, insumo, material o servicio y que sirve como limite superior en los procesos y procedimientos establecidos en La Ley de Contrataciones del Estado."
+    },
+    {
+      "variable": "Fecha de Entrega",
+      "description": "Corresponde a la fecha en la que se hace entrega del o los precios de referencia a la entidad requirente."
+    },
+    {
+      "variable": "Precio Actualizado",
+      "description": "Es la primera actualización del precio de referencia."
+    },
+    {
+      "variable": "Fecha de Actualización de Precio",
+      "description": "Corresponde a la fecha en la que se llevo a cabo la primera actualización del precio de referencia."
+    },
+    {
+      "variable": "Precio Actualizado(2)",
+      "description": "Es la segunda actualización del precio de referencia."
+    },
+    {
+      "variable": "Fecha de Actualización de Precio(2)",
+      "description": "Corresponde a la fecha en la que se llevo a cabo la segunda actualización del precio de referencia."
+    }
+  ],
+  "groupMeta": {
+    "DPIR": {
+      "label": "Precios de Referencia",
+      "shortLabel": "DPIR",
+      "tagline": "Precios observados en compras públicas",
+      "description": "Precios de referencia registrados por el INE a partir de operaciones de compra pública. Se usan como banda orientativa antes de cotizar; no son una serie mensual continua.",
+      "statusLabel": "Serie congelada",
+      "accent": "teal"
+    },
+    "IPMC": {
+      "label": "Materiales de construcción",
+      "shortLabel": "IPMC",
+      "tagline": "Índice de precios de 89 materiales",
+      "description": "Índice de Precios de Materiales de Construcción, base diciembre 2018 = 100. Mide variación de precios de 89 materiales y servicios; no es un precio en quetzales.",
+      "statusLabel": "Actualización mensual",
+      "accent": "ochre"
+    },
+    "ICC": {
+      "label": "Costo de construcción",
+      "shortLabel": "ICC",
+      "tagline": "Índice de costos de vivienda social",
+      "description": "Índice de Costos de Construcción de la Vivienda Social Básica, referencia 2025 = 100. Solo 2026 y Región I; combina materiales, mano de obra, herramienta y equipo.",
+      "statusLabel": "Cobertura parcial",
+      "accent": "clay"
+    },
+    "BASKETS": {
+      "label": "Canastas básicas",
+      "shortLabel": "CBAU / CBAR",
+      "tagline": "Costo de la canasta alimentaria",
+      "description": "Costo per cápita y por producto de la Canasta Básica Alimentaria urbana y rural. La ventana disponible es 2024–2026; el costo de canasta no es un precio de mercado individual.",
+      "statusLabel": "Ventana 2024–2026",
+      "accent": "olive"
+    }
+  },
+  "order": [
+    "DPIR",
+    "IPMC",
+    "ICC",
+    "BASKETS"
+  ],
+  "privacy": "Salidas agregadas y de observación. No se incluyen nombres de proveedores, postores ni identificadores de empresas. Los campos de entidad requirente del DPIR se omiten deliberadamente; no se intenta reidentificar a ninguna persona, hogar o empresa.",
+  "attribution": "Fuente de los datos: Instituto Nacional de Estadística (INE), Guatemala. Elaboración propia para la Mesa de Precios.",
+  "aiDisclosure": "Se utilizaron asistentes de código con IA generativa durante el desarrollo. Las reglas de limpieza y las cifras se verifican con pruebas automatizadas y revisión humana; consulte el README."
+}
