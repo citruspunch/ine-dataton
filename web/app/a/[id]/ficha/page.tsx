@@ -1,7 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft, Download } from "lucide-react";
 
 import { SeverityBadge, StateBadge } from "@/components/badges";
+import { DataList, DataRow } from "@/components/data-list";
 import { PrintButton } from "@/components/print-button";
 import { buttonVariants } from "@/components/ui/button";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
@@ -10,6 +13,8 @@ import type { AggregateDetail, Receipt } from "@/lib/types";
 import { formatPct } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+
+export const metadata = { title: "Ficha técnica" };
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -29,81 +34,97 @@ export default async function FichaPage({ params }: PageProps) {
   const { aggregate, receipt } = payload;
   const entity = aggregate.entity;
   const decision = receipt?.decision_log as Record<string, string> | null | undefined;
-  const rulesVersion = (receipt?.technical_payload as Record<string, unknown> | undefined)
-    ?.rules_version as string | undefined;
+  const technical = receipt?.technical_payload as Record<string, unknown> | undefined;
+  const rulesVersion = technical?.rules_version as string | undefined;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center gap-3 print:hidden">
+    <div className="space-y-6 print:space-y-4">
+      <div className="flex flex-wrap items-center gap-2 print:hidden">
         <Link
           href={`/a/${aggregate.case_id}`}
-          className={buttonVariants({ variant: "secondary" })}
+          className={buttonVariants({ variant: "secondary", size: "sm" })}
         >
-          ← Volver a la consulta
+          <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
+          Volver a la consulta
         </Link>
         <PrintButton />
         <Link
           href={`/api/receipt/${aggregate.case_id}`}
-          className={buttonVariants({ variant: "secondary" })}
+          className={buttonVariants({ variant: "secondary", size: "sm" })}
         >
+          <Download className="h-3.5 w-3.5" aria-hidden />
           recibo.json
         </Link>
       </div>
 
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Ficha técnica de validación
-        </h1>
-        <p className="text-[13px] text-muted">
-          Documento para adjuntar al ticket de publicación (procedimiento 18, pasos 4 a 6,
-          como propuesta). No certifica el dato ni sustituye la revisión del productor.
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-brand pb-4">
+        <div>
+          <p className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-brand">
+            INE Data Trust · Ficha técnica de validación
+          </p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">
+            {entity.title || aggregate.label}
+          </h1>
+          <p className="mt-1 text-[12.5px] text-muted">
+            Documento para adjuntar al ticket de publicación (procedimiento 18, pasos 4 a 6,
+            como propuesta). No certifica el dato ni sustituye la revisión del productor.
+          </p>
+        </div>
+        <div className="text-right text-[11.5px] text-muted">
+          <Image
+            src="/ine-logo.png"
+            alt="Instituto Nacional de Estadística"
+            width={7026}
+            height={2273}
+            className="ml-auto h-8 w-auto"
+          />
+          <p className="mt-2 font-mono">{aggregate.case_id}</p>
+          <p className="font-mono">snapshot {String(technical?.snapshot_id ?? "—")}</p>
+        </div>
       </header>
 
-      <dl className="overflow-hidden rounded-md border border-line bg-card text-sm">
-        <Row label="Agregado">{entity.title}</Row>
-        <Row label="Identificador">
+      <div className="flex flex-wrap items-center gap-2">
+        <StateBadge state={aggregate.state} text={aggregate.state_text} />
+        <span className="text-[12px] text-muted">
+          Publicado el {aggregate.published_at_utc?.slice(0, 10)}
+        </span>
+      </div>
+
+      <DataList>
+        <DataRow label="Identificador">
           <span className="font-mono">{aggregate.case_id}</span>
-        </Row>
-        <Row label="Snapshot">
-          <span className="font-mono">
-            {(receipt?.technical_payload as Record<string, unknown>)?.snapshot_id as string}
-          </span>
-        </Row>
-        <Row label="Periodo">{entity.display.period}</Row>
-        <Row label="Base">{entity.display.base}</Row>
-        <Row label="Unidad">{entity.display.unit}</Row>
-        <Row label="URL oficial">
-          <span className="break-all font-mono text-[12px]">{entity.source_url || "—"}</span>
-        </Row>
-        <Row label="Descargado (UTC)">
+        </DataRow>
+        <DataRow label="Periodo">{entity.display.period}</DataRow>
+        <DataRow label="Base">{entity.display.base}</DataRow>
+        <DataRow label="Unidad">{entity.display.unit}</DataRow>
+        <DataRow label="URL oficial">
+          <span className="break-all font-mono text-[11.5px]">{entity.source_url || "—"}</span>
+        </DataRow>
+        <DataRow label="Descargado (UTC)">
           <span className="font-mono">{entity.downloaded_at_utc || "—"}</span>
-        </Row>
-        <Row label="SHA-256 del archivo">
-          <span className="break-all font-mono">{entity.sha256}</span>
-        </Row>
-        <Row label="Licencia">
+        </DataRow>
+        <DataRow label="SHA-256 del archivo">
+          <span className="break-all font-mono text-[11.5px]">{entity.sha256}</span>
+        </DataRow>
+        <DataRow label="Licencia">
           {entity.license.id || "—"} · {entity.license.attribution || "—"}
-        </Row>
-        <Row label="Perfil declarativo">
+        </DataRow>
+        <DataRow label="Perfil declarativo">
           <span className="font-mono">{entity.profile}</span>
-        </Row>
-        <Row label="Versión de reglas">
+        </DataRow>
+        <DataRow label="Versión de reglas">
           <span className="font-mono">{rulesVersion ?? "—"}</span>
-        </Row>
-        <Row label="Digest de validación">
-          <span className="break-all font-mono">{aggregate.digest}</span>
-        </Row>
-        <Row label="Estado">
-          <StateBadge state={aggregate.state} text={aggregate.state_text} />
-        </Row>
-      </dl>
+        </DataRow>
+        <DataRow label="Digest de validación">
+          <span className="break-all font-mono text-[11.5px]">{aggregate.digest}</span>
+        </DataRow>
+      </DataList>
 
       <section className="space-y-2">
-        <h2 className="text-[12px] font-semibold uppercase tracking-widest text-muted">
+        <h2 className="text-[11.5px] font-bold uppercase tracking-[0.14em] text-brand">
           Resultado por regla
         </h2>
-        <Table>
+        <Table className="text-[12.5px] print:text-[10.5px]">
           <THead>
             <TR>
               <TH>Regla</TH>
@@ -115,7 +136,7 @@ export default async function FichaPage({ params }: PageProps) {
           </THead>
           <TBody>
             {aggregate.findings.map((finding) => (
-              <TR key={finding.rule_id}>
+              <TR key={finding.rule_id} className="hover:bg-transparent">
                 <TD className="whitespace-nowrap font-mono">{finding.rule_id}</TD>
                 <TD>{finding.title}</TD>
                 <TD className="whitespace-nowrap">
@@ -131,10 +152,10 @@ export default async function FichaPage({ params }: PageProps) {
 
       {aggregate.comparisons.length ? (
         <section className="space-y-2">
-          <h2 className="text-[12px] font-semibold uppercase tracking-widest text-muted">
+          <h2 className="text-[11.5px] font-bold uppercase tracking-[0.14em] text-brand">
             Comparaciones evaluadas
           </h2>
-          <Table>
+          <Table className="text-[12.5px] print:text-[10.5px]">
             <THead>
               <TR>
                 <TH>Solicitud</TH>
@@ -147,7 +168,7 @@ export default async function FichaPage({ params }: PageProps) {
               {aggregate.comparisons.map((comparison) => {
                 const evidence = (comparison.evidence ?? {}) as Record<string, unknown>;
                 return (
-                  <TR key={comparison.comparison_id}>
+                  <TR key={comparison.comparison_id} className="hover:bg-transparent">
                     <TD>{comparison.label}</TD>
                     <TD className="whitespace-nowrap">{comparison.status}</TD>
                     <TD>{comparison.reason}</TD>
@@ -155,7 +176,7 @@ export default async function FichaPage({ params }: PageProps) {
                       {comparison.status === "ok" ? (
                         <>
                           {formatPct(evidence.published_pct as number)}{" "}
-                          <span className="font-mono text-[11.5px] text-muted">
+                          <span className="font-mono text-[11px] text-muted">
                             {String(evidence.published_cell ?? "")}
                           </span>
                         </>
@@ -172,51 +193,48 @@ export default async function FichaPage({ params }: PageProps) {
       ) : null}
 
       <section className="space-y-2">
-        <h2 className="text-[12px] font-semibold uppercase tracking-widest text-muted">
+        <h2 className="text-[11.5px] font-bold uppercase tracking-[0.14em] text-brand">
           Decisión registrada
         </h2>
         {decision ? (
-          <dl className="overflow-hidden rounded-md border border-line bg-card text-sm">
-            <Row label="Resultado del gate">{decision.gate_decision}</Row>
-            <Row label="Responsable">{decision.operator}</Row>
-            <Row label="Fecha (UTC)">
+          <DataList>
+            <DataRow label="Resultado del gate">{decision.gate_decision}</DataRow>
+            <DataRow label="Responsable">{decision.operator}</DataRow>
+            <DataRow label="Fecha (UTC)">
               <span className="font-mono">{decision.decided_at_utc}</span>
-            </Row>
-            <Row label="Motivo">{decision.rationale}</Row>
-            <Row label="Digest de la decisión">
-              <span className="break-all font-mono">{decision.decision_basis_digest}</span>
-            </Row>
-          </dl>
+            </DataRow>
+            <DataRow label="Motivo">{decision.rationale}</DataRow>
+            <DataRow label="Digest de la decisión">
+              <span className="break-all font-mono text-[11.5px]">
+                {decision.decision_basis_digest}
+              </span>
+            </DataRow>
+          </DataList>
         ) : (
           <p className="text-[13px] text-muted">Sin decisión registrada en el recibo público.</p>
         )}
       </section>
 
-      <div className="grid gap-8 pt-4 sm:grid-cols-2">
+      <div className="grid gap-8 pt-6 sm:grid-cols-2">
         <div>
-          <p className="mb-8 text-[13px] text-muted">Revisado por (publicaciones)</p>
-          <div className="border-t border-[#999] pt-1 text-[12px]">Nombre y firma</div>
+          <p className="mb-8 text-[12.5px] text-muted">Revisado por (publicaciones)</p>
+          <div className="border-t border-[#8a97a8] pt-1 text-[11.5px] text-muted">
+            Nombre y firma
+          </div>
         </div>
         <div>
-          <p className="mb-8 text-[13px] text-muted">Aprobado por (producción)</p>
-          <div className="border-t border-[#999] pt-1 text-[12px]">Nombre y firma</div>
+          <p className="mb-8 text-[12.5px] text-muted">Aprobado por (producción)</p>
+          <div className="border-t border-[#8a97a8] pt-1 text-[11.5px] text-muted">
+            Nombre y firma
+          </div>
         </div>
       </div>
 
-      <p className="text-[12px] text-muted">
-        La habilitación corresponde a este sistema, no al INE. Este documento no certifica. El digest
-        no incluye timestamps de ejecución ni de decisión. Los datos conservan su licencia{" "}
-        {entity.license.id || "original"}.
+      <p className="border-t border-line pt-3 text-[11px] leading-relaxed text-muted">
+        La habilitación corresponde a INE Data Trust, no al INE. Este documento no certifica.
+        El digest no incluye timestamps de ejecución ni de decisión. Los datos conservan su
+        licencia {entity.license.id || "original"}.
       </p>
-    </div>
-  );
-}
-
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="grid grid-cols-[210px_1fr] border-b border-line last:border-0 print:grid-cols-[180px_1fr]">
-      <dt className="bg-[#fafbfc] px-3 py-2 text-[13px] text-muted">{label}</dt>
-      <dd className="px-3 py-2">{children}</dd>
     </div>
   );
 }

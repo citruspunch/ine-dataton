@@ -18,8 +18,8 @@ INSTRUCTIONS = """
 Herramientas de solo lectura sobre agregados del INE ya validados y habilitados.
 
 Reglas del servidor:
-- Solo lee el snapshot público. No tiene acceso a la cola de revisión,
-  candidatos ni fixtures.
+- Solo lee el snapshot público. No tiene acceso a la cola de revisión ni a los
+  archivos candidatos.
 - No calcula cifras ni compara periodos: devuelve metadatos y el recibo
   publicado, con la fuente y el digest de la decisión.
 - Si un agregado no está habilitado, devuelve un bloqueo estructurado.
@@ -42,9 +42,7 @@ def list_enabled_aggregates() -> dict[str, Any]:
         "snapshot_id": index.get("snapshot_id"),
         "total": len(aggregates),
         "aggregates": aggregates,
-        "notice": (
-            "Solo agregados habilitados tras el gate humano. No certifica."
-        ),
+        "notice": ("Solo agregados habilitados tras el gate humano. No certifica."),
     }
 
 

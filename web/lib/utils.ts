@@ -10,3 +10,13 @@ export function formatPct(value: number | null | undefined): string {
   const text = value.toFixed(2);
   return `${value > 0 ? "+" : ""}${text.replace(".", ",")}%`;
 }
+
+const numberFormat = new Intl.NumberFormat("es-GT", {
+  maximumFractionDigits: 4,
+  minimumFractionDigits: 0,
+});
+
+export function formatNumber(value: number | null | undefined): string {
+  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  return numberFormat.format(value);
+}

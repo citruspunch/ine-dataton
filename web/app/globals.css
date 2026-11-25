@@ -1,51 +1,91 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #14181f;
-  --color-muted: #5b6573;
-  --color-line: #d7dde6;
-  --color-surface: #f4f6f9;
+  /* Palette taken from the official INE imagotype: #004080 and #0080FF. */
+  --color-ink: #0e1b2c;
+  --color-muted: #57677d;
+  --color-line: #dbe4ef;
+  --color-surface: #f4f7fb;
   --color-card: #ffffff;
-  --color-brand: #123a63;
-  --color-brand-dark: #0c2744;
-  --color-brand-soft: #e8eef7;
+  --color-brand: #004080;
+  --color-brand-dark: #00305f;
+  --color-brand-soft: #eaf2fb;
+  --color-accent: #0080ff;
+  --color-accent-soft: #e6f2ff;
 
-  --color-ok: #17603a;
-  --color-ok-bg: #e4f2ea;
-  --color-warn: #7a5000;
-  --color-warn-bg: #fdf1d8;
-  --color-fail: #8d211d;
-  --color-fail-bg: #fae7e5;
-  --color-none: #4a4f57;
-  --color-none-bg: #eceef1;
-  --color-syn: #52307c;
-  --color-syn-bg: #efe6fa;
+  --color-ok: #14603a;
+  --color-ok-bg: #e5f4eb;
+  --color-warn: #7a4d00;
+  --color-warn-bg: #fdf1d6;
+  --color-fail: #8c211c;
+  --color-fail-bg: #fbe8e6;
+  --color-none: #4a5566;
+  --color-none-bg: #edf0f4;
+  --color-syn: #4d2f7a;
+  --color-syn-bg: #f0e8fb;
 
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--font-ubuntu-sans), "Ubuntu Sans", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-ubuntu-mono), "Ubuntu Sans Mono", ui-monospace,
+    SFMono-Regular, Menlo, monospace;
 }
 
 @layer base {
   html {
     color-scheme: light;
+    scroll-behavior: smooth;
   }
   body {
     background: var(--color-surface);
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-size: 15px;
-    line-height: 1.55;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
   ::selection {
-    background: #cfe0f5;
+    background: #cfe4ff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  a {
+    color: var(--color-brand);
   }
 }
 
-@layer print {
-  @media print {
-    body {
-      background: #fff;
-    }
+@layer components {
+  .eyebrow {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-brand);
+  }
+  .prose-note {
+    color: var(--color-muted);
+    font-size: 13px;
+  }
+  .hairline-grid {
+    background-image:
+      linear-gradient(to right, rgba(0, 64, 128, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 64, 128, 0.055) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+}
+
+@media print {
+  @page {
+    margin: 18mm 16mm;
+  }
+  body {
+    background: #fff;
+    font-size: 11.5pt;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 }

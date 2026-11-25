@@ -16,10 +16,19 @@ const SEVERITY_VARIANT: Record<Severity, "ok" | "warn" | "fail" | "none"> = {
   no_evaluado: "none",
 };
 
+const SEVERITY_TEXT: Record<Severity, string> = {
+  ok: "conforme",
+  advertencia: "advertencia",
+  falla: "falla",
+  no_evaluado: "no evaluado",
+};
+
 export function StateBadge({ state, text }: { state: StateName; text: string }) {
   return <Badge variant={STATE_VARIANT[state] ?? "none"}>{text}</Badge>;
 }
 
 export function SeverityBadge({ status }: { status: Severity }) {
-  return <Badge variant={SEVERITY_VARIANT[status] ?? "none"}>{status}</Badge>;
+  return (
+    <Badge variant={SEVERITY_VARIANT[status] ?? "none"}>{SEVERITY_TEXT[status] ?? status}</Badge>
+  );
 }

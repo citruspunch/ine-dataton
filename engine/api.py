@@ -94,7 +94,7 @@ def _case_rows() -> list[dict[str, Any]]:
                 "state": result.state,
                 "state_text": result.state_text,
                 "profile": result.entity.get("profile") or case["profile"],
-                "origin": "caso de ejemplo",
+                "origin": "recurso registrado",
                 "critical": f"{result.coverage.get('critical_evaluated')}/"
                 f"{result.coverage.get('critical_total')}",
                 "override": config.has_override(result.case_id),

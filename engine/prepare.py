@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Prepare the snapshot: download the real resource, generate fixtures and write
-the manifest with URL, UTC date, bytes, SHA-256 and profile.
+"""Prepare the snapshot: download the registered resources and write the
+manifest with URL, UTC date, bytes, SHA-256 and profile.
 
 This is the only step allowed to use the network. Once the snapshot is prepared,
-the whole prototype works offline.
+the whole system works offline.
 """
 
 from __future__ import annotations
@@ -16,8 +16,7 @@ import urllib.request
 from pathlib import Path
 
 from .canonical import file_sha256
-from .config import DATA_DIR, FIXTURE_DIR
-from .fixtures import write_fixtures
+from .config import DATA_DIR
 
 SOURCES_FILE = DATA_DIR / "sources.json"
 MANIFEST_FILE = DATA_DIR / "manifest.json"
@@ -79,9 +78,6 @@ def main() -> int:
 
     with open(SOURCES_FILE, "r", encoding="utf-8") as fh:
         sources = json.load(fh)
-
-    print("generando fixtures sintéticos...")
-    write_fixtures(FIXTURE_DIR)
 
     old = previous_items()
     items = []

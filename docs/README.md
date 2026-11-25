@@ -32,12 +32,12 @@ Requisitos: **uv** (Python) y **pnpm** (Node.js). No se usa `make`.
 uv sync                       # entorno Python y uv.lock
 pnpm --dir web install        # interfaz Next.js y pnpm-lock.yaml
 pnpm run prepare              # verifica y registra las muestras del INE
-pnpm run dev                  # motor :8000 + interfaz :3000
+pnpm run dev                  # motor :8000 + interfaz en el siguiente puerto libre
 ```
 
-Abrir **http://127.0.0.1:3000**. El portal de consulta arranca vacío: un
-agregado solo aparece cuando un revisor lo valida y registra el visto bueno en
-la bandeja de revisión.
+Abrir la URL que imprime el arranque (**http://127.0.0.1:3000** si está libre).
+El portal de consulta arranca vacío: un agregado solo aparece cuando un revisor
+lo valida y registra el visto bueno en la bandeja de revisión.
 
 Scripts disponibles (definidos en `package.json`):
 
@@ -56,9 +56,9 @@ Scripts disponibles (definidos en `package.json`):
 Después de `uv sync` y `pnpm install`, todo funciona **sin red**. Los contratos
 se pueden validar sin interfaz con `uv run python -m engine.profiles`.
 
-> La cola de revisión arranca sin decisiones: los casos precargados se validan y
-> se habilitan desde la interfaz, y cada decisión queda en la bitácora con
-> responsable y motivo.
+> La cola de revisión arranca sin decisiones: los recursos registrados y los
+> archivos que se cargan se validan y se habilitan desde la interfaz, y cada
+> decisión queda en la bitácora con responsable y motivo.
 
 ## 3. Arquitectura de carpetas
 
@@ -70,7 +70,7 @@ profiles/             contratos declarativos YAML
 rules/                registro de reglas versionadas
 data/                 muestras INE verificadas y manifiesto del snapshot
 stores/
-  review_store/       cola privada: candidatos, fixtures, recibos, decisiones
+  review_store/       cola privada: candidatos, recibos, decisiones
   public_snapshot/    agregados habilitados, recibos públicos, vista de consulta
 tests/                pytest (motor y API) y verificación de tipos
 docs/                 README, licencias de terceros, nota de IA
@@ -80,7 +80,7 @@ scripts/              arranque conjunto de servidores (Node)
 - **`engine/`** no importa nada de `web/`. Expone una API HTTP local
   (`engine/api.py`) que la interfaz consume; toda la decisión vive en Python.
 - **`web/`** solo renderiza y recoge datos. No valida ni decide.
-- **`stores/review_store/`** es privado: cargas, fixtures, recibos privados,
+- **`stores/review_store/`** es privado: cargas, recibos privados,
   bitácora de decisiones y enmiendas de simulación.
 - **`stores/public_snapshot/`** solo recibe agregados habilitados tras el gate.
 
@@ -115,9 +115,6 @@ verificable:
 **Por qué el regional.** Segundo recurso real con otra forma: tabla ancha (una
 columna por región), hoja `Hoja1`, sin variación publicada y con un rango de
 periodos (2025-01 a 2026-10). Se evalúa con el mismo motor y un perfil distinto.
-
-El resto son **fixtures sintéticos** generados por `engine/fixtures.py`, rotulados
-como tales en el manifiesto, la ficha y la interfaz. Sin microdatos ni PII.
 
 ## 5. Perfiles declarativos y reglas
 
@@ -155,13 +152,13 @@ Reglas versionadas en `rules/rules.json`: `SNAP-01` integridad, `LIC-01` licenci
 
 ## 6. Interfaz
 
-- **Bandeja de revisión** (`/review`): carga de `.csv`/`.xlsx`/`.xls`, selector de
-  perfil, casos en un clic, diálogo de **nuevo contrato YAML** con validación
-  campo a campo, y tabla de hallazgos por regla.
-- **Detalle y gate** (`/review/[id]`): ficha, hallazgos, comparaciones con
-  evidencia privada, formulario de gate con justificación de advertencias y botón
-  de **invalidación en vivo** que cambia la versión del perfil, recalcula el
-  digest y retira el agregado del portal.
+- **Bandeja de revisión** (`/review`): carga de `.csv`/`.xlsx`/`.xls` con arrastrar
+  y soltar, selectores accesibles de perfil y licencia, lista de contratos
+  disponibles y **editor de reglas guiado**: un formulario genera el YAML y el
+  motor lo valida campo a campo antes de guardarlo.
+- **Detalle y gate** (`/review/[id]`): ficha, hallazgos filtrables por severidad,
+  comparaciones con evidencia privada y formulario de gate con justificación de
+  advertencias.
 - **Consulta** (`/a/[id]`): ficha con fuente, base y periodo, tabla de series
   publicadas, reglas evaluadas, descarga de `recibo.json` y **ficha técnica
   imprimible** (`/a/[id]/ficha`) para adjuntar al ticket del procedimiento 18.
@@ -205,7 +202,7 @@ pnpm run test        # motor + tipos
 - **Motor (pytest):** contrato, `.xls` heredado, identidad, comparabilidad,
   determinismo e invalidación del digest, gate, frontera de la API pública y
   aislamiento del MCP.
-- **API HTTP:** casos, carga, gate, simulación, recibos y creación de perfiles con
+- **API HTTP:** recursos registrados, carga, gate, invalidación por cambio de contrato, recibos y creación de perfiles con
   errores de campo; el endpoint de comparación ya no existe.
 - **Web:** `tsc --noEmit` sobre la interfaz.
 
@@ -216,7 +213,6 @@ pnpm run test        # motor + tipos
   criptográfica ni autenticación.
 - `n<5` no se usa como garantía legal; no se afirma secreto estadístico.
 - El hash prueba igualdad de bytes del par observado, no autoría ni calidad.
-- El caso de duplicados usa un fixture sintético; el par real es microdato.
 - La cobertura es la del perfil declarado, no la de toda la hoja.
 - No hay comparador de periodos: el portal muestra metadatos, reglas y recibo, y
   no calcula variaciones entre periodos.
@@ -229,7 +225,6 @@ pnpm run test        # motor + tipos
 - **Código:** MIT (`LICENSE`). No cubre los datos.
 - **Datos INE:** `cc-by`, atribuidos al Instituto Nacional de Estadística (INE),
   Guatemala. La ficha y el manifiesto guardan licencia y fecha de descarga.
-- **Fixtures:** generados por el equipo.
 - **Dependencias:** `docs/LICENSES_THIRD_PARTY.md`, generado con
   `pnpm run licenses`.
 

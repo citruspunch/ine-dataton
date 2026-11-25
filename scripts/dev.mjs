@@ -43,5 +43,5 @@ start("engine", "uv", [
   "8000",
 ]);
 
-console.log("[dev] web     → http://127.0.0.1:3000");
+console.log("[dev] web     → http://127.0.0.1:3000 (or next free port)");
 start("web", "pnpm", ["--dir", "web", "dev"]);

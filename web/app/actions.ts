@@ -10,12 +10,6 @@ function flash(path: string, message: string, kind: "ok" | "warn" | "err" = "ok"
   redirect(`${path}?msg=${encodeURIComponent(message)}&kind=${kind}`);
 }
 
-export async function loadExample(formData: FormData) {
-  const caseId = String(formData.get("case_id") || "");
-  if (!caseId) return;
-  redirect(`/review/${caseId}`);
-}
-
 export async function uploadCase(
   _prev: ActionState,
   formData: FormData,
@@ -73,34 +67,6 @@ export async function submitGate(
   return { ok: true, message: "Decisión registrada." };
 }
 
-export async function simulate(caseId: string) {
-  try {
-    await postJson(`/review/${caseId}/simulate`, {});
-  } catch (error) {
-    const detail = errorDetail(error);
-    flash(`/review/${caseId}`, detail.message, "err");
-  }
-  revalidatePath(`/review/${caseId}`);
-  revalidatePath("/");
-  flash(
-    `/review/${caseId}`,
-    "Simulación aplicada: el digest cambió y el agregado se retiró del portal.",
-    "warn",
-  );
-}
-
-export async function undoSimulation(caseId: string) {
-  try {
-    await postJson(`/review/${caseId}/simulate/undo`, {});
-  } catch (error) {
-    const detail = errorDetail(error);
-    flash(`/review/${caseId}`, detail.message, "err");
-  }
-  revalidatePath(`/review/${caseId}`);
-  revalidatePath("/");
-  flash(`/review/${caseId}`, "Simulación retirada.", "ok");
-}
-
 export async function verifyAll() {
   try {
     const data = await postJson<{ report: { case_id: string; quarantined: boolean }[] }>(
@@ -131,7 +97,7 @@ export async function createProfile(
   const yaml = String(formData.get("yaml") || "");
   const overwrite = formData.get("overwrite") === "on";
   if (!yaml.trim()) {
-    return { ok: false, message: "El editor YAML está vacío." };
+    return { ok: false, message: "El formulario está vacío." };
   }
   try {
     const result = await postJson<{ profile_id: string }>("/profiles", {

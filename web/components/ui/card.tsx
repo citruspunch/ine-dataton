@@ -5,18 +5,21 @@ import { cn } from "@/lib/utils";
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("rounded-md border border-line bg-card shadow-[0_1px_2px_rgba(20,24,31,.04)]", className)}
+      className={cn(
+        "rounded-xl border border-line bg-card shadow-[0_1px_2px_rgba(16,32,52,.05)]",
+        className,
+      )}
       {...props}
     />
   );
 }
 
 export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("px-5 pt-4 pb-2", className)} {...props} />;
+  return <div className={cn("border-b border-line px-5 py-4", className)} {...props} />;
 }
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn("text-[15px] font-semibold", className)} {...props} />;
+  return <h3 className={cn("text-[15px] font-semibold text-ink", className)} {...props} />;
 }
 
 export function CardDescription({
@@ -27,5 +30,11 @@ export function CardDescription({
 }
 
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("px-5 pb-5", className)} {...props} />;
+  return <div className={cn("px-5 py-4", className)} {...props} />;
+}
+
+export function CardFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("border-t border-line bg-[#fbfcfe] px-5 py-3", className)} {...props} />
+  );
 }

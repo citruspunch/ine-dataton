@@ -27,13 +27,6 @@ LICENSE_CHOICES = {
         "evidence": "Licencia declarada por el revisor al cargar el archivo.",
         "synthetic": False,
     },
-    "interno-fixture": {
-        "id": "interno-fixture",
-        "verified": True,
-        "attribution": "Fixture sintético del equipo. No es un dato oficial del INE.",
-        "evidence": "Fixture sintético generado por el equipo para pruebas.",
-        "synthetic": True,
-    },
     "sin-licencia": {
         "id": None,
         "verified": False,
@@ -133,7 +126,7 @@ def register_upload(
     }
     entry = {
         "id": upload_id,
-        "label": label or f"{name} · {profile_id}",
+        "label": label or name,
         "profile_id": profile_id,
         "original_name": name,
         "uploaded_at_utc": item["downloaded_at_utc"],

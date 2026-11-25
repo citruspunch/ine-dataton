@@ -1,49 +1,48 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Ubuntu_Sans, Ubuntu_Sans_Mono } from "next/font/google";
+
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 
 import "./globals.css";
 
+const sans = Ubuntu_Sans({
+  subsets: ["latin"],
+  variable: "--font-ubuntu-sans",
+  display: "swap",
+});
+
+const mono = Ubuntu_Sans_Mono({
+  subsets: ["latin"],
+  variable: "--font-ubuntu-mono",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "INE Data Trust",
-  description: "Validación técnica de agregados estadísticos publicados",
+  title: {
+    default: "INE Data Trust · Validación de agregados estadísticos",
+    template: "%s · INE Data Trust",
+  },
+  description:
+    "Validación técnica, con trazabilidad y decisión humana, de los agregados estadísticos publicados por el INE.",
+  applicationName: "INE Data Trust",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
-      <body>
-        <header className="border-b-4 border-brand-dark bg-brand text-white print:hidden">
-          <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-6 px-6">
-            <Link href="/" className="flex items-baseline gap-3">
-              <span className="text-lg font-semibold tracking-tight">
-                INE Data Trust
-              </span>
-            </Link>
-            <nav className="flex items-center gap-1 text-sm">
-              <Link
-                href="/review"
-                className="rounded px-3 py-1.5 text-brand-soft transition hover:bg-white/10 hover:text-white"
-              >
-                Revisión técnica
-              </Link>
-              <Link
-                href="/"
-                className="rounded px-3 py-1.5 text-brand-soft transition hover:bg-white/10 hover:text-white"
-              >
-                Consulta
-              </Link>
-            </nav>
-          </div>
-        </header>
-
-        <main className="mx-auto max-w-6xl px-6 py-8">{children}</main>
-
-        <footer className="mx-auto max-w-6xl px-6 pb-12 text-xs text-muted print:hidden">
-          <p>
-            Validación técnica. No certifica, no corrige, no publica en CKAN y no
-            constituye aprobación del INE. Los datos conservan su licencia original.
-          </p>
-        </footer>
+    <html lang="es" className={`${sans.variable} ${mono.variable}`}>
+      <body className="flex min-h-screen flex-col">
+        <a
+          href="#contenido"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+        >
+          Saltar al contenido
+        </a>
+        <SiteHeader />
+        <main id="contenido" className="mx-auto w-full max-w-6xl flex-1 px-5 py-10 sm:px-6">
+          {children}
+        </main>
+        <SiteFooter />
       </body>
     </html>
   );

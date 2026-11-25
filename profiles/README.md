@@ -11,8 +11,9 @@ uv run python -m engine.profiles                      # valida todos los contrat
 uv run python -m engine.profiles profiles/mi_contrato.yaml
 ```
 
-La misma validación se aplica al guardar desde la interfaz (**Añadir regla**), y
-devuelve errores por campo (`schema[2].type`, `dates.expected[0]`, …).
+La misma validación se aplica al guardar desde la interfaz (**Nueva regla**), donde
+un formulario guiado construye el YAML y devuelve errores por campo (`schema[2].type`,
+`dates.expected[0]`, …).
 
 ## Campos obligatorios
 
