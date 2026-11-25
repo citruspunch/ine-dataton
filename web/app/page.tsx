@@ -1,14 +1,14 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
-  CircleCheck,
-  CircleX,
+  CheckCircle,
   Database,
   FileText,
-  Layers,
-  LockKeyhole,
-} from "lucide-react";
+  LockKey,
+  SealCheck,
+  Stack,
+  XCircle,
+} from "@phosphor-icons/react/dist/ssr";
 
 import { EmptyState } from "@/components/empty-state";
 import { SectionHeading } from "@/components/page-header";
@@ -57,7 +57,7 @@ export default async function PublicIndexPage() {
               href="/review"
               className={buttonVariants({ variant: "secondary", size: "sm" })}
             >
-              <LockKeyhole className="h-3.5 w-3.5" aria-hidden />
+              <LockKey className="h-3.5 w-3.5" aria-hidden />
               Revisión técnica
             </Link>
           </div>
@@ -113,7 +113,7 @@ export default async function PublicIndexPage() {
                     </div>
                     <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-muted">
                       <span className="inline-flex items-center gap-1">
-                        <Layers className="h-3.5 w-3.5" aria-hidden />
+                        <Stack className="h-3.5 w-3.5" aria-hidden />
                         {aggregate.series_count}{" "}
                         {aggregate.series_count === 1 ? "serie" : "series"}
                       </span>
@@ -145,7 +145,7 @@ export default async function PublicIndexPage() {
           </ul>
         ) : (
           <EmptyState
-            icon={BadgeCheck}
+            icon={SealCheck}
             title="Todavía no hay agregados habilitados"
             action={
               <Link href="/review" className={buttonVariants({ size: "sm" })}>
@@ -166,22 +166,22 @@ export default async function PublicIndexPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-ok">
-                <CircleCheck className="h-4.5 w-4.5" aria-hidden />
+                <CheckCircle className="h-4.5 w-4.5" aria-hidden weight="duotone" />
                 Lo que sí hace
               </CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2.5 text-[13.5px] leading-relaxed text-ink">
                 <li className="flex gap-2">
-                  <CircleCheck className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
+                  <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
                   Muestra la cifra publicada por el INE, con su celda de origen.
                 </li>
                 <li className="flex gap-2">
-                  <CircleCheck className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
+                  <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
                   Separa base, periodo y unidad en cada respuesta.
                 </li>
                 <li className="flex gap-2">
-                  <CircleCheck className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
+                  <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
                   Solo publica agregados con una decisión vigente y auditable.
                 </li>
               </ul>
@@ -190,22 +190,22 @@ export default async function PublicIndexPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-fail">
-                <CircleX className="h-4.5 w-4.5" aria-hidden />
+                <XCircle className="h-4.5 w-4.5" aria-hidden weight="duotone" />
                 Lo que no hace
               </CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2.5 text-[13.5px] leading-relaxed text-ink">
                 <li className="flex gap-2">
-                  <CircleX className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
+                  <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
                   No calcula cifras nuevas ni empalmes propios.
                 </li>
                 <li className="flex gap-2">
-                  <CircleX className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
+                  <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
                   No certifica ni aprueba el dato oficial.
                 </li>
                 <li className="flex gap-2">
-                  <CircleX className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
+                  <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
                   No convierte un índice en pobreza, ingreso o crecimiento.
                 </li>
               </ul>

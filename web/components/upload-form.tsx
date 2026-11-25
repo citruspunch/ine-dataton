@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { FileSpreadsheet, UploadCloud, X } from "lucide-react";
+import { CloudArrowUp, FileXls, X } from "@phosphor-icons/react/dist/ssr";
 
 import { uploadCase } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -110,9 +110,9 @@ export function UploadForm({ profiles }: { profiles: ProfileSummary[] }) {
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-brand shadow-sm">
             {file ? (
-              <FileSpreadsheet className="h-5 w-5" aria-hidden />
+              <FileXls className="h-5 w-5" aria-hidden />
             ) : (
-              <UploadCloud className="h-5 w-5" aria-hidden />
+              <CloudArrowUp className="h-5 w-5" aria-hidden />
             )}
           </span>
           <span className="min-w-0 flex-1">

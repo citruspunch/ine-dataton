@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 import {
   ArrowLeft,
   ArrowUpRight,
-  CheckCircle2,
-  Download,
-  FileCheck2,
+  CheckCircle,
+  DownloadSimple,
+  FileMagnifyingGlass,
   Info,
-  Scale,
-  ShieldAlert,
-} from "lucide-react";
+  Scales,
+  ShieldWarning,
+} from "@phosphor-icons/react/dist/ssr";
 
 import { StateBadge } from "@/components/badges";
 import { DataList, DataRow } from "@/components/data-list";
@@ -98,7 +98,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
               href={`/api/review-receipt/${data.case_id}`}
               className={buttonVariants({ variant: "secondary", size: "sm" })}
             >
-              <Download className="h-3.5 w-3.5" aria-hidden />
+              <DownloadSimple className="h-3.5 w-3.5" aria-hidden />
               recibo.json
             </Link>
           </>
@@ -118,7 +118,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
 
       {query.msg ? (
         <Alert variant={query.kind === "err" ? "fail" : query.kind === "warn" ? "warn" : "ok"}>
-          <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden />
+          <CheckCircle className="h-4 w-4 shrink-0" aria-hidden />
           <span>{query.msg}</span>
         </Alert>
       ) : null}
@@ -128,7 +128,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileCheck2 className="h-4 w-4 text-brand" aria-hidden />
+                <FileMagnifyingGlass className="h-4 w-4 text-brand" aria-hidden />
                 Ficha del recurso
               </CardTitle>
               <CardDescription>
@@ -206,7 +206,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Scale className="h-4 w-4 text-brand" aria-hidden />
+                <Scales className="h-4 w-4 text-brand" aria-hidden />
                 Hallazgos por regla
               </CardTitle>
               <CardDescription>
@@ -222,7 +222,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <ShieldAlert className="h-4 w-4 text-brand" aria-hidden />
+                  <ShieldWarning className="h-4 w-4 text-brand" aria-hidden />
                   Comparaciones
                 </CardTitle>
                 <CardDescription>

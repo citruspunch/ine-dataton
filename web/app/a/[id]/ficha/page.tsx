@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft, DownloadSimple } from "@phosphor-icons/react/dist/ssr";
 
 import { SeverityBadge, StateBadge } from "@/components/badges";
 import { DataList, DataRow } from "@/components/data-list";
@@ -52,7 +52,7 @@ export default async function FichaPage({ params }: PageProps) {
           href={`/api/receipt/${aggregate.case_id}`}
           className={buttonVariants({ variant: "secondary", size: "sm" })}
         >
-          <Download className="h-3.5 w-3.5" aria-hidden />
+          <DownloadSimple className="h-3.5 w-3.5" aria-hidden />
           recibo.json
         </Link>
       </div>

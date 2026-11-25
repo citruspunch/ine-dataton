@@ -12,14 +12,14 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Braces,
-  CheckCircle2,
-  CircleAlert,
-  CopyPlus,
-  Loader2,
+  BracketsCurly,
+  CheckCircle,
+  CircleNotch,
+  CopySimple,
   Plus,
-  Trash2,
-} from "lucide-react";
+  Trash,
+  WarningCircle,
+} from "@phosphor-icons/react/dist/ssr";
 
 import { createProfile, validateProfileYaml } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -629,7 +629,7 @@ export function NewProfileDialog() {
                         }
                         aria-label="Quitar columna"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
@@ -782,7 +782,7 @@ export function NewProfileDialog() {
                         }
                         aria-label="Quitar serie"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash className="h-4 w-4" />
                       </Button>
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
@@ -917,7 +917,7 @@ export function NewProfileDialog() {
                         }
                         aria-label="Quitar comparación"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash className="h-4 w-4" />
                       </Button>
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
@@ -1050,7 +1050,7 @@ export function NewProfileDialog() {
 
             <details className="rounded-lg border border-line bg-[#fbfcfe] px-4 py-3">
               <summary className="flex cursor-pointer list-none items-center gap-2 text-[13px] font-semibold text-brand">
-                <Braces className="h-4 w-4" aria-hidden />
+                <BracketsCurly className="h-4 w-4" aria-hidden />
                 Vista previa del YAML generado
               </summary>
               <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-md bg-[#0e1b2c] p-3 font-mono text-[11.5px] leading-relaxed text-[#dbe7f5]">
@@ -1078,17 +1078,17 @@ export function NewProfileDialog() {
               >
                 {checking ? (
                   <>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden />
+                    <CircleNotch className="h-3.5 w-3.5 animate-spin" aria-hidden />
                     Validando el contrato…
                   </>
                 ) : liveValid ? (
                   <>
-                    <CheckCircle2 className="h-3.5 w-3.5" aria-hidden />
+                    <CheckCircle className="h-3.5 w-3.5" aria-hidden />
                     El contrato es válido y puede guardarse.
                   </>
                 ) : (
                   <>
-                    <CircleAlert className="h-3.5 w-3.5" aria-hidden />
+                    <WarningCircle className="h-3.5 w-3.5" aria-hidden />
                     {liveErrors.length} error(es) de validación.
                   </>
                 )}
@@ -1115,7 +1115,7 @@ export function NewProfileDialog() {
                 <Button type="submit" disabled={pending}>
                   {pending ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                      <CircleNotch className="h-4 w-4 animate-spin" aria-hidden />
                       Guardando…
                     </>
                   ) : (
@@ -1257,7 +1257,7 @@ function PeriodsInput({
           className="max-w-[180px]"
         />
         <Button type="button" variant="secondary" onClick={add} disabled={!valid}>
-          <CopyPlus className="h-4 w-4" aria-hidden />
+          <CopySimple className="h-4 w-4" aria-hidden />
           Añadir
         </Button>
       </div>
@@ -1275,7 +1275,7 @@ function PeriodsInput({
                 className="rounded-full p-0.5 text-muted hover:bg-fail-bg hover:text-fail"
                 aria-label={`Quitar ${period}`}
               >
-                <Trash2 className="h-3 w-3" />
+                <Trash className="h-3 w-3" />
               </button>
             </span>
           ))}
@@ -1291,7 +1291,7 @@ function AlertList({ title, items }: { title: string; items: string[] }) {
   return (
     <div className="rounded-md border border-[#e7bdb9] bg-fail-bg px-3 py-2 text-[12.5px] text-fail">
       <p className="flex items-center gap-1.5 font-semibold">
-        <CircleAlert className="h-3.5 w-3.5" aria-hidden />
+        <WarningCircle className="h-3.5 w-3.5" aria-hidden />
         {title}
       </p>
       <ul className="mt-1 list-disc space-y-0.5 pl-5">

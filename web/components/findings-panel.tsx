@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown, CircleAlert } from "lucide-react";
+import { CaretDown, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 
 import { SeverityBadge } from "@/components/badges";
 import { Badge } from "@/components/ui/badge";
@@ -81,7 +81,7 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
                       <p className="mt-1 font-mono text-[11px] text-muted/80">{finding.rule_id}</p>
                     </div>
                   </div>
-                  <ChevronDown
+                  <CaretDown
                     className="mt-1 h-4 w-4 shrink-0 text-muted transition-transform group-open:rotate-180"
                     aria-hidden
                   />
@@ -109,7 +109,7 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
         </ul>
       ) : (
         <p className="flex items-center gap-2 px-4 py-6 text-[13px] text-muted">
-          <CircleAlert className="h-4 w-4" aria-hidden />
+          <WarningCircle className="h-4 w-4" aria-hidden />
           No hay hallazgos en esta categoría.
         </p>
       )}

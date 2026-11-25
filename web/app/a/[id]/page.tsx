@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 import {
   ArrowLeft,
   ArrowUpRight,
-  CalendarRange,
-  Download,
+  CalendarDots,
+  DownloadSimple,
   FileText,
   Hash,
-  Layers,
   ShieldCheck,
-} from "lucide-react";
+  Stack,
+} from "@phosphor-icons/react/dist/ssr";
 
 import { StateBadge } from "@/components/badges";
 import { DataList, DataRow } from "@/components/data-list";
@@ -44,9 +44,9 @@ export default async function PublicDetailPage({ params }: PageProps) {
   const series: Series[] = entity.series ?? [];
 
   const facts = [
-    { label: "Periodo", value: entity.display.period ?? "—", icon: CalendarRange },
+    { label: "Periodo", value: entity.display.period ?? "—", icon: CalendarDots },
     { label: "Base", value: entity.display.base ?? "—", icon: Hash },
-    { label: "Unidad", value: entity.display.unit ?? "—", icon: Layers },
+    { label: "Unidad", value: entity.display.unit ?? "—", icon: Stack },
     {
       label: "Licencia",
       value: entity.license.id || "sin licencia",
@@ -89,7 +89,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
               href={`/api/receipt/${aggregate.case_id}`}
               className={buttonVariants({ variant: "secondary", size: "sm" })}
             >
-              <Download className="h-3.5 w-3.5" aria-hidden />
+              <DownloadSimple className="h-3.5 w-3.5" aria-hidden />
               recibo.json
             </Link>
           </>

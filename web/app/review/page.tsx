@@ -1,13 +1,13 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
-  CircleAlert,
-  ClipboardList,
-  FilePlus2,
-  Inbox,
-  Layers3,
-} from "lucide-react";
+  ClipboardText,
+  FilePlus,
+  SealCheck,
+  StackSimple,
+  Tray,
+  WarningCircle,
+} from "@phosphor-icons/react/dist/ssr";
 
 import { verifyAll } from "@/app/actions";
 import { StateBadge } from "@/components/badges";
@@ -66,13 +66,13 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
 
       {params.msg ? (
         <Alert variant={params.kind === "err" ? "fail" : params.kind === "warn" ? "warn" : "ok"}>
-          <BadgeCheck className="h-4 w-4 shrink-0" aria-hidden />
+          <SealCheck className="h-4 w-4 shrink-0" aria-hidden />
           <span>{params.msg}</span>
         </Alert>
       ) : null}
       {error ? (
         <Alert variant="warn">
-          <CircleAlert className="h-4 w-4 shrink-0" aria-hidden />
+          <WarningCircle className="h-4 w-4 shrink-0" aria-hidden />
           <span>{error}</span>
         </Alert>
       ) : null}
@@ -81,7 +81,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <FilePlus2 className="h-4 w-4 text-brand" aria-hidden />
+              <FilePlus className="h-4 w-4 text-brand" aria-hidden />
               Cargar un archivo
             </CardTitle>
             <CardDescription>
@@ -98,7 +98,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
           <CardHeader className="flex items-start justify-between gap-3">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <ClipboardList className="h-4 w-4 text-brand" aria-hidden />
+                <ClipboardText className="h-4 w-4 text-brand" aria-hidden />
                 Perfiles declarativos
               </CardTitle>
               <CardDescription>
@@ -261,11 +261,11 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
           </>
         ) : (
           <EmptyState
-            icon={Inbox}
+            icon={Tray}
             title="La bandeja está vacía"
             action={
               <span className="inline-flex items-center gap-2 text-[13px] text-muted">
-                <Layers3 className="h-4 w-4" aria-hidden />
+                <StackSimple className="h-4 w-4" aria-hidden />
                 Cargue un archivo para iniciar la primera revisión.
               </span>
             }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FileQuestion } from "lucide-react";
+import { FileDashed } from "@phosphor-icons/react/dist/ssr";
 
 import { buttonVariants } from "@/components/ui/button";
 
@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <div className="mx-auto flex max-w-xl flex-col items-center gap-4 py-20 text-center">
       <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand">
-        <FileQuestion className="h-6 w-6" aria-hidden />
+        <FileDashed className="h-6 w-6" aria-hidden weight="duotone" />
       </span>
       <h1 className="text-2xl font-semibold tracking-tight">No encontramos ese recurso</h1>
       <p className="text-[14px] leading-relaxed text-muted">

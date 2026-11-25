@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { CircleAlert, ShieldCheck } from "lucide-react";
+import { ShieldCheck, WarningCircle } from "@phosphor-icons/react/dist/ssr";
 
 import { submitGate } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -60,7 +60,7 @@ export function GateForm({
       {blocked ? (
         <div className="rounded-lg border border-[#e7bdb9] bg-fail-bg px-4 py-3 text-[13px] text-fail">
           <p className="flex items-center gap-1.5 font-semibold">
-            <CircleAlert className="h-4 w-4" aria-hidden />
+            <WarningCircle className="h-4 w-4" aria-hidden />
             No habilitable todavía
           </p>
           <ul className="mt-1.5 list-disc space-y-0.5 pl-5">

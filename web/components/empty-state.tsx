@@ -1,4 +1,4 @@
-import type { LucideIcon } from "lucide-react";
+import type { Icon } from "@phosphor-icons/react";
 
 export function EmptyState({
   icon: Icon,
@@ -6,7 +6,7 @@ export function EmptyState({
   children,
   action,
 }: {
-  icon: LucideIcon;
+  icon: Icon;
   title: string;
   children?: React.ReactNode;
   action?: React.ReactNode;
@@ -14,7 +14,7 @@ export function EmptyState({
   return (
     <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-[#c9d6e6] bg-white px-6 py-12 text-center">
       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-soft text-brand">
-        <Icon className="h-5 w-5" aria-hidden />
+        <Icon className="h-5 w-5" aria-hidden weight="duotone" />
       </span>
       <div className="space-y-1">
         <p className="text-[15px] font-semibold text-ink">{title}</p>
