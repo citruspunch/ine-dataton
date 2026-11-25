@@ -5,8 +5,8 @@ import { CalendarRange, Flame, GitMerge, Info, Users } from "lucide-react";
 import { SourcesDialog } from "@/components/sources-dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { basketData } from "@/lib/data";
-import { formatNumber } from "@/lib/format";
+import { basketData, lastDataUpdate } from "@/lib/data";
+import { formatNumber, formatUtcStamp } from "@/lib/format";
 
 const FACTS = [
   {
@@ -91,7 +91,17 @@ export function NoticeBanner() {
           ))}
         </ul>
         <p className="mt-2 text-[10.5px] leading-relaxed text-muted-foreground/90">
-          Referencias calóricas de la canasta:{" "}
+          Fuente: Instituto Nacional de Estadística (INE) ·{" "}
+          <a
+            href="https://datos.ine.gob.gt"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary underline-offset-2 hover:underline"
+          >
+            datos.ine.gob.gt
+          </a>{" "}
+          · descarga {formatUtcStamp(lastDataUpdate())} · licencias: CC BY 4.0
+          (IPC) y sin licencia declarada en CKAN (CBA, © INE). Referencias:{" "}
           {formatNumber(meta.areas.Urbana.referenceKcal)} kcal/día urbanas y{" "}
           {formatNumber(meta.areas.Rural.referenceKcal)} kcal/día rurales por
           persona. Cálculos propios; no son cifras oficiales del INE.

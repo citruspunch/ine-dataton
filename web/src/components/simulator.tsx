@@ -6,6 +6,7 @@ import { CalendarClock, RotateCcw } from "lucide-react";
 import { ControlPanel } from "@/components/control-panel";
 import { GroupChart } from "@/components/group-chart";
 import { MethodAlert } from "@/components/method-alert";
+import { MethodologyBreakAlert } from "@/components/methodology-break-alert";
 import { NoticeBanner } from "@/components/notice-banner";
 import { ProductsTable } from "@/components/products-table";
 import { SiteFooter } from "@/components/site-footer";
@@ -158,6 +159,8 @@ export function Simulator() {
                 month={month}
                 variation={variation}
               />
+
+              <MethodologyBreakAlert visible={period === meta.period.first} />
 
               <GroupChart
                 area={area}
