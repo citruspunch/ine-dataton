@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  /* Official Datatón 2026 palette, taken from the INE design kit. */
+  --color-ink: #1a1a1a;
+  --color-muted: #4d4d4d;
+  --color-line: #d9d9d9;
+  --color-surface: #f5f5f5;
+  --color-card: #ffffff;
+  --color-brand: #004080;
+  --color-brand-dark: #002b56;
+  --color-brand-soft: #e6f2ff;
+  --color-accent: #0080ff;
+  --color-accent-soft: #e5f2ff;
+
+  /* Secondary tones: naranja, verde, lila y amarillo. */
+  --color-orange: #ff5500;
+  --color-lime: #9dd926;
+  --color-lilac: #a97eff;
+  --color-yellow: #ffd500;
+
+  --color-ok: #3f560f;
+  --color-ok-bg: #eef7d6;
+  --color-warn: #6b4a00;
+  --color-warn-bg: #fff4cc;
+  --color-fail: #802b00;
+  --color-fail-bg: #ffe4d9;
+  --color-none: #4d4d4d;
+  --color-none-bg: #ededed;
+  --color-syn: #6633cc;
+  --color-syn-bg: #efe8ff;
+
+  --font-sans: var(--font-ubuntu-sans), "Ubuntu Sans", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: #cce6ff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+  a {
+    color: var(--color-brand);
+  }
+}
+
+@layer components {
+  .prose-note {
+    color: var(--color-muted);
+    font-size: 13px;
+  }
+  .hairline-grid {
+    background-image:
+      linear-gradient(to right, rgba(0, 64, 128, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 64, 128, 0.055) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+}
+
+@media print {
+  @page {
+    margin: 18mm 16mm;
+  }
+  body {
+    background: #fff;
+    font-size: 11.5pt;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}

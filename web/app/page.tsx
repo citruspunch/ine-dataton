@@ -1,0 +1,233 @@
+import Link from "next/link";
+import {
+  ArrowRight,
+  CheckCircle,
+  Database,
+  FileText,
+  LockKey,
+  SealCheck,
+  Stack,
+  XCircle,
+} from "@phosphor-icons/react/dist/ssr";
+
+import { EmptyState } from "@/components/empty-state";
+import { SectionHeading } from "@/components/page-header";
+import { StateBadge } from "@/components/badges";
+import { Alert } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getJson } from "@/lib/api";
+import type { AggregateSummary } from "@/lib/types";
+
+export const dynamic = "force-dynamic";
+
+export default async function PublicIndexPage() {
+  let snapshot: { snapshot_id: string | null; aggregates: AggregateSummary[] } | null = null;
+  try {
+    snapshot = await getJson("/public");
+  } catch {
+    snapshot = null;
+  }
+
+  const aggregates = snapshot?.aggregates ?? [];
+
+  return (
+    <div className="space-y-10">
+      <section className="overflow-hidden rounded-2xl border border-line bg-white">
+        <div className="grid md:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
+          <div className="hairline-grid px-6 py-10 sm:px-10 sm:py-12">
+            <h1 className="max-w-2xl text-[32px] font-semibold leading-[1.15] tracking-tight text-ink sm:text-[40px]">
+              Agregados estadísticos habilitados para consulta
+            </h1>
+            <p className="mt-4 max-w-2xl text-[16px] leading-relaxed text-muted">
+              Cifras publicadas por el INE que pasaron las reglas críticas, tienen licencia
+              verificada y cuentan con una decisión humana. Cada ficha incluye la fuente,
+              la base y el digest de validación.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <Badge variant="info" className="font-mono">
+                corte {snapshot?.snapshot_id ?? "no disponible"}
+              </Badge>
+              <span className="text-[14px] text-muted">
+                {aggregates.length}{" "}
+                {aggregates.length === 1 ? "agregado habilitado" : "agregados habilitados"}
+              </span>
+              <Link
+                href="/review"
+                className={buttonVariants({ variant: "secondary", size: "sm" })}
+              >
+                <LockKey className="h-3.5 w-3.5" aria-hidden />
+                Revisión técnica
+              </Link>
+            </div>
+          </div>
+
+          <div className="hidden flex-col justify-between gap-10 bg-brand p-8 text-white md:flex">
+            <img
+              src="/ine-isologo-negative.svg"
+              alt=""
+              width={540}
+              height={540}
+              aria-hidden
+              className="h-20 w-20"
+            />
+            <div className="space-y-2">
+              <p className="text-[17px] font-semibold leading-snug">
+                Consulte las cifras y sus recibos de validación.
+              </p>
+              <p className="text-[13.5px] leading-relaxed text-white/80">
+                Instituto Nacional de Estadística · Guatemala
+              </p>
+            </div>
+            <div className="flex items-center gap-2" aria-hidden>
+              <span className="h-1.5 w-12 rounded-full bg-white" />
+              <span className="h-1.5 w-8 rounded-full bg-white/70" />
+              <span className="h-1.5 w-5 rounded-full bg-orange" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {!snapshot ? (
+        <Alert variant="warn">
+          <Database className="h-4 w-4 shrink-0" aria-hidden />
+          <span>
+            El servicio de validación no responde. Vuelva a cargar la página.
+          </span>
+        </Alert>
+      ) : null}
+
+      <section className="space-y-4">
+        <SectionHeading
+          title="Agregados habilitados"
+          description="Agregados con una decisión de habilitación vigente."
+          actions={
+            <span className="text-[13.5px] text-muted">
+              Actualizado con el corte <span className="font-mono">{snapshot?.snapshot_id ?? "sin dato"}</span>
+            </span>
+          }
+        />
+
+        {aggregates.length ? (
+          <ul className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
+            {aggregates.map((aggregate) => (
+              <li key={aggregate.case_id}>
+                <div className="flex flex-col gap-4 px-5 py-4 transition-colors hover:bg-[#f7f7f7] sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link
+                        href={`/a/${aggregate.case_id}`}
+                        className="text-[16.5px] font-semibold text-brand hover:underline"
+                      >
+                        {aggregate.title || aggregate.label}
+                      </Link>
+                      {aggregate.topic === "ipc" ? (
+                        <Badge variant="accent">IPC</Badge>
+                      ) : null}
+                      <StateBadge state={aggregate.state} text={aggregate.state_text} />
+                    </div>
+                    <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-muted">
+                      <span className="inline-flex items-center gap-1">
+                        <Stack className="h-3.5 w-3.5" aria-hidden />
+                        {aggregate.series_count}{" "}
+                        {aggregate.series_count === 1 ? "serie" : "series"}
+                      </span>
+                      <span>{aggregate.period ?? "periodo no declarado"}</span>
+                      <span className="font-mono text-[12.5px] text-muted/80">
+                        {aggregate.case_id}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
+                    <Link
+                      href={`/a/${aggregate.case_id}/ficha`}
+                      className={buttonVariants({ variant: "secondary", size: "sm" })}
+                    >
+                      <FileText className="h-3.5 w-3.5" aria-hidden />
+                      Ficha
+                    </Link>
+                    <Link
+                      href={`/a/${aggregate.case_id}`}
+                      className={buttonVariants({ variant: "default", size: "sm" })}
+                    >
+                      Consultar
+                      <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+                    </Link>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <EmptyState
+            icon={SealCheck}
+            title="Todavía no hay agregados habilitados"
+            action={
+              <Link href="/review" className={buttonVariants({ size: "sm" })}>
+                Abrir la bandeja de revisión
+              </Link>
+            }
+          >
+            Para publicar un agregado, debe pasar las reglas críticas y recibir una
+            decisión de habilitación.
+          </EmptyState>
+        )}
+      </section>
+
+      <section className="space-y-4">
+        <SectionHeading title="Cómo leer esta consulta" />
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-ok">
+                <CheckCircle className="h-4.5 w-4.5" aria-hidden weight="duotone" />
+                Lo que sí hace
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2.5 text-[14.5px] leading-relaxed text-ink">
+                <li className="flex gap-2">
+                  <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
+                  Muestra la cifra publicada por el INE, con su celda de origen.
+                </li>
+                <li className="flex gap-2">
+                  <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
+                  Separa base, periodo y unidad en cada respuesta.
+                </li>
+                <li className="flex gap-2">
+                  <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
+                  Solo publica agregados con una decisión vigente y su recibo.
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-fail">
+                <XCircle className="h-4.5 w-4.5" aria-hidden weight="duotone" />
+                Lo que no hace
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2.5 text-[14.5px] leading-relaxed text-ink">
+                <li className="flex gap-2">
+                  <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
+                  No calcula cifras nuevas ni empalmes propios.
+                </li>
+                <li className="flex gap-2">
+                  <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
+                  No certifica ni aprueba el dato oficial.
+                </li>
+                <li className="flex gap-2">
+                  <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
+                  No convierte un índice en pobreza, ingreso o crecimiento.
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+    </div>
+  );
+}

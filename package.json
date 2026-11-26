@@ -1,0 +1,20 @@
+{
+  "name": "ine-data-trust",
+  "version": "2.0.0",
+  "private": true,
+  "description": "INE Data Trust: technical validation of published statistical aggregates",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:engine": "uv run uvicorn engine.api:app --host 127.0.0.1 --port 8000 --reload",
+    "dev:web": "pnpm --dir web dev",
+    "prepare": "uv run python -m engine.prepare --offline",
+    "verify": "uv run python -m engine.cli verify",
+    "test": "pnpm run test:engine && pnpm run test:web",
+    "test:engine": "uv run pytest -q",
+    "test:web": "pnpm --dir web run typecheck",
+    "build:web": "pnpm --dir web run build",
+    "profiles:check": "uv run python -m engine.profiles",
+    "mcp": "uv run python mcp/server.py",
+    "licenses": "uv run python -m engine.licenses"
+  }
+}

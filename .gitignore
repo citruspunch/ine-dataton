@@ -1,51 +1,49 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# --- Python (uv) ---
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+uv.lock.bak
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# local env files
-.env*.local
-.env
-
-# vercel
-.vercel
-
-# typescript
+# --- Node.js (pnpm) ---
+node_modules/
+.next/
+out/
+.turbo/
 *.tsbuildinfo
 next-env.d.ts
 
-# cache
-.cache
-.eslintcache
-.turbo
-.swc
+# --- Operating system and office suites ---
+.DS_Store
+*.log
+~$*
+.~lock.*
+*.tmp
+*.swp
 
-# Descubrimiento INE (datos crudos, temporales)
+# --- Local configuration and secrets ---
+.env
+.env*.local
+*.pem
+
+# --- Data discovery: not part of the submission ---
 /discovery_ine/
+
+# --- Transient session artifacts ---
+# Uploaded files, generated rule profiles and every artifact derived from
+# them are session state and are not versioned.
+/profiles/*.yaml
+/profiles/*.yml
+/stores/review_store/uploads/
+/stores/review_store/receipts/
+/stores/review_store/decisions/
+/stores/review_store/overrides/
+/stores/review_store/quarantine/
+/stores/public_snapshot/aggregates/
+/stores/public_snapshot/receipts/
+/stores/public_snapshot/index.json
