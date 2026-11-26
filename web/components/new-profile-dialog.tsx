@@ -796,27 +796,32 @@ export function NewProfileDialog({
                 </div>
               </Section>
 
-              <Section
-                number="07"
-                title="Presentación pública"
-                description="Texto para la consulta pública. Si lo deja vacío, se usarán los datos declarados arriba."
-              >
+              <Section number="07" title="Presentación pública">
                 <div className="grid gap-4 sm:grid-cols-3">
-                  <Field label="Periodo mostrado">
+                  <Field
+                    label="Periodo mostrado"
+                    tooltip="Texto opcional para mostrar el periodo en la consulta pública. Si queda vacío, se usa el periodo declarado en el contrato."
+                  >
                     <Input
                       value={draft.displayPeriod}
                       onChange={(event) => update("displayPeriod", event.target.value)}
                       placeholder="diciembre 2024 y enero 2025"
                     />
                   </Field>
-                  <Field label="Base mostrada">
+                  <Field
+                    label="Base mostrada"
+                    tooltip="Etiqueta opcional de base de referencia para la vista pública. Si queda vacía, se toma la base declarada en el perfil."
+                  >
                     <Input
                       value={draft.displayBase}
                       onChange={(event) => update("displayBase", event.target.value)}
                       placeholder="2024=100"
                     />
                   </Field>
-                  <Field label="Unidad mostrada">
+                  <Field
+                    label="Unidad mostrada"
+                    tooltip="Etiqueta opcional de unidad para la consulta pública. Si queda vacía, se usa la unidad declarada en el perfil."
+                  >
                     <Input
                       value={draft.displayUnit}
                       onChange={(event) => update("displayUnit", event.target.value)}
