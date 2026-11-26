@@ -8,7 +8,6 @@ import {
   FileMagnifyingGlass,
   Info,
   Scales,
-  ShieldWarning,
 } from "@phosphor-icons/react/dist/ssr";
 
 import { StateBadge } from "@/components/badges";
@@ -16,6 +15,7 @@ import { DataList, DataRow } from "@/components/data-list";
 import { FindingsPanel } from "@/components/findings-panel";
 import { GateForm } from "@/components/gate-form";
 import { PageHeader } from "@/components/page-header";
+import { VariablesSummary } from "@/components/variables-summary";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/card";
 import { getJson } from "@/lib/api";
 import type { ReviewPayload } from "@/lib/types";
-import { formatPct } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -202,6 +201,8 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
             </CardContent>
           </Card>
 
+          <VariablesSummary summary={entity.variables_summary} />
+
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -217,86 +218,6 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
             </CardContent>
           </Card>
 
-          {data.comparisons.length ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ShieldWarning className="h-4 w-4 text-brand" aria-hidden />
-                  Comparaciones
-                </CardTitle>
-                <CardDescription>
-                  Valores calculados para la revisión. El sistema no copia los bloqueados al
-                  corte público.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {data.comparisons.map((comparison) => {
-                  const evidence = (comparison.evidence ?? {}) as Record<string, unknown>;
-                  const privateEvidence = (comparison.private_evidence ?? {}) as Record<
-                    string,
-                    unknown
-                  >;
-                  const computed = privateEvidence.computed_pct;
-                  return (
-                    <div
-                      key={comparison.comparison_id}
-                      className="rounded-lg border border-line bg-[#fafafa] p-4"
-                    >
-                      <div className="flex flex-wrap items-start justify-between gap-2">
-                        <div>
-                          <p className="text-[14.5px] font-semibold text-ink">
-                            {comparison.label}
-                          </p>
-                          <p className="mt-0.5 font-mono text-[12px] text-muted">
-                            {comparison.comparison_id}
-                          </p>
-                        </div>
-                        <Badge variant={comparison.status === "ok" ? "ok" : "warn"}>
-                          {comparison.status === "ok" ? "verificada" : "bloqueada"}
-                        </Badge>
-                      </div>
-                      <p className="mt-2 text-[13.5px] leading-relaxed text-muted">
-                        {comparison.reason}
-                      </p>
-                      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                        <div className="rounded-md border border-line bg-white px-3 py-2">
-                          <p className="text-[11.5px] font-bold text-muted">
-                            {comparison.status === "ok" ? "Variación publicada" : "Cálculo de revisión"}
-                          </p>
-                          <p className="mt-0.5 text-[16px] font-semibold text-ink">
-                            {comparison.status === "ok"
-                              ? formatPct(evidence.published_pct as number)
-                              : computed !== undefined
-                                ? formatPct(computed as number)
-                                : "Sin dato"}
-                          </p>
-                          {comparison.status === "ok" && evidence.published_cell ? (
-                            <p className="font-mono text-[12px] text-muted">
-                              celda {String(evidence.published_cell)}
-                            </p>
-                          ) : comparison.status !== "ok" ? (
-                            <p className="text-[12px] text-warn">solo revisión</p>
-                          ) : null}
-                        </div>
-                        <details className="rounded-md border border-line bg-white px-3 py-2">
-                          <summary className="cursor-pointer text-[13px] font-semibold text-brand">
-                            Evidencia
-                          </summary>
-                          <pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap break-words font-mono text-[12px] leading-relaxed">
-                            {JSON.stringify(
-                              Object.keys(privateEvidence).length ? privateEvidence : evidence,
-                              null,
-                              2,
-                            )}
-                          </pre>
-                        </details>
-                      </div>
-                    </div>
-                  );
-                })}
-              </CardContent>
-            </Card>
-          ) : null}
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">

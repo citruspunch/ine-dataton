@@ -1,10 +1,8 @@
-"""P0.3: IPC comparability validated at review time."""
+"""Contract validation for the IPC profiles and their variables summary."""
 
 from __future__ import annotations
 
 import json
-
-import pytest
 
 from engine import rules
 from engine.model import OK
@@ -20,34 +18,27 @@ def test_full_ipc_contract():
     )
 
 
-def test_valid_comparison_uses_published_variation():
+def test_summary_reports_units_references_and_counts():
     result = rules.validate("ipc_empalme", write_receipt=False)
-    valid = next(c for c in result.comparisons if c.comparison_id == "mensual_ene_2025")
-    assert valid.status == "ok"
-    assert valid.public_evidence["computed_pct"] == pytest.approx(0.501463, abs=1e-6)
-    assert valid.public_evidence["published_pct"] == pytest.approx(0.501463, abs=1e-6)
-    assert valid.public_evidence["published_cell"] == "G504"
+    summary = result.entity["variables_summary"]
+    assert summary["row_count"] == 524
+    columns = {column["name"]: column for column in summary["columns"]}
+    assert columns["f_index"]["unit"] == "índice"
+    assert columns["f_index"]["reference"] == "2024=100"
+    assert columns["e_index"]["reference"] == "Diciembre 2023=100"
+    assert columns["g_monthly"]["unit"] == "porcentaje"
+    assert columns["g_monthly"]["nullable"] is True
+    assert columns["f_index"]["valid_count"] == 524
+    assert columns["f_index"]["null_count"] == 0
+    assert columns["f_index"]["excluded_count"] == 0
+    assert summary["coverage"]["period"] == "diciembre 2024 y enero 2025"
+    assert "bases" in summary["coverage"]["notes"]
 
 
-def test_invalid_comparison_is_blocked():
-    result = rules.validate("ipc_empalme", write_receipt=False)
-    blocked = next(
-        c for c in result.comparisons if c.comparison_id == "cruce_bases_e_f"
-    )
-    assert blocked.status == "bloqueada"
-    assert blocked.private_evidence["computed_pct"] == pytest.approx(
-        -0.673802, abs=1e-6
-    )
-    assert blocked.private_evidence["display_public"] is False
-    assert "IPC-01" in blocked.rules
-
-
-def test_invalid_number_never_reaches_public_evidence():
+def test_public_payload_has_no_comparison_or_series_model():
     result = rules.validate("ipc_empalme", write_receipt=False)
     public = json.dumps(result.to_public_dict(), ensure_ascii=False)
-    assert "0.6738" not in public
-    assert "0,67" not in public
-    blocked = next(
-        c for c in result.comparisons if c.comparison_id == "cruce_bases_e_f"
-    )
-    assert "computed_pct" not in blocked.public_evidence
+    assert "comparisons" not in public
+    assert "comparison_id" not in public
+    assert "series" not in public
+    assert "computed_pct" not in public

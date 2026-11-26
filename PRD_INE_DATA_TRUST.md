@@ -11,7 +11,7 @@
 
 INE Data Trust validates published statistical aggregates before release or consumption, and exposes approved aggregates through a read-only snapshot. It acts as a technical check aligned with Procedure 18, not a replacement for `datos.ine.gob.gt`.
 
-The system checks files against declarative YAML contracts, flags SHA-256 identity mismatches, blocks invalid comparisons across incompatible CPI base years, records human gate sign-offs, computes a timestamp-free `decision_basis_digest`, and exports a technical receipt. It does not publish to CKAN, does not process or anonymize raw microdata, does not auto-correct data values, and does not certify data on behalf of INE.
+The system checks files against declarative YAML contracts, flags SHA-256 identity mismatches, summarizes declared variables, units and reference scopes, records human gate sign-offs, computes a timestamp-free `decision_basis_digest`, and exports a technical receipt. It does not publish to CKAN, does not process or anonymize raw microdata, does not auto-correct data values, and does not certify data on behalf of INE.
 
 ---
 
@@ -46,7 +46,7 @@ PRD_INE_DATA_TRUST.md
 3.1 Rule profile selector, YAML editor, and file upload
 Profile dropdown: Lists existing YAML contracts from profiles/ (such as ipc_empalme_republica_v1.yaml, ipc_regional_v1.yaml, and contrato_mensual_v1.yaml).
 Add new rule button: Opens a shadcn/ui dialog with a YAML editor and a local .yaml or .yml upload control.
-Contract validation: Before saving a new profile to profiles/, the Python engine checks YAML syntax, required fields (expected_sheet, header_row, schema, types, grain, dates, comparability), and allowed column types (integer, float, string, date), returning clear field errors on invalid input.
+Contract validation: Before saving a new profile to profiles/, the Python engine checks YAML syntax, required fields (expected_sheet, header_row, schema, types, grain, dates), column metadata (unit, reference scope, nullable, notes), and allowed column types (integer, float, string, date), returning clear field errors on invalid input.
 
 PRD_INE_DATA_TRUST.md
 3.2 Review queue and live file validation (stores/review_store/)
@@ -57,7 +57,7 @@ INVENTARIO_DATOS_INE.md
 Second real CPI dataset (ipc_porreg_es25.xlsx or ipc_divgasto_25.xlsx) validated using a second YAML profile without changing Python validation code.   
 INVENTARIO_DATOS_INE.md
 + 1
-Blocked cross-base CPI comparison (E503 vs. F504 yielding -0.67%, blocked in public view).   
+Variables and units summary (E and F indices with their own bases, plus published monthly variation G).
 PRD_INE_DATA_TRUST.md
 Synthetic failure fixtures: missing required column, duplicate grain, unexpected sheet name (expected_sheet vs. observed_sheets), and SHA-256 collision with mismatched identity.   
 PRD_INE_DATA_TRUST.md
@@ -72,14 +72,14 @@ Live invalidation test: Include a button in review that mutates a candidate byte
 
 PRD_INE_DATA_TRUST.md
 3.4 Public snapshot view and receipt export (stores/public_snapshot/)
-Approved items only: Renders aggregates promoted through the human gate, with source, URL, UTC download timestamp, license (CC-BY where verified), base, period, and decision_basis_digest.
-Safe CPI period comparator: Compares two enabled periods only when their bases are compatible, and blocks cross-base comparisons with a methodological explanation.
+Approved items only: Renders aggregates promoted through the human gate, with source, URL, UTC download timestamp, license (CC-BY where verified), base, period, variables and units summary, and decision_basis_digest.
+Variables and units summary: Declares each column's internal name, header, type, unit, reference base or scope, nullability and notes, with valid, null and excluded counts plus coverage or caveat notes. It is dataset-agnostic.
 Exports: Exports receipt.json (separating technical_payload and decision_log) and a clean printable validation sheet for Procedure 18 tickets.
 
 PRD_INE_DATA_TRUST.md
 3.5 Optional P1 read-only MCP server (mcp/)
 Cutoff and isolation: Optional P1 component evaluated on November 25 at 12:00. Runs over stdio using the Python MCP SDK with uv run, reading only stores/public_snapshot/.
-Boundaries: No access to stores/review_store/, no write operations, no remote calls, and no embedded LLM. Exposes list_enabled_aggregates and query_ipc_period_comparison using the public snapshot contract.
+Boundaries: No access to stores/review_store/, no write operations, no remote calls, and no embedded LLM. Exposes list_enabled_aggregates and get_aggregate_receipt using the public snapshot contract, including the variables and units summary.
 
 PRD_INE_DATA_TRUST.md
 4. States, compliance, and deliverables

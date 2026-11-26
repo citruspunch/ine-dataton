@@ -43,10 +43,17 @@ def test_unpublished_case_does_not_exist_for_consultation(seeded):
     assert exc.value.code == "no_publicado"
 
 
-def test_aggregate_publishes_only_reviewed_periods(seeded):
+def test_aggregate_publishes_variables_summary(seeded):
     aggregate = public_api.require_aggregate("ipc_empalme")
-    for series in aggregate["entity"]["series"]:
-        assert {p["period"] for p in series["points"]} == {"2024-12", "2025-01"}
+    summary = aggregate["entity"]["variables_summary"]
+    assert summary["row_count"] == 524
+    assert summary["coverage"]["period"] == "diciembre 2024 y enero 2025"
+    assert {column["name"] for column in summary["columns"]} >= {
+        "e_index",
+        "f_index",
+        "g_monthly",
+    }
+    assert "series" not in aggregate["entity"]
 
 
 def test_no_private_evidence_in_public_snapshot(seeded):

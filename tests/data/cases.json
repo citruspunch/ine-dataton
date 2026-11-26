@@ -6,11 +6,7 @@
       "method": "contract",
       "manifest_item": "ine-ipc-empalme",
       "profile": "ipc_empalme_republica_v1",
-      "label": "IPC empalme República: Hoja2, diciembre 2024 y enero 2025",
-      "requested_comparisons": [
-        "mensual_ene_2025",
-        "cruce_bases_e_f"
-      ]
+      "label": "IPC empalme República: Hoja2, diciembre 2024 y enero 2025"
     },
     {
       "id": "ipc_regional",

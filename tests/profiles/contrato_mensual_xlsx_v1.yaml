@@ -25,9 +25,12 @@ schema:
   - name: value
     column: valor
     type: float
+    unit: índice
+    reference: "2025=100"
   - name: unit
     column: unidad
     type: string
+    notes: Unidad observada en cada fila.
 
 types: [integer, float, string]
 
@@ -42,16 +45,9 @@ dates:
     - "2025-02"
     - "2025-03"
 
-comparability:
-  unit: indice
-  unit_field: unit
-  series:
-    - id: valor
-      label: "Serie mensual"
-      index: value
-      base: "2025=100"
-      comparable: true
-  checks: []
+summary_notes: >
+  Contrato sintético mensual en XLSX. La unidad se declara por columna y el
+  resumen distingue valores válidos, nulos y excluidos.
 
 display:
   period: "enero a marzo de 2025"

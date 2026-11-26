@@ -37,15 +37,6 @@ def _table(headers: list[str], rows: list[list[str]], indent: str = "") -> str:
     return "\n".join(out)
 
 
-def _fmt_pct(value: Any) -> str:
-    if value is None:
-        return "Sin dato"
-    try:
-        return f"{float(value):+.2f}%".replace(".", ",")
-    except (TypeError, ValueError):
-        return str(value)
-
-
 def _subject_ids() -> list[str]:
     from . import store
 
@@ -96,23 +87,48 @@ def _print_result(result: Any, verbose: bool = True) -> None:
     print("")
     print(_table(["regla", "estado", "crítica", "mensaje"], rows, indent="  "))
 
-    if result.comparisons:
+    summary = result.entity.get("variables_summary") or {}
+    if summary:
         print("")
-        print("  comparaciones")
-        for c in result.comparisons:
-            if c.status == "ok":
-                detail = (
-                    f"publicado {_fmt_pct(c.public_evidence.get('published_pct'))} "
-                    f"({c.public_evidence.get('published_cell')})"
-                )
-            elif c.private_evidence.get("computed_pct") is not None:
-                detail = (
-                    f"{_fmt_pct(c.private_evidence['computed_pct'])} solo en revisión"
-                )
-            else:
-                detail = "sin valor calculado"
-            print(f"    {c.comparison_id:22s} {c.status:10s} {detail}")
-            print(f"    {'':22s} {c.reason}")
+        print("  resumen de variables y unidades")
+        rows = [
+            [
+                column["name"],
+                column["column"],
+                column["type"],
+                column["unit"] or "no declarada",
+                column["reference"] or "no declarado",
+                str(
+                    column["valid_count"] if column["valid_count"] is not None else "—"
+                ),
+                str(column["null_count"] if column["null_count"] is not None else "—"),
+                str(
+                    column["excluded_count"]
+                    if column["excluded_count"] is not None
+                    else "—"
+                ),
+            ]
+            for column in summary.get("columns", [])
+        ]
+        print(
+            _table(
+                [
+                    "variable",
+                    "encabezado",
+                    "tipo",
+                    "unidad",
+                    "referencia",
+                    "válidos",
+                    "nulos",
+                    "excluidos",
+                ],
+                rows,
+                indent="  ",
+            )
+        )
+        coverage = summary.get("coverage") or {}
+        if coverage.get("notes"):
+            print(f"  cobertura: {coverage['notes']}")
 
 
 def cmd_validate(args: argparse.Namespace) -> int:
@@ -264,6 +280,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    config.ensure_runtime_dirs()
     parser = build_parser()
     args = parser.parse_args(argv)
     try:

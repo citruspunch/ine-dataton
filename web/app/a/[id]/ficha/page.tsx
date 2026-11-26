@@ -5,11 +5,11 @@ import { ArrowLeft, DownloadSimple } from "@phosphor-icons/react/dist/ssr";
 import { SeverityBadge, StateBadge } from "@/components/badges";
 import { DataList, DataRow } from "@/components/data-list";
 import { PrintButton } from "@/components/print-button";
+import { VariablesSummary } from "@/components/variables-summary";
 import { buttonVariants } from "@/components/ui/button";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { getJson } from "@/lib/api";
 import type { AggregateDetail, Receipt } from "@/lib/types";
-import { formatPct } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -120,6 +120,8 @@ export default async function FichaPage({ params }: PageProps) {
         </DataRow>
       </DataList>
 
+      <VariablesSummary summary={entity.variables_summary} />
+
       <section className="space-y-2">
         <h2 className="text-[12.5px] font-bold text-brand">
           Resultado por regla
@@ -149,48 +151,6 @@ export default async function FichaPage({ params }: PageProps) {
           </TBody>
         </Table>
       </section>
-
-      {aggregate.comparisons.length ? (
-        <section className="space-y-2">
-          <h2 className="text-[12.5px] font-bold text-brand">
-            Comparaciones evaluadas
-          </h2>
-          <Table className="text-[13.5px] print:text-[11.5px]">
-            <THead>
-              <TR>
-                <TH>Solicitud</TH>
-                <TH>Resultado</TH>
-                <TH>Motivo</TH>
-                <TH>Dato mostrado</TH>
-              </TR>
-            </THead>
-            <TBody>
-              {aggregate.comparisons.map((comparison) => {
-                const evidence = (comparison.evidence ?? {}) as Record<string, unknown>;
-                return (
-                  <TR key={comparison.comparison_id} className="hover:bg-transparent">
-                    <TD>{comparison.label}</TD>
-                    <TD className="whitespace-nowrap">{comparison.status}</TD>
-                    <TD>{comparison.reason}</TD>
-                    <TD className="whitespace-nowrap">
-                      {comparison.status === "ok" ? (
-                        <>
-                          {formatPct(evidence.published_pct as number)}{" "}
-                          <span className="font-mono text-[12px] text-muted">
-                            {String(evidence.published_cell ?? "")}
-                          </span>
-                        </>
-                      ) : (
-                        "no se muestra valor"
-                      )}
-                    </TD>
-                  </TR>
-                );
-              })}
-            </TBody>
-          </Table>
-        </section>
-      ) : null}
 
       <section className="space-y-2">
         <h2 className="text-[12.5px] font-bold text-brand">

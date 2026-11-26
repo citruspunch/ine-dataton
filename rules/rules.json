@@ -1,5 +1,5 @@
 {
-  "rules_version": "1.0.0",
+  "rules_version": "1.1.0",
   "note": "Reglas declarativas versionadas. El motor no se modifica al añadir un perfil: solo se declara otro perfil. La severidad observada y la cobertura se muestran sin puntaje.",
   "rules": [
     {
@@ -60,11 +60,11 @@
     },
     {
       "id": "CONT-06",
-      "title": "Unidad y base declaradas",
+      "title": "Variables, unidades y referencias",
       "severity": "falla",
       "critical": true,
       "scope": "contrato",
-      "message": "La unidad observada debe coincidir con la declarada y cada serie debe declarar su base."
+      "message": "Cada variable declara tipo, unidad o referencia cuando aplica y un resumen de valores válidos, nulos y excluidos."
     },
     {
       "id": "ID-01",
@@ -73,30 +73,6 @@
       "critical": true,
       "scope": "par",
       "message": "Mismos bytes con identidad incompatible requieren revisión; una excepción documentada pasa a advertencia."
-    },
-    {
-      "id": "IPC-01",
-      "title": "Misma base para una variación",
-      "severity": "falla",
-      "critical": false,
-      "scope": "comparación",
-      "message": "El cociente entre índices de bases distintas no es una variación."
-    },
-    {
-      "id": "IPC-02",
-      "title": "Periodos contiguos",
-      "severity": "falla",
-      "critical": false,
-      "scope": "comparación",
-      "message": "Una variación mes a mes exige meses consecutivos."
-    },
-    {
-      "id": "IPC-03",
-      "title": "Variación publicada coincide",
-      "severity": "advertencia",
-      "critical": false,
-      "scope": "comparación",
-      "message": "La variación calculada debe coincidir con la publicada dentro de la tolerancia declarada."
     }
   ]
 }

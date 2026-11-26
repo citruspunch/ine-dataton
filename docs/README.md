@@ -100,20 +100,19 @@ publican en la aplicación.
 
 Las URL completas están en `tests/data/real/sources.json`.
 
-El empalme permite comprobar un error de comparación entre bases:
+El empalme permite comprobar el resumen de variables y unidades entre columnas
+con bases distintas:
 
-| Celda | Valor | Qué es |
+| Celda | Valor | Qué declara el perfil |
 |---|---|---|
-| `E503` | 101,702855 | índice base diciembre 2023=100 |
-| `F503` | 100,513541 | índice base 2024=100 |
-| `F504` | 101,017579 | índice base 2024=100 |
-| `G504` | 0,501463 % | variación mensual **publicada** |
+| `E503` | 101,702855 | `e_index`, unidad índice, referencia diciembre 2023=100 |
+| `F503` | 100,513541 | `f_index`, unidad índice, referencia 2024=100 |
+| `F504` | 101,017579 | `f_index`, misma variable y referencia |
+| `G504` | 0,501463 % | `g_monthly`, unidad porcentaje, variación publicada |
 
-- `F504 / F503` es válido: misma base, meses contiguos → **+0,501463 %**, que
-  coincide con `G504`. La ficha muestra la cifra publicada, no una calculada.
-- `F504 / E503` es **inválido**: mezcla bases. Da `−0,673802 %`. Ese número solo
-  aparece en la pantalla privada de revisión: **no entra** al snapshot público,
-  ni al export, ni a la ficha. Hay tests que lo verifican.
+El resumen muestra nombre interno, encabezado, tipo, unidad, base o alcance,
+nulabilidad, notas y conteos de valores válidos, nulos y excluidos. No calcula
+cocientes entre columnas ni series y no publica cifras derivadas.
 
 El recurso regional usa una tabla con una columna por región en `Hoja1`. Abarca
 de 2025-01 a 2026-10 y no incluye variaciones publicadas. Se evalúa con el mismo
@@ -127,31 +126,37 @@ Los perfiles son YAML y **no declaran coordenadas**:
 expected_sheet: Hoja2
 header_row: 1
 schema:
-  - { name: f_index, column: "Índice año Base  2024=100.00 d/", type: float }
+  - name: f_index
+    column: "Índice año Base  2024=100.00 d/"
+    type: float
+    unit: índice
+    reference: "2024=100"
+  - name: g_monthly
+    column: "Variación Mensual e/"
+    type: float
+    unit: porcentaje
+    reference: variación mensual
+    nullable: true
 grain: [year, month]
 dates: { year: year, month: month, month_format: name_es, expected: ["2024-12", "2025-01"] }
-comparability:
-  unit: índice
-  series:
-    - { id: f, index: f_index, base: "2024=100", variation: g_monthly, comparable: true }
-  checks:
-    - id: mensual_ene_2025
-      numerator:   { field: f_index, period: "2025-01" }
-      denominator: { field: f_index, period: "2024-12" }
-      published:   { field: g_monthly, period: "2025-01" }
+summary_notes: >
+  Cobertura de diciembre 2024 y enero 2025; las columnas E y F usan bases distintas.
 ```
 
 Campos obligatorios: `profile_id`, `version`, `kind`, `title`, `expected_sheet`,
-`header_row`, `schema`, `types`, `grain`, `dates`, `comparability`. Tipos
-permitidos: `integer`, `float`, `string`, `date`.
+`header_row`, `schema`, `types`, `grain`, `dates`. Cada columna puede declarar
+`unit`, `reference`, `nullable` y `notes`. Tipos permitidos: `integer`, `float`,
+`string`, `date`.
 
-Las columnas se resuelven por **encabezado** y los periodos por **año y mes**; las
-celdas (`F504`, `G504`) se descubren al leer y solo aparecen como metadato en la
-evidencia. Un test recorre los YAML y falla si alguien escribe `letter`, `cell` o
-`row_number`.
+Las columnas se resuelven por **encabezado** y los periodos por **año**, con mes
+opcional. `dates.expected`/`range` aceptan `AAAA` en contratos anuales y
+`AAAA-MM` cuando se declara mes. Las celdas (`F504`, `G504`) se descubren al leer
+y solo aparecen como metadato en la evidencia. Un test recorre los YAML y falla si
+alguien escribe `letter`, `cell` o `row_number`.
 
 Reglas versionadas en `rules/rules.json`: `SNAP-01` integridad, `LIC-01` licencia,
-`CONT-01`…`CONT-06` contrato, `ID-01` identidad y `IPC-01`…`IPC-03` comparabilidad.
+`CONT-01`…`CONT-06` contrato e `ID-01` identidad. `CONT-06` resume variables,
+tipos, unidades, referencias y conteos; no compara series.
 
 ## 6. Interfaz
 
@@ -161,13 +166,13 @@ Reglas versionadas en `rules/rules.json`: `SNAP-01` integridad, `LIC-01` licenci
 - **Perfiles inmutables**: cada contrato se abre en el formulario precargado y
   se duplica con un identificador nuevo. La acción de guardar crea la copia; el
   original no cambia.
-- **Detalle y gate** (`/review/[id]`): ficha, hallazgos filtrables por severidad,
-  comparaciones con evidencia privada y formulario de gate con justificación de
+- **Detalle y gate** (`/review/[id]`): ficha, resumen de variables y unidades,
+  hallazgos filtrables por severidad y formulario de gate con justificación de
   advertencias.
-- **Consulta** (`/a/[id]`): ficha con fuente, base y periodo, tabla de series
-  publicadas, reglas evaluadas, descarga de `recibo.json` y **ficha técnica
-  imprimible** (`/a/[id]/ficha`) para adjuntar al ticket del procedimiento 18.
-  No incluye comparador de periodos.
+- **Consulta** (`/a/[id]`): ficha con fuente, base y periodo, resumen de
+  variables y unidades, reglas evaluadas, descarga de `recibo.json` y **ficha
+  técnica imprimible** (`/a/[id]/ficha`) para adjuntar al ticket del
+  procedimiento 18. No incluye comparador de periodos ni series.
 
 Estados: `borrador`, `no_habilitado`, `en_revision`,
 `habilitado_para_consulta`, `cerrado`. No existe "aprobado por el INE".
@@ -201,8 +206,8 @@ escritura y sin acceso a la cola de revisión.
 
 | Herramienta | Devuelve |
 |---|---|
-| `list_enabled_aggregates()` | agregados con fuente, URL, fecha UTC, licencia, base, series y `decision_basis_digest` |
-| `get_aggregate_receipt(case_id)` | metadatos del agregado y su recibo público (`technical_payload` y `decision_log`), o un bloqueo estructurado |
+| `list_enabled_aggregates()` | agregados con fuente, URL, fecha UTC, licencia, base, resumen de variables y unidades, y `decision_basis_digest` |
+| `get_aggregate_receipt(case_id)` | metadatos del agregado, resumen de variables y unidades, y su recibo público (`technical_payload` y `decision_log`), o un bloqueo estructurado |
 
 ```json
 {
@@ -226,11 +231,12 @@ pnpm run mcp
 pnpm run test        # motor + tipos
 ```
 
-- **Motor (pytest):** contrato, `.xls` heredado, identidad, comparabilidad,
-  determinismo e invalidación del digest, gate, frontera de la API pública y
-  aislamiento del MCP.
-- **API HTTP:** recursos registrados, carga, gate, invalidación por cambio de contrato, recibos y creación de perfiles con
-  errores de campo; el endpoint de comparación ya no existe.
+- **Motor (pytest):** contrato, `.xls` heredado, identidad, resumen de variables
+  y unidades, determinismo e invalidación del digest, gate, frontera de la API
+  pública y aislamiento del MCP.
+- **API HTTP:** recursos registrados, carga, gate, invalidación por cambio de
+  contrato, recibos con resumen de variables y unidades, y creación de perfiles
+  con errores de campo.
 - **Web:** `tsc --noEmit` sobre la interfaz.
 
 ## 9. Limitaciones
@@ -241,8 +247,8 @@ pnpm run test        # motor + tipos
 - `n<5` no se usa como garantía legal; no se afirma secreto estadístico.
 - El hash prueba igualdad de bytes del par observado, no autoría ni calidad.
 - La cobertura es la del perfil declarado, no la de toda la hoja.
-- No hay comparador de periodos: el portal muestra metadatos, reglas y recibo, y
-  no calcula variaciones entre periodos.
+- El portal muestra metadatos, resumen de variables y unidades, reglas y recibo;
+  no calcula variaciones ni cocientes entre columnas.
 - El regional publica índices, no variaciones; el sistema no las calcula.
 - La fecha de descarga del regional proviene de la mtime del archivo
   (`downloaded_at_source: "mtime"`), declarada en el manifiesto.

@@ -17,6 +17,16 @@ from . import config
 NOT_PUBLISHED = "El agregado no está en el snapshot público."
 
 
+def ensure_public_dirs() -> None:
+    """Create only public-snapshot paths; never touch the review store."""
+    for path in (
+        config.PUBLIC_DIR,
+        config.PUBLIC_DIR / "aggregates",
+        config.PUBLIC_DIR / "receipts",
+    ):
+        path.mkdir(parents=True, exist_ok=True)
+
+
 class PublicError(Exception):
     """Public query error. `code` is stable for MCP clients."""
 
@@ -103,6 +113,7 @@ def list_enabled_aggregates(
         entity = aggregate.get("entity", {})
         display = entity.get("display") or {}
         license_info = entity.get("license") or {}
+        summary = entity.get("variables_summary") or {}
         out.append(
             {
                 "case_id": aggregate["case_id"],
@@ -122,16 +133,8 @@ def list_enabled_aggregates(
                 "sha256": entity.get("sha256"),
                 "decision_basis_digest": aggregate.get("digest"),
                 "published_at_utc": aggregate.get("published_at_utc"),
-                "series": [
-                    {
-                        "series_id": s["series_id"],
-                        "label": s.get("label"),
-                        "base": s.get("base"),
-                        "comparable": s.get("comparable", True),
-                        "periods": [p["period"] for p in s.get("points", [])],
-                    }
-                    for s in entity.get("series", [])
-                ],
+                "variables_count": len(summary.get("columns", [])),
+                "variables_summary": summary,
             }
         )
     return out

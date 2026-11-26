@@ -46,8 +46,10 @@ def test_receipt_separates_payload_and_log(seeded):
             "validation_digest"
         ]
     )
-    assert "comparisons" in receipt["technical_payload"]
-    assert receipt["technical_payload"]["comparisons"]
+    summary = receipt["technical_payload"]["variables_summary"]
+    assert summary["row_count"] == 524
+    assert summary["columns"]
+    assert "comparisons" not in receipt["technical_payload"]
 
 
 def test_public_receipt_has_no_private_evidence(seeded):
@@ -145,13 +147,13 @@ def test_justified_warning_lifts_gate_block(sandbox):
         justifications={
             "ID-01": {
                 "owner": "Revisor de publicaciones",
-                "reason": "Reutilización intencional para dos series de eventos.",
+                "reason": "Reutilización intencional para dos recursos de eventos.",
                 "policy": "POL-DUP-TEST",
             }
         },
     )
     assert final.state == "habilitado_para_consulta"
-    assert final.comparisons == []
+    assert final.entity.get("variables_summary") is None
 
 
 # --------------------------------------------------------------------------

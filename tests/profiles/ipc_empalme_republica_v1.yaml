@@ -26,15 +26,22 @@ schema:
   - name: e_index
     column: "Índice Base Diciembre 2023=100.00 c/"
     type: float
+    unit: índice
+    reference: "Diciembre 2023=100"
+    notes: Columna de índice con base distinta a la serie F.
 
   - name: f_index
     column: "Índice año Base  2024=100.00 d/"
     type: float
+    unit: índice
+    reference: "2024=100"
 
   - name: g_monthly
     column: "Variación Mensual e/"
     type: float
     nullable: true
+    unit: porcentaje
+    reference: variación mensual
 
 types: [integer, float, string]
 
@@ -48,45 +55,10 @@ dates:
     - "2024-12"
     - "2025-01"
 
-comparability:
-  unit: índice
-  series:
-    - id: f
-      label: "Serie F · base 2024=100"
-      index: f_index
-      base: "2024=100"
-      variation: g_monthly
-      comparable: true
-    - id: e
-      label: "Serie E · base dic-2023=100"
-      index: e_index
-      base: "Diciembre 2023=100"
-      comparable: false
-      reason: >
-        Base distinta. Un cociente entre índices de bases distintas no es una
-        variación y no se puede comparar directamente.
-  checks:
-    - id: mensual_ene_2025
-      label: "Variación mensual de enero 2025, serie base 2024=100"
-      numerator:
-        field: f_index
-        period: "2025-01"
-      denominator:
-        field: f_index
-        period: "2024-12"
-      published:
-        field: g_monthly
-        period: "2025-01"
-      tolerance_pp: 0.005
-      unit: porcentaje
-    - id: cruce_bases_e_f
-      label: "Solicitud inválida: cociente entre base 2024=100 y base Diciembre 2023=100"
-      numerator:
-        field: f_index
-        period: "2025-01"
-      denominator:
-        field: e_index
-        period: "2024-12"
+summary_notes: >
+  Cobertura de diciembre 2024 y enero 2025. Las columnas E y F usan bases
+  distintas y G publica la variación mensual; la ficha no calcula comparaciones
+  entre bases.
 
 display:
   period: "diciembre 2024 y enero 2025"

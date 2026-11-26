@@ -53,17 +53,15 @@ def test_review_detail_shape(client):
     }
 
 
-def test_review_detail_shows_private_comparison(client):
+def test_review_detail_shows_variables_summary(client):
     data = client.get("/review/ipc_empalme").json()
-    blocked = next(
-        item
-        for item in data["comparisons"]
-        if item["comparison_id"] == "cruce_bases_e_f"
-    )
-    assert blocked["status"] == "bloqueada"
-    assert blocked["private_evidence"]["computed_pct"] == pytest.approx(
-        -0.673802, abs=1e-6
-    )
+    assert "comparisons" not in data
+    summary = data["entity"]["variables_summary"]
+    assert summary["row_count"] == 524
+    column = next(c for c in summary["columns"] if c["name"] == "f_index")
+    assert column["unit"] == "índice"
+    assert column["reference"] == "2024=100"
+    assert column["valid_count"] == 524
 
 
 def test_upload_then_gate_publishes(client, sandbox):
@@ -144,11 +142,8 @@ def test_public_index_and_detail(client):
     assert "private_evidence" not in json.dumps(detail)
 
 
-def test_compare_endpoint_is_gone(client):
-    response = client.post(
-        "/public/ipc_empalme/compare",
-        json={"series_a": "f", "period_a": "2024-12", "series_b": "f", "period_b": "2025-01"},
-    )
+def test_comparison_endpoint_is_gone(client):
+    response = client.post("/public/ipc_empalme/compare", json={})
     assert response.status_code in (404, 405)
 
 
@@ -168,7 +163,8 @@ def test_profile_validation_reports_fields(client, profiles_dir):
     body = response.json()
     assert body["valid"] is False
     fields = {error["field"] for error in body["errors"]}
-    assert {"expected_sheet", "schema", "grain", "dates", "comparability"} <= fields
+    assert {"expected_sheet", "schema", "grain", "dates"} <= fields
+    assert "comparability" not in fields
 
 
 def test_profile_creation_and_duplicate(client, profiles_dir):

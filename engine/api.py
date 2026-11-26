@@ -6,6 +6,7 @@ renders and collects input; it never decides anything.
 
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
 from typing import Any
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
@@ -16,12 +17,20 @@ from pydantic import BaseModel
 from . import config, gate, profiles, public_api, rules, store
 from .model import WARNING
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    config.ensure_runtime_dirs()
+    yield
+
+
 app = FastAPI(
     title="INE Data Trust engine",
     description="Deterministic validation core. UI lives in the Next.js app.",
     version="2.0.0",
     docs_url="/docs",
     redoc_url=None,
+    lifespan=lifespan,
 )
 app.add_middleware(
     CORSMiddleware,
@@ -59,7 +68,6 @@ def _review_payload(case_id: str) -> dict[str, Any]:
         "entity": result.entity,
         **_state(result),
         "findings": [_finding(f) for f in result.findings],
-        "comparisons": [c.to_private_dict() for c in result.comparisons],
         "blocking": gate.blocking_reasons(result),
         "warnings": gate.pending_warnings(result),
         "decision": decision,
@@ -316,11 +324,12 @@ def public_index() -> dict[str, Any]:
         if not aggregate:
             continue
         entity = aggregate.get("entity", {})
+        summary = entity.get("variables_summary") or {}
         aggregates.append(
             {
                 **entry,
                 "topic": entity.get("topic"),
-                "series_count": len(entity.get("series", [])),
+                "variables_count": len(summary.get("columns", [])),
                 "sha256": entity.get("sha256"),
             }
         )

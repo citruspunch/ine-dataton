@@ -30,6 +30,7 @@ def test_no_period_comparison_tool():
     tools = asyncio.run(mcp_server.server.list_tools())
     assert not any("compar" in tool.name for tool in tools)
     assert not hasattr(mcp_server, "query_ipc_period_comparison")
+    assert not any("series" in tool.name for tool in tools)
 
 
 def test_list_enabled_aggregates(seeded):
@@ -42,7 +43,9 @@ def test_list_enabled_aggregates(seeded):
     for aggregate in aggregates:
         assert aggregate["decision_basis_digest"]
         assert aggregate["license"]["id"] in ("cc-by", "interno-fixture")
-        assert "periods" in aggregate["series"][0] if aggregate["series"] else True
+        assert "series" not in aggregate
+        summary = aggregate.get("variables_summary") or {}
+        assert aggregate["variables_count"] == len(summary.get("columns", []))
 
 
 def test_get_aggregate_receipt(seeded):
@@ -55,7 +58,8 @@ def test_get_aggregate_receipt(seeded):
     assert metadata["downloaded_at_utc"]
     assert metadata["license"]["id"] == "cc-by"
     assert metadata["decision_basis_digest"]
-    assert metadata["series"]
+    assert metadata["variables_count"] == 5
+    assert metadata["variables_summary"]["row_count"] == 524
     receipt = data["receipt"]
     assert receipt["technical_payload"]["digest"] == metadata["decision_basis_digest"]
     assert receipt["decision_log"]["gate_decision"] == "habilitado"
