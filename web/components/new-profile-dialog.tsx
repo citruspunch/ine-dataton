@@ -586,7 +586,6 @@ export function NewProfileDialog({
               <Section
                 number="03"
                 title="Columnas"
-                description="Cada columna se resuelve por su encabezado, nunca por coordenadas fijas."
                 action={
                   <Button
                     type="button"
