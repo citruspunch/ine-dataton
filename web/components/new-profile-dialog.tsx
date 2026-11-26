@@ -51,6 +51,23 @@ import type { ActionState } from "@/lib/types";
 type ColumnType = "integer" | "float" | "string" | "date";
 type PeriodMode = "expected" | "range";
 
+const YEAR_OPTIONS = Array.from({ length: 61 }, (_, index) => {
+  const year = String(1990 + index);
+  return { value: year, label: year };
+});
+
+const MONTH_OPTIONS = Array.from({ length: 12 }, (_, index) => {
+  const value = String(index + 1).padStart(2, "0");
+  const label = new Intl.DateTimeFormat("es", { month: "long" }).format(
+    new Date(2025, index, 1),
+  );
+  return { value, label: label.charAt(0).toUpperCase() + label.slice(1) };
+});
+
+function rangePeriod(year: string, month: string) {
+  return year && month ? `${year}-${month}` : "";
+}
+
 let uid = 0;
 const nextUid = () => {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -157,8 +174,10 @@ interface Draft {
   monthFormat: "number" | "name_es";
   periodMode: PeriodMode;
   periods: string[];
-  rangeFrom: string;
-  rangeTo: string;
+  rangeFromYear: string;
+  rangeFromMonth: string;
+  rangeToYear: string;
+  rangeToMonth: string;
   grainExtra: string;
   unit: string;
   series: SeriesDraft[];
@@ -183,8 +202,10 @@ function initialDraft(): Draft {
     monthFormat: "number",
     periodMode: "expected",
     periods: ["2025-01"],
-    rangeFrom: "",
-    rangeTo: "",
+    rangeFromYear: "",
+    rangeFromMonth: "",
+    rangeToYear: "",
+    rangeToMonth: "",
     grainExtra: "",
     unit: "índice",
     series: initialSeries(),
@@ -234,8 +255,12 @@ function buildYaml(draft: Draft): string {
   lines.push(`  month_format: ${draft.monthFormat}`);
   if (draft.periodMode === "range") {
     lines.push("  range:");
-    lines.push(`    from: ${scalar(draft.rangeFrom)}`);
-    lines.push(`    to: ${scalar(draft.rangeTo)}`);
+    lines.push(
+      `    from: ${scalar(rangePeriod(draft.rangeFromYear, draft.rangeFromMonth))}`,
+    );
+    lines.push(
+      `    to: ${scalar(rangePeriod(draft.rangeToYear, draft.rangeToMonth))}`,
+    );
   } else {
     lines.push("  expected:");
     for (const period of draft.periods) lines.push(`    - ${scalar(period)}`);
@@ -288,7 +313,12 @@ function buildYaml(draft: Draft): string {
   const displayPeriod =
     draft.displayPeriod.trim() ||
     (draft.periodMode === "range"
-      ? `${draft.rangeFrom} a ${draft.rangeTo}`.trim()
+      ? [
+          rangePeriod(draft.rangeFromYear, draft.rangeFromMonth),
+          rangePeriod(draft.rangeToYear, draft.rangeToMonth),
+        ]
+          .filter(Boolean)
+          .join(" a ")
       : draft.periods.join(", "));
   const displayBase = draft.displayBase.trim() || draft.series[0]?.base || "";
   const displayUnit = draft.displayUnit.trim() || draft.unit;
@@ -323,8 +353,14 @@ function validateDraft(draft: Draft): string[] {
   if (draft.periodMode === "expected" && draft.periods.length === 0) {
     problems.push("Declare al menos un periodo esperado.");
   }
-  if (draft.periodMode === "range" && (!draft.rangeFrom || !draft.rangeTo)) {
-    problems.push("Complete el rango de periodos.");
+  if (draft.periodMode === "range") {
+    const from = rangePeriod(draft.rangeFromYear, draft.rangeFromMonth);
+    const to = rangePeriod(draft.rangeToYear, draft.rangeToMonth);
+    if (!from || !to) {
+      problems.push("Complete el inicio y el fin del rango continuo.");
+    } else if (to < from) {
+      problems.push("El fin del rango no puede ser anterior al inicio.");
+    }
   }
   if (!draft.series.some((series) => series.index.trim() && series.base.trim())) {
     problems.push("Declare al menos una serie comparable con índice y base.");
@@ -696,8 +732,12 @@ export function NewProfileDialog({
               </Section>
 
               <Section number="04" title="Periodo y grano">
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <Field label="Campo de año" required>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field
+                    label="Campo de año"
+                    required
+                    tooltip="Columna que aporta el año de cada registro para validar fechas y periodos."
+                  >
                     <DraftSelect
                       value={draft.dateYear}
                       onChange={(value) => update("dateYear", value)}
@@ -705,7 +745,11 @@ export function NewProfileDialog({
                       placeholder="Seleccione"
                     />
                   </Field>
-                  <Field label="Campo de mes" required>
+                  <Field
+                    label="Campo de mes"
+                    required
+                    tooltip="Columna que aporta el mes de cada registro para validar fechas y periodos."
+                  >
                     <DraftSelect
                       value={draft.dateMonth}
                       onChange={(value) => update("dateMonth", value)}
@@ -713,7 +757,11 @@ export function NewProfileDialog({
                       placeholder="Seleccione"
                     />
                   </Field>
-                  <Field label="Formato del mes" required>
+                  <Field
+                    label="Formato del mes"
+                    required
+                    tooltip="Formato en que vienen los meses en el archivo (números del 1 al 12 o nombres en español) para parsearlos sin errores ni orden alfabético."
+                  >
                     <DraftSelect
                       value={draft.monthFormat}
                       onChange={(value) =>
@@ -725,7 +773,10 @@ export function NewProfileDialog({
                       ]}
                     />
                   </Field>
-                  <Field label="Campo adicional del grano" hint="Opcional. Por ejemplo, un indicador.">
+                  <Field
+                    label="Campo adicional del grano"
+                    tooltip="Columna extra (por ejemplo, indicador o territorio) que junto con el periodo define qué hace única a una fila y detecta grano duplicado."
+                  >
                     <DraftSelect
                       value={draft.grainExtra || "none"}
                       onChange={(value) => update("grainExtra", value === "none" ? "" : value)}
@@ -738,7 +789,16 @@ export function NewProfileDialog({
                       ]}
                     />
                   </Field>
-                  <Field label="Periodos declarados" required>
+                </div>
+              </Section>
+
+              <Section number="05" title="Rango de periodos">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field
+                    label="Periodos declarados"
+                    required
+                    tooltip="Define si el contrato espera una lista puntual de periodos o un rango continuo entre un inicio y un fin."
+                  >
                     <DraftSelect
                       value={draft.periodMode}
                       onChange={(value) => update("periodMode", value as PeriodMode)}
@@ -751,33 +811,43 @@ export function NewProfileDialog({
                 </div>
 
                 {draft.periodMode === "range" ? (
-                  <div className="mt-3 grid gap-4 sm:grid-cols-2">
-                    <Field label="Desde" required>
-                      <Input
-                        value={draft.rangeFrom}
-                        onChange={(event) => update("rangeFrom", event.target.value)}
-                        placeholder="2025-01"
+                  <div className="mt-4 space-y-3">
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-[14px] font-semibold text-ink">Límites del rango</p>
+                      <InfoTip
+                        label="Límites del rango"
+                        text="Inicio y fin del rango continuo esperado (año y mes) para comprobar que las fechas del archivo caigan dentro del periodo declarado."
                       />
-                    </Field>
-                    <Field label="Hasta" required>
-                      <Input
-                        value={draft.rangeTo}
-                        onChange={(event) => update("rangeTo", event.target.value)}
-                        placeholder="2025-12"
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <RangeBound
+                        label="Desde"
+                        year={draft.rangeFromYear}
+                        month={draft.rangeFromMonth}
+                        onYear={(value) => update("rangeFromYear", value)}
+                        onMonth={(value) => update("rangeFromMonth", value)}
                       />
-                    </Field>
+                      <RangeBound
+                        label="Hasta"
+                        year={draft.rangeToYear}
+                        month={draft.rangeToMonth}
+                        onYear={(value) => update("rangeToYear", value)}
+                        onMonth={(value) => update("rangeToMonth", value)}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <div className="mt-3">
                     <PeriodsInput
                       periods={draft.periods}
                       onChange={(periods) => update("periods", periods)}
+                      tooltip="Lista explícita de periodos válidos (por ejemplo, 2025-01) que el archivo debe cubrir sin mezclar periodos fuera de lo declarado."
                     />
                   </div>
                 )}
               </Section>
 
-              <Section number="05" title="Comparabilidad">
+              <Section number="06" title="Comparabilidad">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Field label="Unidad" required>
                     <Input
@@ -1077,7 +1147,7 @@ export function NewProfileDialog({
               </Section>
 
               <Section
-                number="06"
+                number="07"
                 title="Presentación pública"
                 description="Texto para la consulta pública. Si lo deja vacío, se usarán los datos declarados arriba."
               >
@@ -1305,12 +1375,50 @@ function DraftSelect({
   );
 }
 
+function RangeBound({
+  label,
+  year,
+  month,
+  onYear,
+  onMonth,
+}: {
+  label: string;
+  year: string;
+  month: string;
+  onYear: (value: string) => void;
+  onMonth: (value: string) => void;
+}) {
+  return (
+    <div>
+      <p className="mb-1.5 text-[14px] font-semibold text-ink">{label}</p>
+      <div className="grid grid-cols-2 gap-2">
+        <DraftSelect
+          value={year}
+          onChange={onYear}
+          options={YEAR_OPTIONS}
+          placeholder="Año"
+          ariaLabel={`${label}: año`}
+        />
+        <DraftSelect
+          value={month}
+          onChange={onMonth}
+          options={MONTH_OPTIONS}
+          placeholder="Mes"
+          ariaLabel={`${label}: mes`}
+        />
+      </div>
+    </div>
+  );
+}
+
 function PeriodsInput({
   periods,
   onChange,
+  tooltip,
 }: {
   periods: string[];
   onChange: (periods: string[]) => void;
+  tooltip?: string;
 }) {
   const [text, setText] = useState("");
   const valid = /^\d{4}-(0[1-9]|1[0-2])$/.test(text);
@@ -1323,7 +1431,10 @@ function PeriodsInput({
 
   return (
     <div>
-      <Label>Periodos esperados</Label>
+      <div className="mb-1.5 flex items-center gap-1.5">
+        <Label className="mb-0">Periodos esperados</Label>
+        {tooltip ? <InfoTip label="Periodos esperados" text={tooltip} /> : null}
+      </div>
       <div className="flex gap-2">
         <Input
           value={text}
@@ -1361,9 +1472,7 @@ function PeriodsInput({
             </span>
           ))}
         </div>
-      ) : (
-        <FieldHint>Sin periodos, la validación no podrá verificar la cobertura temporal.</FieldHint>
-      )}
+      ) : null}
     </div>
   );
 }
