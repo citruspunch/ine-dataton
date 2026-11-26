@@ -22,7 +22,6 @@ from .model import (
     NOT_EVALUATED,
     OK,
     WARNING,
-    Comparison,
     Finding,
     ValidationResult,
     derive_state,
@@ -38,7 +37,7 @@ from .reader import (
 )
 
 MAX_EVIDENCE_ITEMS = 8
-PERIOD_RE = re.compile(r"^(\d{4})-(\d{2})$")
+PERIOD_RE = re.compile(r"^(\d{4})(?:-(\d{2}))?$")
 
 ALL_CONTRACT_RULES = ["CONT-02", "CONT-03", "CONT-04", "CONT-05", "CONT-06"]
 
@@ -55,7 +54,6 @@ class Subject:
     method: str
     profile_id: str
     items: list[dict[str, Any]]
-    requested_comparisons: list[str] = field(default_factory=list)
     resources: list[dict[str, Any]] = field(default_factory=list)
     origin: str = "case"
 
@@ -84,7 +82,6 @@ def resolve_subject(subject_id: str) -> Subject:
         method=case["method"],
         profile_id=case["profile"],
         items=items,
-        requested_comparisons=list(case.get("requested_comparisons") or []),
         resources=list(case.get("resources") or []),
         origin="case",
     )
@@ -103,12 +100,13 @@ class Parsed:
     row_of_period: dict[str, int]
 
 
-def parse_period(value: str) -> tuple[int, int]:
+def parse_period(value: str) -> tuple[int, int | None]:
     match = PERIOD_RE.match(str(value).strip())
     if not match:
-        raise ValueError(f"periodo inválido: {value!r}; se espera AAAA-MM")
-    year, month = int(match.group(1)), int(match.group(2))
-    if not 1 <= month <= 12:
+        raise ValueError(f"periodo inválido: {value!r}; se espera AAAA o AAAA-MM")
+    year = int(match.group(1))
+    month = int(match.group(2)) if match.group(2) else None
+    if month is not None and not 1 <= month <= 12:
         raise ValueError(f"mes inválido en {value!r}")
     return year, month
 
@@ -116,6 +114,8 @@ def parse_period(value: str) -> tuple[int, int]:
 def month_range(start: str, end: str) -> list[str]:
     y0, m0 = parse_period(start)
     y1, m1 = parse_period(end)
+    if m0 is None or m1 is None:
+        raise ValueError("un rango mensual exige periodos AAAA-MM")
     out = []
     year, month = y0, m0
     while (year, month) <= (y1, m1):
@@ -126,13 +126,21 @@ def month_range(start: str, end: str) -> list[str]:
     return out
 
 
+def year_range(start: str, end: str) -> list[str]:
+    y0, _ = parse_period(start)
+    y1, _ = parse_period(end)
+    return [f"{year:04d}" for year in range(y0, y1 + 1)]
+
+
 def declared_periods(profile: dict[str, Any]) -> list[str]:
     dates = profile.get("dates") or {}
     if dates.get("expected"):
         return [str(p) for p in dates["expected"]]
     window = dates.get("range")
     if window:
-        return month_range(window["from"], window["to"])
+        if dates.get("month"):
+            return month_range(window["from"], window["to"])
+        return year_range(window["from"], window["to"])
     return []
 
 
@@ -190,17 +198,69 @@ def parse_table(table: Table, profile: dict[str, Any]) -> Parsed:
     period_of_row: dict[int, str] = {}
     row_of_period: dict[str, int] = {}
     year_field = dates.get("year", "year")
-    if year_field in values and month_field in values:
+    if year_field in values:
         for row_number in table.row_numbers:
             year = values[year_field].get(row_number)
-            month = values[month_field].get(row_number)
-            if not isinstance(year, int) or not isinstance(month, int):
+            if not isinstance(year, int):
                 continue
-            text = f"{year:04d}-{month:02d}"
+            if month_field:
+                month = values.get(month_field, {}).get(row_number)
+                if not isinstance(month, int):
+                    continue
+                text = f"{year:04d}-{month:02d}"
+            else:
+                text = f"{year:04d}"
             period_of_row[row_number] = text
             row_of_period.setdefault(text, row_number)
 
     return Parsed(table, values, period_of_row, row_of_period)
+
+
+def build_variables_summary(parsed: Parsed, profile: dict[str, Any]) -> dict[str, Any]:
+    """Summarize declared columns without exposing individual observations.
+
+    A missing header has unknown counts, not zero counts. Blank values are
+    counted separately from nonblank values that could not be parsed.
+    """
+    table = parsed.table
+    columns = []
+    for entry in profile["schema"]:
+        index = _field_index(table, entry)
+        valid = null = excluded = None
+        if index is not None:
+            valid = null = excluded = 0
+            values = parsed.values[entry["name"]]
+            for row in table.row_numbers:
+                if _is_blank(table.cell(row, index)):
+                    null += 1
+                elif row in values and values[row] is not None:
+                    valid += 1
+                else:
+                    excluded += 1
+        columns.append(
+            {
+                "name": entry["name"],
+                "column": entry["column"],
+                "type": entry["type"],
+                "unit": entry.get("unit"),
+                "reference": entry.get("reference"),
+                "nullable": bool(entry.get("nullable", False)),
+                "notes": entry.get("notes"),
+                "present": index is not None,
+                "valid_count": valid,
+                "null_count": null,
+                "excluded_count": excluded,
+            }
+        )
+    display = profile.get("display") or {}
+    return {
+        "row_count": len(table.row_numbers),
+        "columns": columns,
+        "coverage": {
+            "period": display.get("period"),
+            "notes": profile.get("summary_notes"),
+        },
+    }
 
 
 def _finding(
@@ -423,305 +483,36 @@ def _eval_contract(
                 )
             )
 
-    # CONT-06 unit and base
-    block = profile.get("comparability") or {}
-    unit = block.get("unit")
-    series = block.get("series") or []
-    bases = {s["index"]: s.get("base") for s in series if s.get("base")}
-    unit_field = block.get("unit_field")
-    unit_issues: list[dict[str, Any]] = []
-    if unit_field and unit and unit_field in parsed.values:
-        entry = next(e for e in schema if e["name"] == unit_field)
-        index = _field_index(table, entry)
-        for row_number in table.row_numbers:
-            raw = table.cell(row_number, index)
-            observed = "" if raw is None else str(raw).strip()
-            if observed != unit and len(unit_issues) < MAX_EVIDENCE_ITEMS:
-                unit_issues.append(
-                    {"observed": observed, **_cell_ref(table, row_number, index)}
-                )
-    if unit_issues:
-        findings.append(
-            _finding(
-                meta,
-                "CONT-06",
-                FAILURE,
-                "La unidad observada no coincide con la declarada.",
-                {"declared_unit": unit, "issues": unit_issues},
-            )
+    # CONT-06 variables, units and reference scopes
+    summary = build_variables_summary(parsed, profile)
+    findings.append(
+        _finding(
+            meta,
+            "CONT-06",
+            OK,
+            "Las variables declaradas, sus tipos, unidades y referencias están resumidos.",
+            {
+                "row_count": summary["row_count"],
+                "variables": [
+                    {
+                        "name": column["name"],
+                        "column": column["column"],
+                        "type": column["type"],
+                        "unit": column["unit"],
+                        "reference": column["reference"],
+                        "nullable": column["nullable"],
+                        "valid_count": column["valid_count"],
+                        "null_count": column["null_count"],
+                        "excluded_count": column["excluded_count"],
+                    }
+                    for column in summary["columns"]
+                ],
+                "coverage": summary["coverage"],
+            },
         )
-    elif not unit or not bases:
-        findings.append(
-            _finding(
-                meta,
-                "CONT-06",
-                NOT_EVALUATED,
-                "El perfil no declara unidad o base.",
-                {"declared_unit": unit, "declared_bases": bases},
-            )
-        )
-    else:
-        findings.append(
-            _finding(
-                meta,
-                "CONT-06",
-                OK,
-                "Unidad y base coinciden con lo declarado en el perfil.",
-                {"declared_unit": unit, "declared_bases": bases},
-            )
-        )
+    )
 
     return findings
-
-
-# --------------------------------------------------------------------------
-# P0.3 comparability
-# --------------------------------------------------------------------------
-
-
-def _base_of(profile: dict[str, Any], field_name: str) -> str | None:
-    for series in (profile.get("comparability") or {}).get("series") or []:
-        if series.get("index") == field_name:
-            return series.get("base")
-    return None
-
-
-def _column_of(profile: dict[str, Any], field_name: str) -> dict[str, Any]:
-    for entry in profile["schema"]:
-        if entry["name"] == field_name:
-            return entry
-    raise config.ConfigError(f"el perfil no declara el campo {field_name}")
-
-
-def _resolve_point(parsed: Parsed, ref: dict[str, Any]) -> tuple[int, Any] | None:
-    row = parsed.row_of_period.get(str(ref.get("period")))
-    if row is None:
-        return None
-    value = parsed.values.get(ref.get("field"), {}).get(row)
-    if value is None:
-        return None
-    return row, value
-
-
-def _eval_comparisons(
-    parsed: Parsed, profile: dict[str, Any], requested: list[str]
-) -> list[Comparison]:
-    block = profile.get("comparability") or {}
-    specs = {c["id"]: c for c in block.get("checks") or []}
-    results: list[Comparison] = []
-
-    for comparison_id in requested:
-        spec = specs.get(comparison_id)
-        if spec is None:
-            results.append(
-                Comparison(
-                    comparison_id=comparison_id,
-                    label=comparison_id,
-                    status="bloqueada",
-                    reason="La comparación solicitada no está declarada en el perfil.",
-                )
-            )
-            continue
-
-        num_field = spec["numerator"]["field"]
-        den_field = spec["denominator"]["field"]
-        num_entry = _column_of(profile, num_field)
-        den_entry = _column_of(profile, den_field)
-        num = _resolve_point(parsed, spec["numerator"])
-        den = _resolve_point(parsed, spec["denominator"])
-
-        evidence: dict[str, Any] = {
-            "numerator_column": num_entry["column"],
-            "denominator_column": den_entry["column"],
-            "numerator_base": _base_of(profile, num_field),
-            "denominator_base": _base_of(profile, den_field),
-            "numerator_period": spec["numerator"]["period"],
-            "denominator_period": spec["denominator"]["period"],
-            "unit": spec.get("unit") or block.get("unit"),
-        }
-        if num:
-            evidence["numerator_cell"] = _cell_ref(
-                parsed.table, num[0], _field_index(parsed.table, num_entry)
-            ).get("cell")
-        if den:
-            evidence["denominator_cell"] = _cell_ref(
-                parsed.table, den[0], _field_index(parsed.table, den_entry)
-            ).get("cell")
-
-        if num is None or den is None:
-            results.append(
-                Comparison(
-                    comparison_id=comparison_id,
-                    label=spec["label"],
-                    status="bloqueada",
-                    reason="El periodo o la columna no están disponibles en el archivo.",
-                    public_evidence=evidence,
-                    rules=["IPC-01"],
-                )
-            )
-            continue
-
-        num_row, num_value = num
-        den_row, den_value = den
-
-        if _base_of(profile, num_field) != _base_of(profile, den_field):
-            raw = (num_value / den_value - 1.0) * 100.0
-            results.append(
-                Comparison(
-                    comparison_id=comparison_id,
-                    label=spec["label"],
-                    status="bloqueada",
-                    reason=(
-                        "Bases distintas: el cociente entre índices de bases distintas "
-                        "no es una variación y no se puede comparar directamente."
-                    ),
-                    public_evidence=evidence,
-                    private_evidence={
-                        "computed_pct": raw,
-                        "computed_pct_rounded": round(raw, 4),
-                        "display_public": False,
-                        "note": (
-                            "Se calculó solo para la pantalla de revisión. El número no "
-                            "se copia al corte público, ni al export, ni a la ficha."
-                        ),
-                    },
-                    rules=["IPC-01"],
-                )
-            )
-            continue
-
-        den_period = parse_period(str(spec["denominator"]["period"]))
-        num_period = parse_period(str(spec["numerator"]["period"]))
-        gap = (num_period[0] - den_period[0]) * 12 + (num_period[1] - den_period[1])
-        if gap != 1:
-            results.append(
-                Comparison(
-                    comparison_id=comparison_id,
-                    label=spec["label"],
-                    status="bloqueada",
-                    reason=(
-                        "Los periodos solicitados no son contiguos; la variación "
-                        "mensual exige meses consecutivos."
-                    ),
-                    public_evidence={**evidence, "months_between": gap},
-                    rules=["IPC-02"],
-                )
-            )
-            continue
-
-        computed = (num_value / den_value - 1.0) * 100.0
-        submitted: dict[str, Any] = {
-            **evidence,
-            "period": str(spec["numerator"]["period"]),
-            "computed_pct": round(computed, 6),
-        }
-
-        published_spec = spec.get("published")
-        if published_spec:
-            published = _resolve_point(parsed, published_spec)
-            pub_entry = _column_of(profile, published_spec["field"])
-            cell = None
-            if published:
-                cell = _cell_ref(
-                    parsed.table, published[0], _field_index(parsed.table, pub_entry)
-                ).get("cell")
-            submitted["published_cell"] = cell
-            submitted["published_pct"] = (
-                None if published is None else round(float(published[1]), 6)
-            )
-            if published is None:
-                results.append(
-                    Comparison(
-                        comparison_id=comparison_id,
-                        label=spec["label"],
-                        status="bloqueada",
-                        reason="La variación publicada no está disponible.",
-                        public_evidence=submitted,
-                        rules=["IPC-03"],
-                    )
-                )
-                continue
-            tolerance = float(spec.get("tolerance_pp", 0.005))
-            delta = abs(computed - float(published[1]))
-            if delta > tolerance:
-                results.append(
-                    Comparison(
-                        comparison_id=comparison_id,
-                        label=spec["label"],
-                        status="bloqueada",
-                        reason="La variación calculada no coincide con la publicada.",
-                        public_evidence={**submitted, "delta_pp": round(delta, 6)},
-                        rules=["IPC-03"],
-                    )
-                )
-                continue
-
-        results.append(
-            Comparison(
-                comparison_id=comparison_id,
-                label=spec["label"],
-                status="ok",
-                reason="Misma base, periodos contiguos y variación publicada.",
-                public_evidence=submitted,
-                rules=["IPC-01", "IPC-02", "IPC-03"]
-                if published_spec
-                else ["IPC-01", "IPC-02"],
-            )
-        )
-    return results
-
-
-# --------------------------------------------------------------------------
-# Publishable series
-# --------------------------------------------------------------------------
-
-
-def build_series(parsed: Parsed, profile: dict[str, Any]) -> list[dict[str, Any]]:
-    table = parsed.table
-    block = profile.get("comparability") or {}
-    out: list[dict[str, Any]] = []
-    for spec in block.get("series") or []:
-        field_name = spec["index"]
-        if field_name not in parsed.values:
-            continue
-        entry = _column_of(profile, field_name)
-        index = _field_index(table, entry)
-        variation_field = spec.get("variation")
-        var_entry = _column_of(profile, variation_field) if variation_field else None
-        var_index = _field_index(table, var_entry) if var_entry else None
-
-        points = []
-        for period in declared_periods(profile):
-            row = parsed.row_of_period.get(period)
-            if row is None:
-                continue
-            value = parsed.values[field_name].get(row)
-            if value is None:
-                continue
-            point: dict[str, Any] = {
-                "period": period,
-                "value": value,
-                "cell": _cell_ref(table, row, index).get("cell"),
-            }
-            if var_entry is not None:
-                variation = parsed.values.get(variation_field, {}).get(row)
-                point["published_variation_pct"] = variation
-                point["variation_cell"] = _cell_ref(table, row, var_index).get("cell")
-            points.append(point)
-
-        out.append(
-            {
-                "series_id": spec["id"],
-                "label": spec.get("label", spec["id"]),
-                "base": spec.get("base"),
-                "unit": block.get("unit"),
-                "comparable": bool(spec.get("comparable", True)),
-                "not_comparable_reason": spec.get("reason"),
-                "has_published_variation": var_entry is not None,
-                "points": points,
-            }
-        )
-    return out
 
 
 # --------------------------------------------------------------------------
@@ -876,9 +667,8 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
     meta = config.rule_meta(rules_doc)
 
     findings: list[Finding] = []
-    comparisons: list[Comparison] = []
     files: dict[str, str] = {}
-    series: list[dict[str, Any]] = []
+    variables_summary: dict[str, Any] | None = None
     entity: dict[str, Any] = {}
     license_verified = False
 
@@ -1062,11 +852,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
         if read_failure is None and table is not None:
             parsed = parse_table(table, profile)
             findings.extend(_eval_contract(parsed, profile, meta))
-            series = build_series(parsed, profile)
-            if subject.requested_comparisons:
-                comparisons = _eval_comparisons(
-                    parsed, profile, subject.requested_comparisons
-                )
+            variables_summary = build_variables_summary(parsed, profile)
         else:
             findings.extend(
                 _not_evaluated(
@@ -1089,7 +875,7 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
             "profile": f"{profile['profile_id']}@{profile['version']}",
             "license": license_info,
             "display": display,
-            "series": series,
+            "variables_summary": variables_summary,
         }
 
     for finding in findings:
@@ -1106,7 +892,6 @@ def validate_subject(subject: Subject, write_receipt: bool = True) -> Validation
         method=subject.method,
         entity=entity,
         findings=findings,
-        comparisons=comparisons,
         warnings_justified=warnings_justified,
     )
     result.coverage = summarize_coverage(findings)

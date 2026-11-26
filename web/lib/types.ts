@@ -17,33 +17,25 @@ export interface Finding {
   justified: boolean;
 }
 
-export interface Comparison {
-  comparison_id: string;
-  label: string;
-  status: "ok" | "bloqueada";
-  reason: string;
-  evidence?: Record<string, unknown>;
-  private_evidence?: Record<string, unknown>;
-  rules?: string[];
-}
-
-export interface SeriesPoint {
-  period: string;
-  value: number;
-  cell: string | null;
-  published_variation_pct?: number | null;
-  variation_cell?: string | null;
-}
-
-export interface Series {
-  series_id: string;
-  label: string;
-  base: string | null;
-  unit: string | null;
-  comparable: boolean;
-  not_comparable_reason: string | null;
-  has_published_variation: boolean;
-  points: SeriesPoint[];
+export interface VariablesSummary {
+  row_count: number;
+  coverage?: {
+    period?: string | null;
+    notes?: string | null;
+  };
+  columns: {
+    name: string;
+    column: string;
+    type: string;
+    unit: string | null;
+    reference: string | null;
+    nullable: boolean;
+    notes: string | null;
+    present: boolean;
+    valid_count: number | null;
+    null_count: number | null;
+    excluded_count: number | null;
+  }[];
 }
 
 export interface Entity {
@@ -65,7 +57,7 @@ export interface Entity {
     evidence?: string | null;
   };
   display: { period?: string; base?: string; unit?: string };
-  series?: Series[];
+  variables_summary?: VariablesSummary | null;
   resources?: { manifest_item: string; identity: Record<string, string> }[];
   same_bytes?: boolean;
 }
@@ -100,7 +92,6 @@ export interface ReviewPayload {
   coverage: Coverage;
   digest: string;
   findings: Finding[];
-  comparisons: Comparison[];
   blocking: string[];
   warnings: { rule_id: string; title: string; message: string; justified: boolean }[];
   decision: Decision | null;
@@ -149,7 +140,7 @@ export interface AggregateSummary {
   origin: string;
   period: string | null;
   topic: string | null;
-  series_count: number;
+  variables_count: number;
   sha256: string | null;
 }
 
@@ -162,7 +153,6 @@ export interface AggregateDetail {
   coverage: Coverage;
   digest: string;
   findings: Finding[];
-  comparisons: Comparison[];
   published_at_utc: string;
   notice: string;
 }

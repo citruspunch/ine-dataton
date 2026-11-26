@@ -64,8 +64,10 @@ const MONTH_OPTIONS = Array.from({ length: 12 }, (_, index) => {
   return { value, label: label.charAt(0).toUpperCase() + label.slice(1) };
 });
 
-function rangePeriod(year: string, month: string) {
-  return year && month ? `${year}-${month}` : "";
+function rangePeriod(year: string, month: string, withMonth = true) {
+  if (!year) return "";
+  if (!withMonth) return year;
+  return month ? `${year}-${month}` : "";
 }
 
 let uid = 0;
@@ -83,6 +85,9 @@ interface ColumnDraft {
   column: string;
   type: ColumnType;
   nullable: boolean;
+  unit: string;
+  reference: string;
+  notes: string;
 }
 
 const COLUMN_TYPES: { value: ColumnType; label: string }[] = [
@@ -139,12 +144,8 @@ interface Draft {
   rangeToYear: string;
   rangeToMonth: string;
   grainExtra: string;
-  unit: string;
-  indexField: string;
-  base: string;
+  summaryNotes: string;
   displayPeriod: string;
-  displayBase: string;
-  displayUnit: string;
 }
 
 function initialDraft(): Draft {
@@ -167,12 +168,8 @@ function initialDraft(): Draft {
     rangeToYear: "",
     rangeToMonth: "",
     grainExtra: "",
-    unit: "índice",
-    indexField: "",
-    base: "",
+    summaryNotes: "",
     displayPeriod: "",
-    displayBase: "",
-    displayUnit: "",
   };
 }
 
@@ -209,14 +206,13 @@ function draftFromProfile(data: Record<string, unknown>): Draft {
           ? type
           : ("string" as ColumnType),
         nullable: column.nullable === true,
+        unit: asText(column.unit),
+        reference: asText(column.reference),
+        notes: asText(column.notes),
       };
     })
     .filter((column) => column.name || column.column);
   const grain = Array.isArray(data.grain) ? data.grain.map((name) => asText(name)) : [];
-  const comparability = asRecord(data.comparability);
-  const series = Array.isArray(comparability.series)
-    ? asRecord(comparability.series[0])
-    : {};
   const display = asRecord(data.display);
   const year = asText(dates.year);
   const month = asText(dates.month);
@@ -243,18 +239,15 @@ function draftFromProfile(data: Record<string, unknown>): Draft {
     rangeToMonth,
     grainExtra:
       grain.find((name) => name && name !== year && name !== month) ?? "",
-    unit: asText(comparability.unit, "índice") || "índice",
-    indexField: asText(series.index),
-    base: asText(series.base),
+    summaryNotes: asText(data.summary_notes),
     displayPeriod: asText(display.period),
-    displayBase: asText(display.base),
-    displayUnit: asText(display.unit),
   };
 }
 
 function buildYaml(draft: Draft): string {
   const columns = draft.columns.filter((column) => column.name.trim() && column.column.trim());
   const grain = [draft.dateYear, draft.dateMonth, draft.grainExtra].filter(Boolean);
+  const withMonth = Boolean(draft.dateMonth);
   const lines: string[] = [];
 
   lines.push(`profile_id: ${scalar(draft.profileId)}`);
@@ -275,6 +268,9 @@ function buildYaml(draft: Draft): string {
       lines.push(`    column: ${scalar(column.column)}`);
       lines.push(`    type: ${column.type}`);
       if (column.nullable) lines.push("    nullable: true");
+      if (column.unit.trim()) lines.push(`    unit: ${scalar(column.unit)}`);
+      if (column.reference.trim()) lines.push(`    reference: ${scalar(column.reference)}`);
+      if (column.notes.trim()) lines.push(`    notes: ${scalar(column.notes)}`);
     }
   } else {
     lines.push("schema: []");
@@ -287,15 +283,17 @@ function buildYaml(draft: Draft): string {
   lines.push("");
   lines.push("dates:");
   lines.push(`  year: ${scalar(draft.dateYear)}`);
-  lines.push(`  month: ${scalar(draft.dateMonth)}`);
-  lines.push(`  month_format: ${draft.monthFormat}`);
+  if (withMonth) {
+    lines.push(`  month: ${scalar(draft.dateMonth)}`);
+    lines.push(`  month_format: ${draft.monthFormat}`);
+  }
   if (draft.periodMode === "range") {
     lines.push("  range:");
     lines.push(
-      `    from: ${scalar(rangePeriod(draft.rangeFromYear, draft.rangeFromMonth))}`,
+      `    from: ${scalar(rangePeriod(draft.rangeFromYear, draft.rangeFromMonth, withMonth))}`,
     );
     lines.push(
-      `    to: ${scalar(rangePeriod(draft.rangeToYear, draft.rangeToMonth))}`,
+      `    to: ${scalar(rangePeriod(draft.rangeToYear, draft.rangeToMonth, withMonth))}`,
     );
   } else if (draft.periods.length) {
     lines.push("  expected:");
@@ -304,40 +302,25 @@ function buildYaml(draft: Draft): string {
     lines.push("  expected: []");
   }
 
-  lines.push("");
-  lines.push("comparability:");
-  lines.push(`  unit: ${scalar(draft.unit)}`);
-  if (draft.indexField) {
-    const column = columns.find((entry) => entry.name === draft.indexField);
-    lines.push("  series:");
-    lines.push("    - id: serie");
-    lines.push(`      label: ${scalar(column?.column || draft.indexField)}`);
-    lines.push(`      index: ${scalar(draft.indexField)}`);
-    lines.push(`      base: ${scalar(draft.base)}`);
-    lines.push("      comparable: true");
-  } else {
-    lines.push("  series: []");
+  if (draft.summaryNotes.trim()) {
+    lines.push("");
+    lines.push(`summary_notes: ${block(draft.summaryNotes, 2)}`);
   }
-  lines.push("  checks: []");
 
   const displayPeriod =
     draft.displayPeriod.trim() ||
     (draft.periodMode === "range"
       ? [
-          rangePeriod(draft.rangeFromYear, draft.rangeFromMonth),
-          rangePeriod(draft.rangeToYear, draft.rangeToMonth),
+          rangePeriod(draft.rangeFromYear, draft.rangeFromMonth, withMonth),
+          rangePeriod(draft.rangeToYear, draft.rangeToMonth, withMonth),
         ]
           .filter(Boolean)
           .join(" a ")
       : draft.periods.join(", "));
-  const displayBase = draft.displayBase.trim() || draft.base;
-  const displayUnit = draft.displayUnit.trim() || draft.unit;
-  if (displayPeriod || displayBase || displayUnit) {
+  if (displayPeriod) {
     lines.push("");
     lines.push("display:");
-    if (displayPeriod) lines.push(`  period: ${scalar(displayPeriod)}`);
-    if (displayBase) lines.push(`  base: ${scalar(displayBase)}`);
-    if (displayUnit) lines.push(`  unit: ${scalar(displayUnit)}`);
+    lines.push(`  period: ${scalar(displayPeriod)}`);
   }
 
   return `${lines.join("\n")}\n`;
@@ -357,29 +340,21 @@ function validateDraft(draft: Draft): string[] {
   if (draft.kind === "xlsx" && !draft.expectedSheet.trim()) {
     problems.push("Un perfil XLSX necesita el nombre de la hoja esperada.");
   }
-  if (!draft.dateYear || !draft.dateMonth) {
-    problems.push("Seleccione los campos de año y mes.");
+  if (!draft.dateYear) {
+    problems.push("Seleccione el campo de año.");
   }
   if (draft.periodMode === "expected" && draft.periods.length === 0) {
     problems.push("Declare al menos un periodo esperado.");
   }
   if (draft.periodMode === "range") {
-    const from = rangePeriod(draft.rangeFromYear, draft.rangeFromMonth);
-    const to = rangePeriod(draft.rangeToYear, draft.rangeToMonth);
+    const withMonth = Boolean(draft.dateMonth);
+    const from = rangePeriod(draft.rangeFromYear, draft.rangeFromMonth, withMonth);
+    const to = rangePeriod(draft.rangeToYear, draft.rangeToMonth, withMonth);
     if (!from || !to) {
       problems.push("Complete el inicio y el fin del rango continuo.");
     } else if (to < from) {
       problems.push("El fin del rango no puede ser anterior al inicio.");
     }
-  }
-  if (!draft.unit.trim()) {
-    problems.push("La unidad es obligatoria.");
-  }
-  if (!draft.base.trim()) {
-    problems.push("La base es obligatoria.");
-  }
-  if (!draft.indexField) {
-    problems.push("Seleccione la columna del índice.");
   }
   return problems;
 }
@@ -472,7 +447,6 @@ export function NewProfileDialog({
         dateYear: current.dateYear === name ? "" : current.dateYear,
         dateMonth: current.dateMonth === name ? "" : current.dateMonth,
         grainExtra: current.grainExtra === name ? "" : current.grainExtra,
-        indexField: current.indexField === name ? "" : current.indexField,
       };
     });
   }
@@ -636,7 +610,7 @@ export function NewProfileDialog({
 
               <Section
                 number="03"
-                title="Columnas"
+                title="Variables y columnas"
                 action={
                   <Button
                     type="button"
@@ -651,6 +625,9 @@ export function NewProfileDialog({
                           column: "",
                           type: "float",
                           nullable: false,
+                          unit: "",
+                          reference: "",
+                          notes: "",
                         },
                       ])
                     }
@@ -734,6 +711,11 @@ export function NewProfileDialog({
                             <Trash className="h-4 w-4" />
                           </Button>
                         </div>
+                        <div className="grid gap-2 sm:col-span-4 sm:grid-cols-3">
+                          <Input value={column.unit} onChange={(event) => updateColumn(column.uid, { unit: event.target.value })} placeholder="Unidad (opcional)" aria-label="Unidad" />
+                          <Input value={column.reference} onChange={(event) => updateColumn(column.uid, { reference: event.target.value })} placeholder="Base o alcance (opcional)" aria-label="Base o alcance" />
+                          <Input value={column.notes} onChange={(event) => updateColumn(column.uid, { notes: event.target.value })} placeholder="Notas (opcional)" aria-label="Notas" />
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -762,8 +744,7 @@ export function NewProfileDialog({
                   </Field>
                   <Field
                     label="Campo de mes"
-                    required
-                    tooltip="Columna que aporta el mes de cada registro para validar fechas y periodos."
+                    tooltip="Columna que aporta el mes de cada registro. Déjala vacía para contratos anuales o sin desagregación mensual."
                   >
                     <DraftSelect
                       value={draft.dateMonth}
@@ -772,22 +753,24 @@ export function NewProfileDialog({
                       placeholder="Seleccione"
                     />
                   </Field>
-                  <Field
-                    label="Formato del mes"
-                    required
-                    tooltip="Formato en que vienen los meses en el archivo (números del 1 al 12 o nombres en español) para parsearlos sin errores ni orden alfabético."
-                  >
-                    <DraftSelect
-                      value={draft.monthFormat}
-                      onChange={(value) =>
-                        update("monthFormat", value as Draft["monthFormat"])
-                      }
-                      options={[
-                        { value: "number", label: "Número del 1 al 12" },
-                        { value: "name_es", label: "Nombre en español" },
-                      ]}
-                    />
-                  </Field>
+                  {draft.dateMonth ? (
+                    <Field
+                      label="Formato del mes"
+                      required
+                      tooltip="Formato en que vienen los meses en el archivo (números del 1 al 12 o nombres en español) para parsearlos sin errores ni orden alfabético."
+                    >
+                      <DraftSelect
+                        value={draft.monthFormat}
+                        onChange={(value) =>
+                          update("monthFormat", value as Draft["monthFormat"])
+                        }
+                        options={[
+                          { value: "number", label: "Número del 1 al 12" },
+                          { value: "name_es", label: "Nombre en español" },
+                        ]}
+                      />
+                    </Field>
+                  ) : null}
                   <Field
                     label="Campo adicional del grano"
                     tooltip="Columna extra (por ejemplo, indicador o territorio) que junto con el periodo define qué hace única a una fila y detecta grano duplicado."
@@ -839,6 +822,7 @@ export function NewProfileDialog({
                         label="Desde"
                         year={draft.rangeFromYear}
                         month={draft.rangeFromMonth}
+                        withMonth={Boolean(draft.dateMonth)}
                         onYear={(value) => update("rangeFromYear", value)}
                         onMonth={(value) => update("rangeFromMonth", value)}
                       />
@@ -846,6 +830,7 @@ export function NewProfileDialog({
                         label="Hasta"
                         year={draft.rangeToYear}
                         month={draft.rangeToMonth}
+                        withMonth={Boolean(draft.dateMonth)}
                         onYear={(value) => update("rangeToYear", value)}
                         onMonth={(value) => update("rangeToMonth", value)}
                       />
@@ -855,54 +840,34 @@ export function NewProfileDialog({
                   <div className="mt-3">
                     <PeriodsInput
                       periods={draft.periods}
+                      withMonth={Boolean(draft.dateMonth)}
                       onChange={(periods) => update("periods", periods)}
-                      tooltip="Lista explícita de periodos válidos (por ejemplo, 2025-01) que el archivo debe cubrir sin mezclar periodos fuera de lo declarado."
+                      tooltip="Lista explícita de periodos válidos (2025-01 si hay mes; 2025 si el contrato es anual) que el archivo debe cubrir sin mezclar periodos fuera de lo declarado."
                     />
                   </div>
                 )}
               </Section>
 
-              <Section number="06" title="Comparabilidad">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <Field
-                    label="Unidad"
-                    required
-                    tooltip="Unidad de medida declarada para los valores del conjunto (por ejemplo, índice o porcentaje)."
-                  >
-                    <Input
-                      value={draft.unit}
-                      onChange={(event) => update("unit", event.target.value)}
-                      placeholder="índice"
-                    />
-                  </Field>
-                  <Field
-                    label="Base"
-                    required
-                    tooltip="Periodo o año base de referencia del indicador. Permite distinguir cambios metodológicos de base antes de comparar series."
-                  >
-                    <Input
-                      value={draft.base}
-                      onChange={(event) => update("base", event.target.value)}
-                      placeholder="2024=100"
-                    />
-                  </Field>
-                  <Field
-                    label="Columna del índice"
-                    required
-                    tooltip="Columna que contiene los valores del indicador que se publican y comparan."
-                  >
-                    <DraftSelect
-                      value={draft.indexField}
-                      onChange={(value) => update("indexField", value)}
-                      options={fieldOptions}
-                      placeholder="Seleccione"
-                    />
-                  </Field>
-                </div>
+              <Section number="06" title="Resumen de variables y unidades">
+                <p className="mb-3 text-[13.5px] leading-relaxed text-muted">
+                  La unidad, la base o alcance y las notas se declaran por columna en el
+                  paso 03. El resumen se genera al validar el archivo, con conteos de
+                  valores válidos, nulos y excluidos para cualquier familia del INE.
+                </p>
+                <Field
+                  label="Notas de cobertura y advertencias"
+                  tooltip="Texto opcional sobre cobertura, exclusiones o salvedades metodológicas del conjunto. Se muestra en el detalle de revisión, la consulta pública y los recibos."
+                >
+                  <Textarea
+                    value={draft.summaryNotes}
+                    onChange={(event) => update("summaryNotes", event.target.value)}
+                    placeholder="Cobertura nacional, datos preliminares, columnas con distinta base, etc."
+                  />
+                </Field>
               </Section>
 
               <Section number="07" title="Presentación pública">
-                <div className="grid gap-4 sm:grid-cols-3">
+                <div className="grid gap-4 sm:grid-cols-1">
                   <Field
                     label="Periodo mostrado"
                     tooltip="Texto opcional para mostrar el periodo en la consulta pública. Si queda vacío, se usa el periodo declarado en el contrato."
@@ -911,26 +876,6 @@ export function NewProfileDialog({
                       value={draft.displayPeriod}
                       onChange={(event) => update("displayPeriod", event.target.value)}
                       placeholder="diciembre 2024 y enero 2025"
-                    />
-                  </Field>
-                  <Field
-                    label="Base mostrada"
-                    tooltip="Etiqueta opcional de base de referencia para la vista pública. Si queda vacía, se toma la base declarada en el perfil."
-                  >
-                    <Input
-                      value={draft.displayBase}
-                      onChange={(event) => update("displayBase", event.target.value)}
-                      placeholder="2024=100"
-                    />
-                  </Field>
-                  <Field
-                    label="Unidad mostrada"
-                    tooltip="Etiqueta opcional de unidad para la consulta pública. Si queda vacía, se usa la unidad declarada en el perfil."
-                  >
-                    <Input
-                      value={draft.displayUnit}
-                      onChange={(event) => update("displayUnit", event.target.value)}
-                      placeholder="índice"
                     />
                   </Field>
                 </div>
@@ -1140,19 +1085,21 @@ function RangeBound({
   label,
   year,
   month,
+  withMonth,
   onYear,
   onMonth,
 }: {
   label: string;
   year: string;
   month: string;
+  withMonth: boolean;
   onYear: (value: string) => void;
   onMonth: (value: string) => void;
 }) {
   return (
     <div>
       <p className="mb-1.5 text-[14px] font-semibold text-ink">{label}</p>
-      <div className="grid grid-cols-2 gap-2">
+      <div className={withMonth ? "grid grid-cols-2 gap-2" : ""}>
         <DraftSelect
           value={year}
           onChange={onYear}
@@ -1160,13 +1107,15 @@ function RangeBound({
           placeholder="Año"
           ariaLabel={`${label}: año`}
         />
-        <DraftSelect
-          value={month}
-          onChange={onMonth}
-          options={MONTH_OPTIONS}
-          placeholder="Mes"
-          ariaLabel={`${label}: mes`}
-        />
+        {withMonth ? (
+          <DraftSelect
+            value={month}
+            onChange={onMonth}
+            options={MONTH_OPTIONS}
+            placeholder="Mes"
+            ariaLabel={`${label}: mes`}
+          />
+        ) : null}
       </div>
     </div>
   );
@@ -1174,16 +1123,18 @@ function RangeBound({
 
 function PeriodsInput({
   periods,
+  withMonth,
   onChange,
   tooltip,
 }: {
   periods: string[];
+  withMonth: boolean;
   onChange: (periods: string[]) => void;
   tooltip?: string;
 }) {
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
-  const value = rangePeriod(year, month);
+  const value = rangePeriod(year, month, withMonth);
   const canAdd = Boolean(value) && !periods.includes(value);
 
   function add() {
@@ -1207,13 +1158,15 @@ function PeriodsInput({
           placeholder="Año"
           ariaLabel="Año del periodo"
         />
-        <DraftSelect
-          value={month}
-          onChange={setMonth}
-          options={MONTH_OPTIONS}
-          placeholder="Mes"
-          ariaLabel="Mes del periodo"
-        />
+        {withMonth ? (
+          <DraftSelect
+            value={month}
+            onChange={setMonth}
+            options={MONTH_OPTIONS}
+            placeholder="Mes"
+            ariaLabel="Mes del periodo"
+          />
+        ) : null}
         <Button type="button" variant="secondary" onClick={add} disabled={!canAdd}>
           <CopySimple className="h-4 w-4" aria-hidden />
           Añadir

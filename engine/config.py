@@ -35,9 +35,61 @@ SOURCES_FILE = DATA_DIR / "sources.json"
 DECISIONS_FILE = DECISION_DIR / "decisions.jsonl"
 UPLOAD_REGISTRY = UPLOAD_DIR / "manifest.json"
 
+DEFAULT_CASES = {
+    "note": "Lista cerrada vacía. Los recursos se registran al preparar el snapshot.",
+    "cases": [],
+}
+DEFAULT_JUSTIFICATIONS = {
+    "note": "Justificaciones registradas por el gate.",
+    "justifications": {},
+}
+DEFAULT_MANIFEST = {
+    "snapshot_id": None,
+    "prepared_at_utc": None,
+    "note": "Lista cerrada vacía. Añada recursos al snapshot para validarlos.",
+    "items": [],
+}
+DEFAULT_SOURCES = {
+    "snapshot_id": None,
+    "note": "Lista cerrada vacía. Añada recursos al snapshot para validarlos.",
+    "items": [],
+}
+
 
 class ConfigError(Exception):
     pass
+
+
+def ensure_runtime_dirs() -> None:
+    """Create the writable layout and empty defaults after a clean reset.
+
+    Only missing paths are created. Existing snapshots, decisions, profiles and
+    uploads are never overwritten.
+    """
+    directories = (
+        DATA_DIR,
+        PROFILE_DIR,
+        REVIEW_DIR,
+        PUBLIC_DIR,
+        FIXTURE_DIR,
+        RECEIPT_DIR,
+        DECISION_DIR,
+        UPLOAD_DIR,
+        OVERRIDE_DIR,
+        QUARANTINE_DIR,
+        PUBLIC_DIR / "aggregates",
+        PUBLIC_DIR / "receipts",
+    )
+    for path in directories:
+        path.mkdir(parents=True, exist_ok=True)
+    for path, default in (
+        (CASES_FILE, DEFAULT_CASES),
+        (JUSTIFICATION_FILE, DEFAULT_JUSTIFICATIONS),
+        (MANIFEST_FILE, DEFAULT_MANIFEST),
+        (SOURCES_FILE, DEFAULT_SOURCES),
+    ):
+        if not path.exists():
+            dump_json(default, path)
 
 
 def load_json(path: Path) -> Any:

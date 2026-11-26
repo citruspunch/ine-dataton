@@ -18,7 +18,7 @@ from . import config
 ALLOWED_TYPES = ("integer", "float", "string", "date")
 MONTH_FORMATS = ("name_es", "number")
 KINDS = ("xlsx", "delimited", "pair")
-PERIOD_RE = re.compile(r"^(\d{4})-(\d{2})$")
+PERIOD_RE = re.compile(r"^(\d{4})(?:-(\d{2}))?$")
 
 REQUIRED_FIELDS = (
     "profile_id",
@@ -31,7 +31,6 @@ REQUIRED_FIELDS = (
     "types",
     "grain",
     "dates",
-    "comparability",
 )
 
 BASE_FIELDS = ("profile_id", "version", "kind", "title")
@@ -119,8 +118,12 @@ def validate_profile(data: dict[str, Any]) -> list[dict[str, str]]:
         errors.extend(_validate_grain(data))
     if "dates" in data:
         errors.extend(_validate_dates(data))
-    if "comparability" in data:
-        errors.extend(_validate_comparability(data))
+    if (
+        "summary_notes" in data
+        and data["summary_notes"] is not None
+        and not isinstance(data["summary_notes"], str)
+    ):
+        err("summary_notes", "debe ser texto o null")
     return errors
 
 
@@ -180,6 +183,19 @@ def _validate_schema(data: dict[str, Any]) -> list[dict[str, str]]:
                     "message": f"{type_name} no está declarado en types",
                 }
             )
+        for key in ("unit", "reference", "notes"):
+            if (
+                key in entry
+                and entry[key] is not None
+                and not isinstance(entry[key], str)
+            ):
+                errors.append(
+                    {"field": f"{prefix}.{key}", "message": "debe ser texto o null"}
+                )
+        if "nullable" in entry and not isinstance(entry["nullable"], bool):
+            errors.append(
+                {"field": f"{prefix}.nullable", "message": "debe ser booleano"}
+            )
     return errors
 
 
@@ -204,19 +220,27 @@ def _validate_dates(data: dict[str, Any]) -> list[dict[str, str]]:
 
     errors: list[dict[str, str]] = []
     names = {e.get("name") for e in data.get("schema") or [] if isinstance(e, dict)}
-    for key in ("year", "month"):
-        if not dates.get(key):
-            errors.append({"field": f"dates.{key}", "message": "obligatorio"})
-        elif dates[key] not in names:
-            errors.append(
-                {
-                    "field": f"dates.{key}",
-                    "message": f"{dates[key]} no existe en schema",
-                }
-            )
+    if not dates.get("year"):
+        errors.append({"field": "dates.year", "message": "obligatorio"})
+    elif dates["year"] not in names:
+        errors.append(
+            {
+                "field": "dates.year",
+                "message": f"{dates['year']} no existe en schema",
+            }
+        )
+
+    has_month = bool(dates.get("month"))
+    if has_month and dates["month"] not in names:
+        errors.append(
+            {
+                "field": "dates.month",
+                "message": f"{dates['month']} no existe en schema",
+            }
+        )
 
     month_format = dates.get("month_format")
-    if month_format not in MONTH_FORMATS:
+    if has_month and month_format not in MONTH_FORMATS:
         errors.append(
             {
                 "field": "dates.month_format",
@@ -230,16 +254,19 @@ def _validate_dates(data: dict[str, Any]) -> list[dict[str, str]]:
         errors.append(
             {"field": "dates", "message": "declare expected o range con periodos"}
         )
+    period_hint = "AAAA-MM" if has_month else "AAAA"
     if expected:
         if not isinstance(expected, list):
             errors.append({"field": "dates.expected", "message": "debe ser una lista"})
         else:
             for index, period in enumerate(expected):
-                if not isinstance(period, str) or not PERIOD_RE.match(period):
+                if not isinstance(period, str) or not _period_matches(
+                    period, has_month
+                ):
                     errors.append(
                         {
                             "field": f"dates.expected[{index}]",
-                            "message": "formato AAAA-MM",
+                            "message": f"formato {period_hint}",
                         }
                     )
     if period_range:
@@ -248,9 +275,12 @@ def _validate_dates(data: dict[str, Any]) -> list[dict[str, str]]:
         else:
             for key in ("from", "to"):
                 value = period_range.get(key)
-                if not isinstance(value, str) or not PERIOD_RE.match(value):
+                if not isinstance(value, str) or not _period_matches(value, has_month):
                     errors.append(
-                        {"field": f"dates.range.{key}", "message": "formato AAAA-MM"}
+                        {
+                            "field": f"dates.range.{key}",
+                            "message": f"formato {period_hint}",
+                        }
                     )
             if (
                 isinstance(period_range.get("from"), str)
@@ -263,90 +293,9 @@ def _validate_dates(data: dict[str, Any]) -> list[dict[str, str]]:
     return errors
 
 
-def _validate_comparability(data: dict[str, Any]) -> list[dict[str, str]]:
-    block = data.get("comparability")
-    if not isinstance(block, dict):
-        return [{"field": "comparability", "message": "debe ser un mapa"}]
-
-    errors: list[dict[str, str]] = []
-    names = {e.get("name") for e in data.get("schema") or [] if isinstance(e, dict)}
-
-    if not block.get("unit"):
-        errors.append({"field": "comparability.unit", "message": "obligatorio"})
-
-    series = block.get("series")
-    if not isinstance(series, list) or not series:
-        errors.append(
-            {"field": "comparability.series", "message": "declare al menos una serie"}
-        )
-    else:
-        seen: set[str] = set()
-        for index, entry in enumerate(series):
-            prefix = f"comparability.series[{index}]"
-            if not isinstance(entry, dict):
-                errors.append({"field": prefix, "message": "debe ser un mapa"})
-                continue
-            series_id = entry.get("id")
-            if not series_id:
-                errors.append({"field": f"{prefix}.id", "message": "obligatorio"})
-            elif series_id in seen:
-                errors.append(
-                    {"field": f"{prefix}.id", "message": f"duplicado: {series_id}"}
-                )
-            else:
-                seen.add(str(series_id))
-            if not entry.get("index"):
-                errors.append({"field": f"{prefix}.index", "message": "obligatorio"})
-            elif entry["index"] not in names:
-                errors.append(
-                    {
-                        "field": f"{prefix}.index",
-                        "message": f"{entry['index']} no existe en schema",
-                    }
-                )
-            if not entry.get("base"):
-                errors.append({"field": f"{prefix}.base", "message": "obligatorio"})
-            variation = entry.get("variation")
-            if variation and variation not in names:
-                errors.append(
-                    {
-                        "field": f"{prefix}.variation",
-                        "message": f"{variation} no existe en schema",
-                    }
-                )
-
-    checks = block.get("checks") or []
-    if not isinstance(checks, list):
-        errors.append(
-            {"field": "comparability.checks", "message": "debe ser una lista"}
-        )
-        return errors
-    for index, check in enumerate(checks):
-        prefix = f"comparability.checks[{index}]"
-        if not isinstance(check, dict):
-            errors.append({"field": prefix, "message": "debe ser un mapa"})
-            continue
-        if not check.get("id"):
-            errors.append({"field": f"{prefix}.id", "message": "obligatorio"})
-        for side in ("numerator", "denominator"):
-            ref = check.get(side)
-            if not isinstance(ref, dict):
-                errors.append({"field": f"{prefix}.{side}", "message": "obligatorio"})
-                continue
-            if ref.get("field") not in names:
-                errors.append(
-                    {
-                        "field": f"{prefix}.{side}.field",
-                        "message": f"{ref.get('field')} no existe en schema",
-                    }
-                )
-            if not isinstance(ref.get("period"), str) or not PERIOD_RE.match(
-                str(ref.get("period"))
-            ):
-                errors.append(
-                    {"field": f"{prefix}.{side}.period", "message": "formato AAAA-MM"}
-                )
-    return errors
+def _period_matches(value: str, has_month: bool) -> bool:
+    match = PERIOD_RE.match(value)
+    return bool(match) and bool(match.group(2)) == has_month
 
 
 # --------------------------------------------------------------------------

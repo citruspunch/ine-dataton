@@ -52,45 +52,12 @@ class Finding:
 
 
 @dataclass
-class Comparison:
-    """Outcome of a comparison request (P0.3).
-
-    `private_evidence` may hold the invalid number: it is shown on the review
-    screen and never on the public sheet.
-    """
-
-    comparison_id: str
-    label: str
-    status: str  # "ok" | "bloqueada"
-    reason: str
-    public_evidence: dict[str, Any] = field(default_factory=dict)
-    private_evidence: dict[str, Any] = field(default_factory=dict)
-    rules: list[str] = field(default_factory=list)
-
-    def to_public_dict(self) -> dict[str, Any]:
-        return {
-            "comparison_id": self.comparison_id,
-            "label": self.label,
-            "status": self.status,
-            "reason": self.reason,
-            "evidence": self.public_evidence,
-            "rules": self.rules,
-        }
-
-    def to_private_dict(self) -> dict[str, Any]:
-        out = self.to_public_dict()
-        out["private_evidence"] = self.private_evidence
-        return out
-
-
-@dataclass
 class ValidationResult:
     case_id: str
     label: str
     method: str
     entity: dict[str, Any]
     findings: list[Finding] = field(default_factory=list)
-    comparisons: list[Comparison] = field(default_factory=list)
     state: str = "borrador"
     coverage: dict[str, Any] = field(default_factory=dict)
     digests: dict[str, str] = field(default_factory=dict)
@@ -114,7 +81,6 @@ class ValidationResult:
             "coverage": self.coverage,
             "digests": self.digests,
             "findings": [f.to_dict() for f in self.findings],
-            "comparisons": [c.to_private_dict() for c in self.comparisons],
         }
 
     def to_public_dict(self) -> dict[str, Any]:
@@ -127,7 +93,6 @@ class ValidationResult:
             "coverage": self.coverage,
             "digest": self.digests.get("validation_digest"),
             "findings": [f.to_dict() for f in self.findings],
-            "comparisons": [c.to_public_dict() for c in self.comparisons],
         }
 
 

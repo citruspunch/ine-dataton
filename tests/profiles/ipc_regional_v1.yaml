@@ -23,30 +23,48 @@ schema:
   - name: republica
     column: "República"
     type: float
+    unit: índice
+    reference: "2024=100"
   - name: region_1
     column: "Región I"
     type: float
+    unit: índice
+    reference: "2024=100"
   - name: region_2
     column: "Región II"
     type: float
+    unit: índice
+    reference: "2024=100"
   - name: region_3
     column: "Región III"
     type: float
+    unit: índice
+    reference: "2024=100"
   - name: region_4
     column: "Región IV"
     type: float
+    unit: índice
+    reference: "2024=100"
   - name: region_5
     column: "Región V"
     type: float
+    unit: índice
+    reference: "2024=100"
   - name: region_6
     column: "Región VI"
     type: float
+    unit: índice
+    reference: "2024=100"
   - name: region_7
     column: "Región VII"
     type: float
+    unit: índice
+    reference: "2024=100"
   - name: region_8
     column: "Región VIII"
     type: float
+    unit: índice
+    reference: "2024=100"
 
 types: [integer, float, string]
 
@@ -60,55 +78,9 @@ dates:
     from: "2025-01"
     to: "2026-10"
 
-comparability:
-  unit: índice
-  series:
-    - id: republica
-      label: "República"
-      index: republica
-      base: "2024=100"
-      comparable: true
-    - id: region_1
-      label: "Región I"
-      index: region_1
-      base: "2024=100"
-      comparable: true
-    - id: region_2
-      label: "Región II"
-      index: region_2
-      base: "2024=100"
-      comparable: true
-    - id: region_3
-      label: "Región III"
-      index: region_3
-      base: "2024=100"
-      comparable: true
-    - id: region_4
-      label: "Región IV"
-      index: region_4
-      base: "2024=100"
-      comparable: true
-    - id: region_5
-      label: "Región V"
-      index: region_5
-      base: "2024=100"
-      comparable: true
-    - id: region_6
-      label: "Región VI"
-      index: region_6
-      base: "2024=100"
-      comparable: true
-    - id: region_7
-      label: "Región VII"
-      index: region_7
-      base: "2024=100"
-      comparable: true
-    - id: region_8
-      label: "Región VIII"
-      index: region_8
-      base: "2024=100"
-      comparable: true
-  checks: []
+summary_notes: >
+  Tabla ancha con una columna por territorio. Todas las columnas comparten la
+  base 2024=100 y el resumen declara unidad, referencia y conteos por variable.
 
 display:
   period: "enero 2025 a octubre 2026"

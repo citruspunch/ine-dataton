@@ -130,8 +130,8 @@ export default async function PublicIndexPage() {
                     <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-muted">
                       <span className="inline-flex items-center gap-1">
                         <Stack className="h-3.5 w-3.5" aria-hidden />
-                        {aggregate.series_count}{" "}
-                        {aggregate.series_count === 1 ? "serie" : "series"}
+                        {aggregate.variables_count}{" "}
+                        {aggregate.variables_count === 1 ? "variable" : "variables"}
                       </span>
                       <span>{aggregate.period ?? "periodo no declarado"}</span>
                       <span className="font-mono text-[12.5px] text-muted/80">

@@ -5,7 +5,7 @@ topic: identidad
 title: Identidad entre dos recursos
 description: >
   Perfil mínimo para el caso de identidad: no hay contrato de columnas, solo
-  comparación de bytes e identidad semántica entre dos recursos.
+  contraste de bytes e identidad semántica entre dos recursos.
 
 display:
   period: "no aplica"

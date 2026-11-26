@@ -16,7 +16,7 @@ import urllib.request
 from pathlib import Path
 
 from .canonical import file_sha256
-from .config import DATA_DIR
+from .config import DATA_DIR, ensure_runtime_dirs
 
 SOURCES_FILE = DATA_DIR / "sources.json"
 MANIFEST_FILE = DATA_DIR / "manifest.json"
@@ -75,6 +75,7 @@ def main() -> int:
         help="vuelve a descargar aunque el archivo ya exista",
     )
     args = parser.parse_args()
+    ensure_runtime_dirs()
 
     with open(SOURCES_FILE, "r", encoding="utf-8") as fh:
         sources = json.load(fh)

@@ -61,10 +61,13 @@ def test_second_real_resource_with_different_shape():
     result = rules.validate("ipc_regional", write_receipt=False)
     assert result.coverage["complete"]
     assert [f.status for f in result.findings] == [OK] * len(result.findings)
-    series = result.entity["series"]
-    assert len(series) == 9
-    assert {len(s["points"]) for s in series} == {22}
-    assert series[0]["points"][0]["period"] == "2025-01"
+    summary = result.entity["variables_summary"]
+    assert summary["row_count"] == 22
+    assert len(summary["columns"]) == 11
+    regional = next(c for c in summary["columns"] if c["name"] == "region_1")
+    assert regional["unit"] == "índice"
+    assert regional["reference"] == "2024=100"
+    assert regional["valid_count"] == 22
 
 
 def test_profiles_declare_no_fixed_coordinates():
@@ -89,10 +92,12 @@ def test_profiles_declare_no_fixed_coordinates():
 
 def test_evidence_records_cell_as_metadata():
     result = rules.validate("ipc_empalme", write_receipt=False)
-    comp = next(c for c in result.comparisons if c.comparison_id == "mensual_ene_2025")
-    assert comp.public_evidence["published_cell"] == "G504"
-    assert comp.public_evidence["numerator_cell"] == "F504"
-    assert comp.public_evidence["denominator_cell"] == "F503"
+    finding = next(f for f in result.findings if f.rule_id == "CONT-02")
+    cells = {
+        item["column"]: item["cell_column"] for item in finding.evidence["columns"]
+    }
+    assert cells["Variación Mensual e/"] == "G"
+    assert cells["Índice año Base  2024=100.00 d/"] == "F"
 
 
 def test_unreadable_csv_is_not_evaluated(sandbox):
@@ -105,7 +110,9 @@ def test_unreadable_csv_is_not_evaluated(sandbox):
     assert result.state == "no_habilitado"
     assert not result.coverage["complete"]
     assert all(
-        f.status == NOT_EVALUATED for f in result.findings if f.rule_id.startswith("CONT")
+        f.status == NOT_EVALUATED
+        for f in result.findings
+        if f.rule_id.startswith("CONT")
     )
 
 

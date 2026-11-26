@@ -19,7 +19,7 @@ Web -> API : GET /review/{case_id}
 API -> Validator : validate(case_id)
 Validator -> Inputs : Resolver caso y libro del manifiesto
 Validator -> Inputs : Cargar perfil YAML y reglas versionadas
-Validator -> Validator : Comprobar integridad y licencia\nEvaluar contrato y comparabilidad
+Validator -> Validator : Comprobar integridad y licencia\nEvaluar contrato, variables y unidades
 Validator -> Validator : Consolidar hallazgos y calcular\nvalidation_digest
 Validator -> Review : Guardar recibo privado
 Validator --> API : Estado, cobertura y hallazgos

@@ -1,8 +1,8 @@
 """Read-only MCP server over the public snapshot (optional P1).
 
 Two typed, deterministic tools: enabled aggregates and aggregate
-metadata/receipt lookup. No LLM inside the server, no writes, no period
-comparison logic and no access to `stores/review_store/`: every function lives
+metadata/receipt lookup. No LLM inside the server, no writes, no comparison or
+period arithmetic and no access to `stores/review_store/`: every function lives
 in `engine.public_api`, which only opens files inside `stores/public_snapshot/`.
 """
 
@@ -20,8 +20,9 @@ Herramientas de solo lectura sobre agregados del INE ya validados y habilitados.
 Reglas del servidor:
 - Solo lee el snapshot público. No tiene acceso a la cola de revisión ni a los
   archivos candidatos.
-- No calcula cifras ni compara periodos: devuelve metadatos y el recibo
-  publicado, con la fuente y el digest de la decisión.
+- No calcula cifras ni compara periodos: devuelve metadatos, el resumen de
+  variables y unidades, y el recibo publicado, con la fuente y el digest de la
+  decisión.
 - Si un agregado no está habilitado, devuelve un bloqueo estructurado.
 """.strip()
 
@@ -32,7 +33,7 @@ server = MCPServer(name="ine-data-trust", instructions=INSTRUCTIONS)
     title="List enabled aggregates",
     description=(
         "Lists the aggregates in the public snapshot with source, official URL, "
-        "UTC download date, license, base, series and decision_basis_digest."
+        "UTC download date, license, base, variables summary and decision_basis_digest."
     ),
 )
 def list_enabled_aggregates() -> dict[str, Any]:
@@ -50,9 +51,9 @@ def list_enabled_aggregates() -> dict[str, Any]:
     title="Get aggregate receipt",
     description=(
         "Returns the metadata and the public receipt of one enabled aggregate: "
-        "source, official URL, UTC download date, license, base, period, series, "
-        "validation digest and the recorded human decision. Read-only; it returns "
-        "no computed figure."
+        "source, official URL, UTC download date, license, base, period, variables "
+        "and units summary, validation digest and the recorded human decision. "
+        "Read-only; it returns no computed figure."
     ),
 )
 def get_aggregate_receipt(case_id: str) -> dict[str, Any]:
@@ -68,7 +69,7 @@ def get_aggregate_receipt(case_id: str) -> dict[str, Any]:
     entity = aggregate.get("entity", {})
     display = entity.get("display") or {}
     license_info = entity.get("license") or {}
-    series = entity.get("series") or []
+    summary = entity.get("variables_summary") or {}
 
     metadata = {
         "case_id": aggregate.get("case_id"),
@@ -87,16 +88,8 @@ def get_aggregate_receipt(case_id: str) -> dict[str, Any]:
             "attribution": license_info.get("attribution"),
         },
         "decision_basis_digest": aggregate.get("digest"),
-        "series": [
-            {
-                "series_id": item.get("series_id"),
-                "label": item.get("label"),
-                "base": item.get("base"),
-                "unit": item.get("unit"),
-                "periods": len(item.get("points") or []),
-            }
-            for item in series
-        ],
+        "variables_count": len(summary.get("columns", [])),
+        "variables_summary": summary,
     }
 
     return {
@@ -112,6 +105,7 @@ def get_aggregate_receipt(case_id: str) -> dict[str, Any]:
 
 
 def run() -> None:
+    public_api.ensure_public_dirs()
     server.run(transport="stdio")
 
 

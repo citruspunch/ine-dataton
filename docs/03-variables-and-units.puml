@@ -1,0 +1,24 @@
+@startuml
+title Resumen de variables y unidades · IPC enero de 2025
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+
+start
+:Leer encabezados declarados en el perfil;
+:Resolver cada variable por encabezado;
+:Convertir valores al tipo declarado;
+partition "Resumen por variable" {
+  :Nombre interno y encabezado;
+  :Tipo de dato;
+  :Unidad y base o alcance;
+  :Nulabilidad y notas;
+  :Conteos válidos, nulos y excluidos;
+}
+:Agregar notas de cobertura y salvedades;
+:Publicar el resumen en revisión, consulta y recibos;
+note right
+  No calcula cocientes entre columnas
+  ni series. No publica cifras derivadas.
+end note
+stop
+@enduml
