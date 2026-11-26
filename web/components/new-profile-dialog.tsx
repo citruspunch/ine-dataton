@@ -524,30 +524,52 @@ export function NewProfileDialog({
 
               <Section number="02" title="Estructura del archivo">
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Field label="Tipo de archivo" required>
+                  <Field
+                    label="Tipo de archivo"
+                    required
+                    tooltip="Formato del archivo a validar. Elige entre archivo delimitado (CSV) o libro de Excel (XLSX/XLS)."
+                  >
                     <DraftSelect
                       value={draft.kind}
-                      onChange={(value) => update("kind", value as Draft["kind"])}
+                      onChange={(value) => {
+                        const kind = value as Draft["kind"];
+                        setDraft((current) => ({
+                          ...current,
+                          kind,
+                          expectedSheet: kind === "xlsx" ? current.expectedSheet : "",
+                        }));
+                      }}
                       options={[
                         { value: "delimited", label: "CSV / delimitado" },
                         { value: "xlsx", label: "Libro de Excel" },
                       ]}
                     />
                   </Field>
-                  <Field label="Fila de encabezados" required>
+                  <Field
+                    label="Fila de encabezados"
+                    required
+                    tooltip="Número de fila (empezando en 1) donde están los nombres de las columnas. Útil cuando el archivo tiene títulos o celdas combinadas antes de la tabla."
+                  >
                     <Input
                       type="number"
                       min={1}
+                      placeholder="1"
                       value={draft.headerRow}
                       onChange={(event) => update("headerRow", event.target.value)}
                     />
                   </Field>
                   {draft.kind === "xlsx" ? (
-                    <Field label="Hoja esperada" required>
+                    <Field
+                      label="Hoja esperada"
+                      required
+                      tooltip="Nombre exacto de la única pestaña del libro de Excel que debe leerse (por ejemplo, Hoja2). Si no existe, la validación falla y muestra las hojas encontradas."
+                    >
                       <Input
                         value={draft.expectedSheet}
                         onChange={(event) => update("expectedSheet", event.target.value)}
                         placeholder="Hoja1"
+                        autoComplete="off"
+                        spellCheck={false}
                       />
                     </Field>
                   ) : null}
