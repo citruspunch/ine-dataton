@@ -1,44 +1,5 @@
 {
   "snapshot_id": "snap-2026-11-23",
-  "note": "Lista cerrada. Ninguna URL libre en tiempo de ejecución: esta lista es la única fuente de rutas.",
-  "items": [
-    {
-      "id": "ine-ipc-empalme",
-      "kind": "real",
-      "source_id": "ine-ckan-ipc-empalme-rep",
-      "dataset_id": "4243818d-b479-4bc1-aae6-2735e2b51265",
-      "resource_id": "6b2cb40a-188c-47c9-9288-ba11c40b5910",
-      "title": "Índice de Precios al Consumidor, serie empalmada, República",
-      "path": "data/ipc_emprepu_es25.xlsx",
-      "source_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/6b2cb40a-188c-47c9-9288-ba11c40b5910/download/ipc_emprepu_es25.xlsx",
-      "license": {
-        "id": "cc-by",
-        "verified": true,
-        "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
-        "evidence": "Metadatos CKAN (package_show) del conjunto IPC Base Anual 2024=100: license_id cc-by."
-      },
-      "profile": "ipc_empalme_republica_v1@2.0.0",
-      "expected_sha256": "d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4",
-      "expected_bytes": 68016
-    },
-    {
-      "id": "ine-ipc-regional",
-      "kind": "real",
-      "source_id": "ine-ckan-ipc-regional",
-      "dataset_id": "4243818d-b479-4bc1-aae6-2735e2b51265",
-      "resource_id": "04f7ee06-d597-4309-9522-c70e23e00e75",
-      "title": "Índice de Precios al Consumidor por Región",
-      "path": "data/ipc_porreg_es25.xlsx",
-      "source_url": "https://datos.ine.gob.gt/dataset/4243818d-b479-4bc1-aae6-2735e2b51265/resource/04f7ee06-d597-4309-9522-c70e23e00e75/download/ipc_porreg_es25.xlsx",
-      "license": {
-        "id": "cc-by",
-        "verified": true,
-        "attribution": "Instituto Nacional de Estadística (INE), Guatemala",
-        "evidence": "Mismo conjunto CKAN (IPC Base Anual 2024=100), license_id cc-by."
-      },
-      "profile": "ipc_regional_v1@2.0.0",
-      "expected_sha256": "841dada98d20bca5ec8c23755ac8d793ce76b2e06dc7c82d34fc4f48475c8c1e",
-      "expected_bytes": 12703
-    }
-  ]
+  "note": "Lista cerrada vacía. Añada recursos al snapshot para validarlos.",
+  "items": []
 }

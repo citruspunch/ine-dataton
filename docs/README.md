@@ -29,7 +29,7 @@ Requisitos: **uv** (Python) y **pnpm** (Node.js). No se usa `make`.
 ```bash
 uv sync                       # entorno Python y uv.lock
 pnpm --dir web install        # interfaz Next.js y pnpm-lock.yaml
-pnpm run prepare              # verifica y registra las muestras del INE
+pnpm run prepare              # registra los recursos del snapshot
 pnpm run dev                  # motor :8000 + interfaz en el siguiente puerto libre
 ```
 
@@ -44,7 +44,7 @@ Scripts disponibles (definidos en `package.json`):
 | `pnpm run dev` | arranca motor y web juntos |
 | `pnpm run dev:engine` | solo el motor (`uv run uvicorn engine.api:app`) |
 | `pnpm run dev:web` | solo la interfaz (`next dev`) |
-| `pnpm run prepare` | verifica las muestras del INE y escribe el manifiesto |
+| `pnpm run prepare` | registra los recursos del snapshot y escribe el manifiesto |
 | `pnpm run verify` | recalcula digests y retira agregados sin decisión vigente |
 | `pnpm run test:engine` | suite `pytest` |
 | `pnpm run test:web` | verificación de tipos de TypeScript |
@@ -66,7 +66,7 @@ engine/               núcleo determinista en Python (uv)
 mcp/                  lanzador del servidor MCP de solo lectura
 profiles/             contratos declarativos YAML
 rules/                registro de reglas versionadas
-data/                 muestras INE verificadas y manifiesto del snapshot
+data/                 manifiesto del snapshot (vacío por defecto)
 stores/
   review_store/       cola privada: candidatos, recibos, decisiones
   public_snapshot/    agregados habilitados, recibos públicos, vista de consulta
@@ -82,17 +82,23 @@ scripts/              arranque conjunto de servidores (Node)
   bitácora de decisiones y enmiendas de simulación.
 - **`stores/public_snapshot/`** solo recibe agregados habilitados tras el gate.
 
-## 4. Datasets reales utilizados
+## 4. Recursos de prueba
 
-Ambos del conjunto CKAN **IPC Base Anual 2024=100**
-(`dataset_id 4243818d-b479-4bc1-aae6-2735e2b51265`), licencia `cc-by`.
+El producto arranca sin perfiles ni agregados registrados. `data/sources.json`,
+`data/manifest.json`, `stores/review_store/cases.json` y `profiles/` quedan
+vacíos hasta que se registren recursos y se creen contratos.
 
-| Recurso | Archivo | Descarga (UTC) | Bytes | SHA-256 |
+La suite conserva copias de dos recursos del conjunto CKAN **IPC Base Anual
+2024=100** (`dataset_id 4243818d-b479-4bc1-aae6-2735e2b51265`), licencia
+`cc-by`, en `tests/data/real/` y sus contratos en `tests/profiles/`. No se
+publican en la aplicación.
+
+| Recurso | Archivo de prueba | Descarga (UTC) | Bytes | SHA-256 |
 |---|---|---|---|---|
-| Empalme del IPC por República | `data/ipc_emprepu_es25.xlsx` | 2026-11-24T05:41:54Z | 68.016 | `d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4` |
-| IPC por Región | `data/ipc_porreg_es25.xlsx` | 2026-11-24T19:34:21Z | 12.703 | `841dada98d20bca5ec8c23755ac8d793ce76b2e06dc7c82d34fc4f48475c8c1e` |
+| Empalme del IPC por República | `tests/data/real/ipc_emprepu_es25.xlsx` | 2026-11-24T05:41:54Z | 68.016 | `d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4` |
+| IPC por Región | `tests/data/real/ipc_porreg_es25.xlsx` | 2026-11-24T19:34:21Z | 12.703 | `841dada98d20bca5ec8c23755ac8d793ce76b2e06dc7c82d34fc4f48475c8c1e` |
 
-URLs completas en `data/sources.json` y `data/manifest.json`.
+Las URL completas están en `tests/data/real/sources.json`.
 
 El empalme permite comprobar un error de comparación entre bases:
 

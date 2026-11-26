@@ -57,10 +57,12 @@ def _manifest_item(spec: dict, path: Path) -> dict:
 
 def _build_manifest(fixtures_dir: Path) -> dict:
     """Real snapshot items plus the synthetic fixtures used only by the suite."""
-    sources = json.loads((ROOT / "data" / "sources.json").read_text(encoding="utf-8"))
+    sources = json.loads(
+        (ROOT / "tests" / "data" / "real" / "sources.json").read_text(encoding="utf-8")
+    )
     items = []
     for spec in sources["items"]:
-        path = ROOT / spec["path"]
+        path = ROOT / "tests" / "data" / "real" / Path(spec["path"]).name
         items.append(_manifest_item(spec, path))
 
     synthetic = json.loads(

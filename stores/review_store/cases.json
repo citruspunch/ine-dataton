@@ -1,23 +1,4 @@
 {
-  "note": "Recursos oficiales registrados para revisión. No hay URL libre, SQL ni carga de archivos remotos.",
-  "cases": [
-    {
-      "id": "ipc_empalme",
-      "method": "contract",
-      "manifest_item": "ine-ipc-empalme",
-      "profile": "ipc_empalme_republica_v1",
-      "label": "IPC empalme República: Hoja2, diciembre 2024 y enero 2025",
-      "requested_comparisons": [
-        "mensual_ene_2025",
-        "cruce_bases_e_f"
-      ]
-    },
-    {
-      "id": "ipc_regional",
-      "method": "contract",
-      "manifest_item": "ine-ipc-regional",
-      "profile": "ipc_regional_v1",
-      "label": "IPC por Región: Hoja1, enero 2025 a octubre 2026"
-    }
-  ]
+  "note": "Lista cerrada vacía. Los recursos se registran al preparar el snapshot.",
+  "cases": []
 }

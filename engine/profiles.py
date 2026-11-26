@@ -456,8 +456,8 @@ def main(argv: list[str] | None = None) -> int:
         config.PROFILE_DIR.glob("*.yaml")
     )
     if not paths:
-        print("no hay perfiles para validar", file=sys.stderr)
-        return 2
+        print("no hay perfiles para validar")
+        return 0
 
     failed = 0
     for path in paths:
