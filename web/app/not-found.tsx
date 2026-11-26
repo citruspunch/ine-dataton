@@ -9,8 +9,8 @@ export default function NotFound() {
       <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand">
         <FileDashed className="h-6 w-6" aria-hidden weight="duotone" />
       </span>
-      <h1 className="text-2xl font-semibold tracking-tight">No encontramos ese recurso</h1>
-      <p className="text-[14px] leading-relaxed text-muted">
+      <h1 className="text-[26px] font-semibold tracking-tight">No encontramos ese recurso</h1>
+      <p className="text-[15px] leading-relaxed text-muted">
         El agregado no está publicado o el enlace ya no es válido. Solo los agregados
         habilitados aparecen en la consulta pública.
       </p>

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
-const alertVariants = cva("flex gap-3 rounded-lg border px-4 py-3 text-sm", {
+const alertVariants = cva("flex gap-3 rounded-lg border px-4 py-3 text-[15px]", {
   variants: {
     variant: {
       info: "border-line bg-white text-ink",

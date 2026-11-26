@@ -16,8 +16,8 @@ export default function ErrorPage({
       <span className="flex h-12 w-12 items-center justify-center rounded-full bg-fail-bg text-fail">
         <WarningCircle className="h-6 w-6" aria-hidden weight="duotone" />
       </span>
-      <h1 className="text-2xl font-semibold tracking-tight">Algo falló al cargar la página</h1>
-      <p className="text-[14px] leading-relaxed text-muted">
+      <h1 className="text-[26px] font-semibold tracking-tight">Algo falló al cargar la página</h1>
+      <p className="text-[15px] leading-relaxed text-muted">
         {error.message || "El servicio de validación no respondió. Intente de nuevo."}
       </p>
       <Button onClick={reset}>Reintentar</Button>

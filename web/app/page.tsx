@@ -37,20 +37,19 @@ export default async function PublicIndexPage() {
       <section className="overflow-hidden rounded-2xl border border-line bg-white">
         <div className="grid md:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)]">
           <div className="hairline-grid px-6 py-10 sm:px-10 sm:py-12">
-            <p className="eyebrow">Consulta pública</p>
-            <h1 className="mt-3 max-w-2xl text-3xl font-semibold leading-[1.15] tracking-tight text-ink sm:text-[38px]">
-              Agregados estadísticos validados, con fuente y decisión
+            <h1 className="max-w-2xl text-[32px] font-semibold leading-[1.15] tracking-tight text-ink sm:text-[40px]">
+              Agregados estadísticos habilitados para consulta
             </h1>
-            <p className="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted">
-              Cifras publicadas por el INE que pasaron las reglas críticas, tienen una
-              licencia verificada y una decisión humana registrada. Cada respuesta incluye
-              la URL de origen, la base y el digest de validación.
+            <p className="mt-4 max-w-2xl text-[16px] leading-relaxed text-muted">
+              Cifras publicadas por el INE que pasaron las reglas críticas, tienen licencia
+              verificada y cuentan con una decisión humana. Cada ficha incluye la fuente,
+              la base y el digest de validación.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Badge variant="info" className="font-mono">
                 corte {snapshot?.snapshot_id ?? "no disponible"}
               </Badge>
-              <span className="text-[13px] text-muted">
+              <span className="text-[14px] text-muted">
                 {aggregates.length}{" "}
                 {aggregates.length === 1 ? "agregado habilitado" : "agregados habilitados"}
               </span>
@@ -74,13 +73,10 @@ export default async function PublicIndexPage() {
               className="h-20 w-20"
             />
             <div className="space-y-2">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/85">
-                Fuente, base y decisión
+              <p className="text-[17px] font-semibold leading-snug">
+                Consulte las cifras y sus recibos de validación.
               </p>
-              <p className="text-[16px] font-semibold leading-snug">
-                La ficha de cada cifra muestra su fuente, su base y la decisión que la habilitó.
-              </p>
-              <p className="text-[12.5px] leading-relaxed text-white/80">
+              <p className="text-[13.5px] leading-relaxed text-white/80">
                 Instituto Nacional de Estadística · Guatemala
               </p>
             </div>
@@ -105,9 +101,9 @@ export default async function PublicIndexPage() {
       <section className="space-y-4">
         <SectionHeading
           title="Agregados habilitados"
-          description="Solo aparecen los agregados que pasaron la revisión humana y mantienen su decisión vigente."
+          description="Agregados con una decisión de habilitación vigente."
           actions={
-            <span className="text-[12.5px] text-muted">
+            <span className="text-[13.5px] text-muted">
               Actualizado con el corte <span className="font-mono">{snapshot?.snapshot_id ?? "sin dato"}</span>
             </span>
           }
@@ -122,7 +118,7 @@ export default async function PublicIndexPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <Link
                         href={`/a/${aggregate.case_id}`}
-                        className="text-[15.5px] font-semibold text-brand hover:underline"
+                        className="text-[16.5px] font-semibold text-brand hover:underline"
                       >
                         {aggregate.title || aggregate.label}
                       </Link>
@@ -131,14 +127,14 @@ export default async function PublicIndexPage() {
                       ) : null}
                       <StateBadge state={aggregate.state} text={aggregate.state_text} />
                     </div>
-                    <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-muted">
+                    <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13.5px] text-muted">
                       <span className="inline-flex items-center gap-1">
                         <Stack className="h-3.5 w-3.5" aria-hidden />
                         {aggregate.series_count}{" "}
                         {aggregate.series_count === 1 ? "serie" : "series"}
                       </span>
                       <span>{aggregate.period ?? "periodo no declarado"}</span>
-                      <span className="font-mono text-[11.5px] text-muted/80">
+                      <span className="font-mono text-[12.5px] text-muted/80">
                         {aggregate.case_id}
                       </span>
                     </p>
@@ -173,9 +169,8 @@ export default async function PublicIndexPage() {
               </Link>
             }
           >
-            Un agregado llega a esta consulta después de pasar las reglas críticas y de que
-            un revisor registre su decisión. El corte cambia cuando se habilita el
-            primero.
+            Para publicar un agregado, debe pasar las reglas críticas y recibir una
+            decisión de habilitación.
           </EmptyState>
         )}
       </section>
@@ -191,7 +186,7 @@ export default async function PublicIndexPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2.5 text-[13.5px] leading-relaxed text-ink">
+              <ul className="space-y-2.5 text-[14.5px] leading-relaxed text-ink">
                 <li className="flex gap-2">
                   <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-ok" aria-hidden />
                   Muestra la cifra publicada por el INE, con su celda de origen.
@@ -215,7 +210,7 @@ export default async function PublicIndexPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-2.5 text-[13.5px] leading-relaxed text-ink">
+              <ul className="space-y-2.5 text-[14.5px] leading-relaxed text-ink">
                 <li className="flex gap-2">
                   <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-fail" aria-hidden />
                   No calcula cifras nuevas ni empalmes propios.

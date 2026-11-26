@@ -3,13 +3,11 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export function PageHeader({
-  eyebrow,
   title,
   description,
   actions,
   className,
 }: {
-  eyebrow?: string;
   title: React.ReactNode;
   description?: React.ReactNode;
   actions?: React.ReactNode;
@@ -23,12 +21,11 @@ export function PageHeader({
       )}
     >
       <div className="max-w-3xl space-y-2">
-        {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
-        <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-[28px]">
+        <h1 className="text-[26px] font-semibold tracking-tight text-ink sm:text-[30px]">
           {title}
         </h1>
         {description ? (
-          <p className="text-[14.5px] leading-relaxed text-muted">{description}</p>
+          <p className="text-[15.5px] leading-relaxed text-muted">{description}</p>
         ) : null}
       </div>
       {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
@@ -50,11 +47,11 @@ export function SectionHeading({
   return (
     <div className={cn("flex flex-wrap items-end justify-between gap-3", className)}>
       <div>
-        <h2 className="text-[13px] font-bold uppercase tracking-[0.12em] text-brand">
+        <h2 className="text-[14px] font-bold text-brand">
           {title}
         </h2>
         {description ? (
-          <p className="mt-1 text-[13px] text-muted">{description}</p>
+          <p className="mt-1 text-[14px] text-muted">{description}</p>
         ) : null}
       </div>
       {actions}

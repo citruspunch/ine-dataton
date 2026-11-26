@@ -116,10 +116,10 @@ export function UploadForm({ profiles }: { profiles: ProfileSummary[] }) {
             )}
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[13.5px] font-semibold text-ink">
+            <span className="block truncate text-[14.5px] font-semibold text-ink">
               {file ? file.name : "Arrastre el archivo o haga clic para seleccionarlo"}
             </span>
-            <span className="block text-[12px] text-muted">
+            <span className="block text-[13px] text-muted">
               {file
                 ? `${formatBytes(file.size)} · listo para validar`
                 : "CSV, XLSX o XLS · máximo 20 MB"}
@@ -148,7 +148,7 @@ export function UploadForm({ profiles }: { profiles: ProfileSummary[] }) {
           className="sr-only"
           onChange={(event) => pick(event.target.files?.[0])}
         />
-        {fileError ? <p className="mt-1.5 text-[12px] font-medium text-fail">{fileError}</p> : null}
+        {fileError ? <p className="mt-1.5 text-[13px] font-medium text-fail">{fileError}</p> : null}
       </div>
 
       <div>
@@ -164,7 +164,7 @@ export function UploadForm({ profiles }: { profiles: ProfileSummary[] }) {
               <SelectItem key={profile.profile_id} value={profile.profile_id}>
                 <span className="flex flex-col py-0.5">
                   <span className="font-medium">{profile.title}</span>
-                  <span className="text-[11.5px] text-muted">
+                  <span className="text-[12.5px] text-muted">
                     v{profile.version} · {profile.kind_label}
                   </span>
                 </span>
@@ -209,7 +209,7 @@ export function UploadForm({ profiles }: { profiles: ProfileSummary[] }) {
       </div>
 
       {error ? (
-        <p className="rounded-md border border-[#ffb699] bg-fail-bg px-3 py-2 text-[13px] text-fail">
+        <p className="rounded-md border border-[#ffb699] bg-fail-bg px-3 py-2 text-[14px] text-fail">
           {error}
         </p>
       ) : null}

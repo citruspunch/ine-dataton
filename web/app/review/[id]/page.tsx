@@ -66,18 +66,17 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
     <div className="space-y-6">
       <Link
         href="/review"
-        className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand hover:underline"
+        className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-brand hover:underline"
       >
         <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
         Volver a la bandeja
       </Link>
 
       <PageHeader
-        eyebrow="Caso en revisión"
         title={data.label}
         description={
           <>
-            <span className="font-mono text-[12.5px]">{data.case_id}</span> ·{" "}
+            <span className="font-mono text-[13.5px]">{data.case_id}</span> ·{" "}
             {data.method === "identity_pair"
               ? "contraste de identidad entre recursos"
               : "validación contra contrato declarativo"}
@@ -143,7 +142,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                       <div className="space-y-1">
                         {(entity.resources ?? []).map((resource) => (
                           <div key={resource.manifest_item}>
-                            <span className="font-mono text-[12px]">{resource.manifest_item}</span>
+                            <span className="font-mono text-[13px]">{resource.manifest_item}</span>
                             <span className="text-muted"> · {resource.identity.dataset}</span>
                           </div>
                         ))}
@@ -151,7 +150,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                     </DataRow>
                     <DataRow label="Mismos bytes">{entity.same_bytes ? "sí" : "no"}</DataRow>
                     <DataRow label="SHA-256">
-                      <span className="break-all font-mono text-[12px]">{entity.sha256}</span>
+                      <span className="break-all font-mono text-[13px]">{entity.sha256}</span>
                     </DataRow>
                   </>
                 ) : (
@@ -171,7 +170,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                           href={entity.source_url}
                           target="_blank"
                           rel="noreferrer"
-                          className="break-all font-mono text-[12px] text-brand hover:underline"
+                          className="break-all font-mono text-[13px] text-brand hover:underline"
                         >
                           {entity.source_url}
                         </a>
@@ -180,12 +179,12 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                       )}
                     </DataRow>
                     <DataRow label="Descarga UTC">
-                      <span className="font-mono text-[12px]">
+                      <span className="font-mono text-[13px]">
                         {entity.downloaded_at_utc || "Sin registro"}
                       </span>
                     </DataRow>
                     <DataRow label="SHA-256">
-                      <span className="break-all font-mono text-[12px]">{entity.sha256}</span>
+                      <span className="break-all font-mono text-[13px]">{entity.sha256}</span>
                     </DataRow>
                     <DataRow label="Licencia">
                       {entity.license.id || "sin licencia verificada"} ·{" "}
@@ -194,10 +193,10 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                   </>
                 )}
                 <DataRow label="Perfil">
-                  <span className="font-mono text-[12px]">{entity.profile}</span>
+                  <span className="font-mono text-[13px]">{entity.profile}</span>
                 </DataRow>
                 <DataRow label="Digest de validación">
-                  <span className="break-all font-mono text-[12px]">{data.digest}</span>
+                  <span className="break-all font-mono text-[13px]">{data.digest}</span>
                 </DataRow>
               </DataList>
             </CardContent>
@@ -245,10 +244,10 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                     >
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div>
-                          <p className="text-[13.5px] font-semibold text-ink">
+                          <p className="text-[14.5px] font-semibold text-ink">
                             {comparison.label}
                           </p>
-                          <p className="mt-0.5 font-mono text-[11px] text-muted">
+                          <p className="mt-0.5 font-mono text-[12px] text-muted">
                             {comparison.comparison_id}
                           </p>
                         </div>
@@ -256,15 +255,15 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                           {comparison.status === "ok" ? "verificada" : "bloqueada"}
                         </Badge>
                       </div>
-                      <p className="mt-2 text-[12.5px] leading-relaxed text-muted">
+                      <p className="mt-2 text-[13.5px] leading-relaxed text-muted">
                         {comparison.reason}
                       </p>
                       <div className="mt-3 grid gap-3 sm:grid-cols-2">
                         <div className="rounded-md border border-line bg-white px-3 py-2">
-                          <p className="text-[10.5px] font-bold uppercase tracking-[0.1em] text-muted">
+                          <p className="text-[11.5px] font-bold text-muted">
                             {comparison.status === "ok" ? "Variación publicada" : "Cálculo de revisión"}
                           </p>
-                          <p className="mt-0.5 text-[15px] font-semibold text-ink">
+                          <p className="mt-0.5 text-[16px] font-semibold text-ink">
                             {comparison.status === "ok"
                               ? formatPct(evidence.published_pct as number)
                               : computed !== undefined
@@ -272,18 +271,18 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                                 : "Sin dato"}
                           </p>
                           {comparison.status === "ok" && evidence.published_cell ? (
-                            <p className="font-mono text-[11px] text-muted">
+                            <p className="font-mono text-[12px] text-muted">
                               celda {String(evidence.published_cell)}
                             </p>
                           ) : comparison.status !== "ok" ? (
-                            <p className="text-[11px] text-warn">solo revisión</p>
+                            <p className="text-[12px] text-warn">solo revisión</p>
                           ) : null}
                         </div>
                         <details className="rounded-md border border-line bg-white px-3 py-2">
-                          <summary className="cursor-pointer text-[12px] font-semibold text-brand">
+                          <summary className="cursor-pointer text-[13px] font-semibold text-brand">
                             Evidencia
                           </summary>
-                          <pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap break-words font-mono text-[11px] leading-relaxed">
+                          <pre className="mt-2 max-h-48 overflow-auto whitespace-pre-wrap break-words font-mono text-[12px] leading-relaxed">
                             {JSON.stringify(
                               Object.keys(privateEvidence).length ? privateEvidence : evidence,
                               null,
@@ -309,7 +308,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                   La decisión que fijó el estado actual del agregado.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2.5 text-[13px]">
+              <CardContent className="space-y-2.5 text-[14px]">
                 <div className="flex items-center gap-2">
                   <Badge
                     variant={
@@ -322,7 +321,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                   >
                     {GATE_LABEL[data.decision.gate_decision] ?? data.decision.gate_decision}
                   </Badge>
-                  <span className="text-[12px] text-muted">
+                  <span className="text-[13px] text-muted">
                     {data.decision.decided_at_utc}
                   </span>
                 </div>
@@ -330,7 +329,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
                   <span className="font-semibold">{data.decision.operator}</span>
                 </p>
                 <p className="leading-relaxed text-muted">{data.decision.rationale}</p>
-                <p className="break-all font-mono text-[11px] text-muted/80">
+                <p className="break-all font-mono text-[12px] text-muted/80">
                   digest de la base {data.decision.decision_basis_digest}
                 </p>
               </CardContent>
@@ -355,7 +354,7 @@ export default async function ReviewDetailPage({ params, searchParams }: PagePro
             </CardContent>
           </Card>
 
-          <div className="flex gap-2.5 rounded-lg border border-line bg-white px-4 py-3 text-[12px] leading-relaxed text-muted">
+          <div className="flex gap-2.5 rounded-lg border border-line bg-white px-4 py-3 text-[13px] leading-relaxed text-muted">
             <Info className="mt-0.5 h-4 w-4 shrink-0 text-brand" aria-hidden />
             <p>
               Habilitar no certifica el dato. Solo registra que el archivo coincidió con su

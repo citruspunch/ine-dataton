@@ -31,10 +31,10 @@ export function SiteHeader() {
             className="h-10 w-auto sm:h-11"
           />
           <span className="hidden border-l border-line pl-3 sm:block">
-            <span className="block text-[13px] font-bold uppercase tracking-[0.18em] text-brand">
+            <span className="block text-[14px] font-bold text-brand">
               Data Trust
             </span>
-            <span className="block text-[11px] leading-tight text-muted">
+            <span className="block text-[12px] leading-tight text-muted">
               Validación técnica de agregados
             </span>
           </span>
@@ -53,7 +53,7 @@ export function SiteHeader() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative rounded-md px-3 py-2 text-[13.5px] font-semibold transition-colors",
+                  "relative rounded-md px-3 py-2 text-[14.5px] font-semibold transition-colors",
                   active
                     ? "text-brand after:absolute after:inset-x-3 after:-bottom-[13px] after:h-0.5 after:rounded-full after:bg-accent"
                     : "text-muted hover:bg-brand-soft hover:text-brand",
@@ -67,7 +67,7 @@ export function SiteHeader() {
             href="https://www.ine.gob.gt"
             target="_blank"
             rel="noreferrer"
-            className="ml-1 hidden items-center gap-1 rounded-md px-3 py-2 text-[13.5px] font-semibold text-muted transition-colors hover:bg-brand-soft hover:text-brand md:inline-flex"
+            className="ml-1 hidden items-center gap-1 rounded-md px-3 py-2 text-[14.5px] font-semibold text-muted transition-colors hover:bg-brand-soft hover:text-brand md:inline-flex"
           >
             ine.gob.gt
             <ArrowUpRight className="h-3 w-3" aria-hidden />

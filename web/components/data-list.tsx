@@ -18,10 +18,10 @@ export function DataRow({
         className,
       )}
     >
-      <dt className="text-[12px] font-semibold uppercase tracking-[0.06em] text-muted sm:pt-0.5">
+      <dt className="text-[13px] font-semibold text-muted sm:pt-0.5">
         {label}
       </dt>
-      <dd className="min-w-0 text-[13.5px] text-ink">{children}</dd>
+      <dd className="min-w-0 text-[14.5px] text-ink">{children}</dd>
     </div>
   );
 }

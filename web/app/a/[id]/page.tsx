@@ -58,19 +58,18 @@ export default async function PublicDetailPage({ params }: PageProps) {
     <div className="space-y-7">
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand hover:underline print:hidden"
+        className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-brand hover:underline print:hidden"
       >
         <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
         Volver a la consulta
       </Link>
 
       <PageHeader
-        eyebrow="Consulta pública"
         title={entity.title || aggregate.label}
         description={
           <>
             El INE publicó este agregado y la validación lo habilitó para consulta el{" "}
-            <span className="font-mono text-[12.5px]">
+            <span className="font-mono text-[13.5px]">
               {aggregate.published_at_utc?.slice(0, 10)}
             </span>
             . Esta validación no sustituye la revisión oficial.
@@ -100,7 +99,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
         <StateBadge state={aggregate.state} text={aggregate.state_text} />
         {entity.topic === "ipc" ? <Badge variant="accent">IPC</Badge> : null}
         <Badge variant="none">no certifica</Badge>
-        <span className="font-mono text-[11.5px] text-muted">{aggregate.case_id}</span>
+        <span className="font-mono text-[12.5px] text-muted">{aggregate.case_id}</span>
       </div>
 
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -109,11 +108,11 @@ export default async function PublicDetailPage({ params }: PageProps) {
             key={fact.label}
             className="rounded-xl border border-line bg-white px-4 py-3 shadow-[0_1px_2px_rgba(16,32,52,.04)]"
           >
-            <p className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted">
+            <p className="flex items-center gap-1.5 text-[11.5px] font-bold text-muted">
               <fact.icon className="h-3.5 w-3.5 text-brand" aria-hidden />
               {fact.label}
             </p>
-            <p className="mt-1.5 text-[14px] font-semibold leading-snug text-ink">
+            <p className="mt-1.5 text-[15px] font-semibold leading-snug text-ink">
               {fact.value}
             </p>
           </div>
@@ -132,7 +131,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
                 <CardHeader className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <CardTitle>{item.label}</CardTitle>
-                    <p className="mt-0.5 font-mono text-[11.5px] text-muted">
+                    <p className="mt-0.5 font-mono text-[12.5px] text-muted">
                       {item.series_id} · base {item.base ?? "no declarada"} ·{" "}
                       {item.unit ?? "sin unidad"}
                     </p>
@@ -142,14 +141,14 @@ export default async function PublicDetailPage({ params }: PageProps) {
                   </Badge>
                 </CardHeader>
                 {item.not_comparable_reason ? (
-                  <div className="border-b border-line bg-warn-bg/50 px-5 py-2.5 text-[12.5px] leading-relaxed text-warn">
+                  <div className="border-b border-line bg-warn-bg/50 px-5 py-2.5 text-[13.5px] leading-relaxed text-warn">
                     {item.not_comparable_reason}
                   </div>
                 ) : null}
                 <CardContent className="p-0">
                   <div className="overflow-x-auto">
-                    <table className="w-full text-left text-[13px]">
-                      <thead className="border-b border-line bg-[#f2f2f2] text-[10.5px] uppercase tracking-[0.1em] text-muted">
+                    <table className="w-full text-left text-[14px]">
+                      <thead className="border-b border-line bg-[#f2f2f2] text-[11.5px] text-muted">
                         <tr>
                           <th className="px-5 py-2 font-bold">Periodo</th>
                           <th className="px-5 py-2 text-right font-bold">Índice</th>
@@ -164,7 +163,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
                       <tbody className="divide-y divide-line">
                         {item.points.map((point) => (
                           <tr key={point.period} className="hover:bg-[#f7f7f7]">
-                            <td className="px-5 py-2 font-mono text-[12px]">{point.period}</td>
+                            <td className="px-5 py-2 font-mono text-[13px]">{point.period}</td>
                             <td className="px-5 py-2 text-right font-semibold tabular-nums">
                               {formatNumber(point.value)}
                             </td>
@@ -173,7 +172,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
                                 {formatPct(point.published_variation_pct)}
                               </td>
                             ) : null}
-                            <td className="px-5 py-2 text-right font-mono text-[11.5px] text-muted">
+                            <td className="px-5 py-2 text-right font-mono text-[12.5px] text-muted">
                               {point.cell ?? "Sin celda"}
                             </td>
                           </tr>
@@ -186,7 +185,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
             ))}
           </div>
         ) : (
-          <p className="rounded-lg border border-line bg-white px-4 py-6 text-[13px] text-muted">
+          <p className="rounded-lg border border-line bg-white px-4 py-6 text-[14px] text-muted">
             Este agregado no publica series en la consulta.
           </p>
         )}
@@ -196,7 +195,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
         <Card>
           <CardHeader>
             <CardTitle>Reglas evaluadas</CardTitle>
-            <p className="mt-1 text-[13px] text-muted">
+            <p className="mt-1 text-[14px] text-muted">
               Resultado técnico de cada regla aplicada al archivo.
             </p>
           </CardHeader>
@@ -208,7 +207,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
         <Card>
           <CardHeader>
             <CardTitle>Ficha técnica</CardTitle>
-            <p className="mt-1 text-[13px] text-muted">
+            <p className="mt-1 text-[14px] text-muted">
               Datos de procedencia y digest del archivo.
             </p>
           </CardHeader>
@@ -223,7 +222,7 @@ export default async function PublicDetailPage({ params }: PageProps) {
                     href={entity.source_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="break-all font-mono text-[11.5px] text-brand hover:underline"
+                    className="break-all font-mono text-[12.5px] text-brand hover:underline"
                   >
                     {entity.source_url}
                     <ArrowUpRight className="ml-0.5 inline h-3 w-3" aria-hidden />
@@ -233,28 +232,28 @@ export default async function PublicDetailPage({ params }: PageProps) {
                 )}
               </DataRow>
               <DataRow label="Descarga UTC">
-                <span className="font-mono text-[12px]">
+                <span className="font-mono text-[13px]">
                   {entity.downloaded_at_utc || "Sin registro"}
                 </span>
               </DataRow>
               <DataRow label="SHA-256">
-                <span className="break-all font-mono text-[11.5px]">{entity.sha256}</span>
+                <span className="break-all font-mono text-[12.5px]">{entity.sha256}</span>
               </DataRow>
               <DataRow label="Licencia">
                 {entity.license.id || "Sin licencia"} · {entity.license.attribution || "Sin atribución"}
               </DataRow>
               <DataRow label="Perfil">
-                <span className="font-mono text-[12px]">{entity.profile}</span>
+                <span className="font-mono text-[13px]">{entity.profile}</span>
               </DataRow>
               <DataRow label="Digest">
-                <span className="break-all font-mono text-[11.5px]">{aggregate.digest}</span>
+                <span className="break-all font-mono text-[12.5px]">{aggregate.digest}</span>
               </DataRow>
             </DataList>
           </CardContent>
         </Card>
       </section>
 
-      <p className="rounded-lg border border-line bg-brand-soft/60 px-4 py-3 text-[12px] leading-relaxed text-muted">
+      <p className="rounded-lg border border-line bg-brand-soft/60 px-4 py-3 text-[13px] leading-relaxed text-muted">
         {aggregate.notice}
       </p>
     </div>

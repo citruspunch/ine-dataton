@@ -14,22 +14,21 @@ export function SiteFooter() {
               height={540}
               className="h-9 w-9"
             />
-            <span className="text-[12px] font-bold uppercase tracking-[0.16em] text-brand">
+            <span className="text-[13px] font-bold text-brand">
               Data Trust
             </span>
           </div>
-          <p className="mt-4 max-w-2xl text-[12.5px] leading-relaxed text-muted">
-            Validación técnica de los agregados estadísticos que publica el Instituto
-            Nacional de Estadística de Guatemala. La ficha de cada cifra muestra la fuente,
-            la licencia y la decisión humana que la habilitó.
+          <p className="mt-4 max-w-2xl text-[13.5px] leading-relaxed text-muted">
+            Validación técnica de agregados publicados por el Instituto Nacional de
+            Estadística de Guatemala.
           </p>
-          <p className="mt-3 max-w-2xl text-[12px] leading-relaxed text-muted">
-            Este sistema no certifica, no corrige, no publica en CKAN y no constituye una
+          <p className="mt-3 max-w-2xl text-[13px] leading-relaxed text-muted">
+            El sistema no certifica ni corrige los datos, no publica en CKAN y no implica
             aprobación del INE. Los datos mantienen su licencia original.
           </p>
         </div>
-        <div className="text-[12.5px] text-muted">
-          <p className="text-[11.5px] font-bold uppercase tracking-[0.14em] text-brand">
+        <div className="text-[13.5px] text-muted">
+          <p className="text-[12.5px] font-bold text-brand">
             Enlaces
           </p>
           <ul className="mt-3 space-y-2">
@@ -64,7 +63,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-line">
-        <p className="mx-auto max-w-6xl px-5 py-4 text-[11.5px] text-muted sm:px-6">
+        <p className="mx-auto max-w-6xl px-5 py-4 text-[12.5px] text-muted sm:px-6">
           INE Data Trust · Datatón INE 2026 · Documento de trabajo, no oficial.
         </p>
       </div>

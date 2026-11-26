@@ -54,9 +54,8 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
   return (
     <div className="space-y-8">
       <PageHeader
-        eyebrow="Revisión técnica"
         title="Bandeja de validación"
-        description="Aquí un revisor contrasta cada archivo con un contrato declarativo, justifica las advertencias y registra la decisión. Solo los agregados habilitados llegan a la consulta pública."
+        description="Valide archivos contra un contrato, justifique las advertencias y registre una decisión."
         actions={
           <form action={verifyAll}>
             <VerifyButton />
@@ -85,8 +84,8 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
               Cargar un archivo
             </CardTitle>
             <CardDescription>
-              La validación calcula el SHA-256 al recibir el archivo y lo evalúa contra el
-              perfil elegido. No modifica el archivo original.
+              El sistema calcula el SHA-256 y valida el archivo contra el perfil elegido.
+              No modifica el original.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -102,7 +101,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                 Perfiles declarativos
               </CardTitle>
               <CardDescription>
-                Hay {profiles.length} contratos disponibles para la validación.
+                {profiles.length} contratos disponibles.
               </CardDescription>
             </div>
             <NewProfileDialog />
@@ -114,10 +113,10 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                   <li key={profile.profile_id} className="px-5 py-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-[13.5px] font-semibold text-ink">
+                        <p className="text-[14.5px] font-semibold text-ink">
                           {profile.title}
                         </p>
-                        <p className="mt-0.5 text-[11.5px] text-muted">
+                        <p className="mt-0.5 text-[12.5px] text-muted">
                           <span className="font-mono">{profile.profile_id}</span> · v
                           {profile.version} · {profile.kind_label}
                         </p>
@@ -132,20 +131,20 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                 ))}
               </ul>
             ) : (
-              <p className="px-5 py-6 text-[13px] text-muted">
+              <p className="px-5 py-6 text-[14px] text-muted">
                 No hay perfiles. Cree el primero con el formulario de nueva regla.
               </p>
             )}
             {invalidProfiles ? (
-              <p className="border-t border-line bg-fail-bg/60 px-5 py-2.5 text-[12px] text-fail">
+              <p className="border-t border-line bg-fail-bg/60 px-5 py-2.5 text-[13px] text-fail">
                 Hay {invalidProfiles} perfiles con errores. La validación los rechazará.
               </p>
             ) : null}
             <div className="border-t border-line bg-[#fafafa] px-5 py-4">
-              <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted">
+              <p className="text-[11.5px] font-bold text-muted">
                 Flujo de revisión
               </p>
-              <ol className="mt-2 space-y-1.5 text-[12px] leading-relaxed text-muted">
+              <ol className="mt-2 space-y-1.5 text-[13px] leading-relaxed text-muted">
                 <li>1. Cargue el archivo y elija su contrato.</li>
                 <li>2. Revise los hallazgos y justifique las advertencias.</li>
                 <li>3. Registre la decisión. Solo lo habilitado llega a la consulta pública.</li>
@@ -160,7 +159,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
           title="En la bandeja"
           description="Recursos registrados y archivos cargados en esta sesión."
           actions={
-            <div className="flex items-center gap-2 text-[12.5px] text-muted">
+            <div className="flex items-center gap-2 text-[13.5px] text-muted">
               <Badge variant="outline">{cases.length} en total</Badge>
               {pendingCount ? <Badge variant="warn">{pendingCount} en revisión</Badge> : null}
             </div>
@@ -180,25 +179,25 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                       <StateBadge state={row.state} text={row.state_text} />
                       {row.override ? <Badge variant="warn">simulación</Badge> : null}
                     </div>
-                    <p className="mt-2 text-[14px] font-semibold leading-snug text-brand">
+                    <p className="mt-2 text-[15px] font-semibold leading-snug text-brand">
                       {row.label}
                     </p>
-                    <p className="mt-0.5 font-mono text-[11px] text-muted">{row.id}</p>
-                    <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-line pt-3 text-[11.5px]">
+                    <p className="mt-0.5 font-mono text-[12px] text-muted">{row.id}</p>
+                    <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 border-t border-line pt-3 text-[12.5px]">
                       <div className="col-span-2">
-                        <dt className="text-[10px] uppercase tracking-wide text-muted">Perfil</dt>
-                        <dd className="break-all font-mono text-[11px]">{row.profile}</dd>
+                        <dt className="text-[11px] text-muted">Perfil</dt>
+                        <dd className="break-all font-mono text-[12px]">{row.profile}</dd>
                       </div>
                       <div>
-                        <dt className="text-[10px] uppercase tracking-wide text-muted">Críticas</dt>
+                        <dt className="text-[11px] text-muted">Críticas</dt>
                         <dd>{row.critical}</dd>
                       </div>
                       <div>
-                        <dt className="text-[10px] uppercase tracking-wide text-muted">Origen</dt>
+                        <dt className="text-[11px] text-muted">Origen</dt>
                         <dd>{row.origin}</dd>
                       </div>
                     </dl>
-                    <span className="mt-3 inline-flex items-center gap-1 text-[12.5px] font-semibold text-brand">
+                    <span className="mt-3 inline-flex items-center gap-1 text-[13.5px] font-semibold text-brand">
                       Revisar
                       <ArrowRight className="h-3.5 w-3.5" aria-hidden />
                     </span>
@@ -228,10 +227,10 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                     >
                       {row.label}
                     </Link>
-                    <div className="mt-0.5 flex items-center gap-1.5 font-mono text-[11.5px] text-muted">
+                    <div className="mt-0.5 flex items-center gap-1.5 font-mono text-[12.5px] text-muted">
                       {row.id}
                       {row.override ? (
-                        <span className="font-sans text-[11px] font-medium text-warn">
+                        <span className="font-sans text-[12px] font-medium text-warn">
                           · simulación activa
                         </span>
                       ) : null}
@@ -240,13 +239,13 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                   <TD className="whitespace-nowrap">
                     <StateBadge state={row.state} text={row.state_text} />
                   </TD>
-                  <TD className="font-mono text-[12px] text-muted">{row.profile}</TD>
-                  <TD className="whitespace-nowrap text-[13px]">{row.critical}</TD>
-                  <TD className="whitespace-nowrap text-[12.5px] text-muted">{row.origin}</TD>
+                  <TD className="font-mono text-[13px] text-muted">{row.profile}</TD>
+                  <TD className="whitespace-nowrap text-[14px]">{row.critical}</TD>
+                  <TD className="whitespace-nowrap text-[13.5px] text-muted">{row.origin}</TD>
                   <TD className="whitespace-nowrap text-right">
                     <Link
                       href={`/review/${row.id}`}
-                      className="inline-flex items-center gap-1 text-[13px] font-semibold text-brand hover:underline"
+                      className="inline-flex items-center gap-1 text-[14px] font-semibold text-brand hover:underline"
                     >
                       Revisar
                       <ArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -263,7 +262,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
             icon={Tray}
             title="La bandeja está vacía"
             action={
-              <span className="inline-flex items-center gap-2 text-[13px] text-muted">
+              <span className="inline-flex items-center gap-2 text-[14px] text-muted">
                 <StackSimple className="h-4 w-4" aria-hidden />
                 Cargue un archivo para iniciar la primera revisión.
               </span>

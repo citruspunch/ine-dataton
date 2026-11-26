@@ -435,8 +435,8 @@ export function NewProfileDialog() {
           <DialogHeader className="mb-0">
             <DialogTitle>Nuevo perfil declarativo</DialogTitle>
             <DialogDescription>
-              El formulario construye el contrato. La validación revisa campos, grano,
-              periodos y comparabilidad antes de guardar el archivo en <code>profiles/</code>.
+              Cree un contrato. El sistema revisa sus campos antes de guardarlo en{" "}
+              <code>profiles/</code>.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -558,7 +558,7 @@ export function NewProfileDialog() {
               }
             >
               <div className="space-y-3">
-                <div className="hidden grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] gap-2 px-1 text-[11px] font-bold uppercase tracking-[0.08em] text-muted sm:grid">
+                <div className="hidden grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] gap-2 px-1 text-[12px] font-bold text-muted sm:grid">
                   <span>Campo interno</span>
                   <span>Encabezado</span>
                   <span>Tipo</span>
@@ -607,7 +607,7 @@ export function NewProfileDialog() {
                       ariaLabel="Rol"
                     />
                     <div className="flex items-center justify-between gap-2 sm:justify-end">
-                      <label className="flex items-center gap-1.5 text-[12px] text-muted">
+                      <label className="flex items-center gap-1.5 text-[13px] text-muted">
                         <Checkbox
                           checked={column.nullable}
                           onChange={(event) =>
@@ -728,13 +728,13 @@ export function NewProfileDialog() {
                     placeholder="índice"
                   />
                 </Field>
-                <div className="flex items-end pb-2 text-[12px] text-muted">
+                <div className="flex items-end pb-2 text-[13px] text-muted">
                   Una serie solo es comparable si declara su base.
                 </div>
               </div>
 
               <div className="mt-4 flex items-center justify-between">
-                <p className="text-[12px] font-bold uppercase tracking-[0.1em] text-muted">
+                <p className="text-[13px] font-bold text-muted">
                   Series
                 </p>
                 <Button
@@ -768,7 +768,7 @@ export function NewProfileDialog() {
                     className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
                   >
                     <div className="flex items-center justify-between">
-                      <p className="text-[12px] font-semibold text-muted">Serie {index + 1}</p>
+                      <p className="text-[13px] font-semibold text-muted">Serie {index + 1}</p>
                       <Button
                         type="button"
                         variant="ghost"
@@ -837,7 +837,7 @@ export function NewProfileDialog() {
                             updateSeries(series.uid, { comparable: event.target.checked })
                           }
                         />
-                        <span className="text-[13px] text-ink">
+                        <span className="text-[14px] text-ink">
                           Comparable con las demás series
                         </span>
                       </div>
@@ -860,10 +860,10 @@ export function NewProfileDialog() {
 
               <div className="mt-6 flex items-center justify-between">
                 <div>
-                  <p className="text-[12px] font-bold uppercase tracking-[0.1em] text-muted">
+                  <p className="text-[13px] font-bold text-muted">
                     Comparaciones
                   </p>
-                  <p className="text-[12px] text-muted">
+                  <p className="text-[13px] text-muted">
                     Opcional. Cada comprobación contrasta dos periodos de la misma base.
                   </p>
                 </div>
@@ -901,7 +901,7 @@ export function NewProfileDialog() {
                     className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
                   >
                     <div className="flex items-center justify-between">
-                      <p className="text-[12px] font-semibold text-muted">
+                      <p className="text-[13px] font-semibold text-muted">
                         Comparación {index + 1}
                       </p>
                       <Button
@@ -1021,7 +1021,7 @@ export function NewProfileDialog() {
             <Section
               number="06"
               title="Presentación pública"
-              description="Texto que verá quien consulta el agregado. Si queda vacío, el formulario usa lo declarado arriba."
+              description="Texto para la consulta pública. Si lo deja vacío, se usarán los datos declarados arriba."
             >
               <div className="grid gap-4 sm:grid-cols-3">
                 <Field label="Periodo mostrado">
@@ -1049,11 +1049,11 @@ export function NewProfileDialog() {
             </Section>
 
             <details className="rounded-lg border border-line bg-[#fafafa] px-4 py-3">
-              <summary className="flex cursor-pointer list-none items-center gap-2 text-[13px] font-semibold text-brand">
+              <summary className="flex cursor-pointer list-none items-center gap-2 text-[14px] font-semibold text-brand">
                 <BracketsCurly className="h-4 w-4" aria-hidden />
                 Vista previa del YAML generado
               </summary>
-              <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-md bg-[#1a1a1a] p-3 font-mono text-[11.5px] leading-relaxed text-[#f0f0f0]">
+              <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-md bg-[#1a1a1a] p-3 font-mono text-[12.5px] leading-relaxed text-[#f0f0f0]">
                 {yaml}
               </pre>
             </details>
@@ -1072,7 +1072,7 @@ export function NewProfileDialog() {
             {!localProblems.length && !errors.length && draft.profileId && draft.title ? (
               <p
                 className={cn(
-                  "flex items-center gap-1.5 text-[12.5px]",
+                  "flex items-center gap-1.5 text-[13.5px]",
                   liveValid ? "text-ok" : "text-muted",
                 )}
               >
@@ -1096,7 +1096,7 @@ export function NewProfileDialog() {
             ) : null}
 
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <label className="flex items-center gap-2 text-[13px] text-muted">
+              <label className="flex items-center gap-2 text-[14px] text-muted">
                 <Checkbox name="overwrite" />
                 Sobrescribir si el identificador ya existe
               </label>
@@ -1148,13 +1148,13 @@ function Section({
     <section className="space-y-3">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-soft text-[11px] font-bold text-brand">
+          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-soft text-[12px] font-bold text-brand">
             {number}
           </span>
           <div>
-            <h3 className="text-[14px] font-semibold text-ink">{title}</h3>
+            <h3 className="text-[15px] font-semibold text-ink">{title}</h3>
             {description ? (
-              <p className="mt-0.5 text-[12px] text-muted">{description}</p>
+              <p className="mt-0.5 text-[13px] text-muted">{description}</p>
             ) : null}
           </div>
         </div>
@@ -1266,7 +1266,7 @@ function PeriodsInput({
           {periods.map((period) => (
             <span
               key={period}
-              className="inline-flex items-center gap-1 rounded-full border border-line bg-white py-0.5 pl-2.5 pr-1 font-mono text-[11.5px] text-ink"
+              className="inline-flex items-center gap-1 rounded-full border border-line bg-white py-0.5 pl-2.5 pr-1 font-mono text-[12.5px] text-ink"
             >
               {period}
               <button
@@ -1289,7 +1289,7 @@ function PeriodsInput({
 
 function AlertList({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="rounded-md border border-[#ffb699] bg-fail-bg px-3 py-2 text-[12.5px] text-fail">
+    <div className="rounded-md border border-[#ffb699] bg-fail-bg px-3 py-2 text-[13.5px] text-fail">
       <p className="flex items-center gap-1.5 font-semibold">
         <WarningCircle className="h-3.5 w-3.5" aria-hidden />
         {title}

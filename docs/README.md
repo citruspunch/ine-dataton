@@ -1,9 +1,8 @@
 # INE Data Trust
 
-Validación técnica de agregados estadísticos ya publicados. El sistema comprueba
-un archivo candidato contra un contrato declarativo en YAML. Marca identidades
-incompatibles por SHA-256, bloquea comparaciones entre bases del IPC que no son
-comparables, registra el visto bueno humano y exporta un recibo reproducible.
+INE Data Trust valida agregados estadísticos publicados contra contratos YAML.
+Detecta identidades incompatibles por SHA-256, bloquea comparaciones entre bases
+incompatibles del IPC, registra decisiones humanas y exporta recibos reproducibles.
 
 > **No implica certificación, aprobación ni adopción por el INE.**
 > Datatón INE 2026, Categoría 2. Versión 2.0.
@@ -12,17 +11,16 @@ comparables, registra el visto bueno humano y exporta un recibo reproducible.
 
 ## 1. Problema y usuarios
 
-Un agregado candidato puede parecer correcto y no ser comparable con su versión
-oficial por **base, periodo, unidad, esquema, identidad o licencia**.
+Un agregado candidato puede diferir de la versión oficial en su base, periodo,
+unidad, esquema, identidad o licencia.
 
-- **Usuario primario:** técnico de publicaciones que revisa un agregado al lado de
-  la ficha oficial, dentro del flujo del **procedimiento 18** del Manual de
-  procesos de la Dirección de Informática del INE.
-- **Usuario secundario:** periodista o analista que necesita fuente, base y
-  periodo, y una negativa clara cuando pide comparar cosas que no se comparan.
+El usuario principal es el técnico de publicaciones que coteja un agregado con
+la ficha oficial en el procedimiento 18 del Manual de procesos de la Dirección de
+Informática del INE. También puede servir a periodistas y analistas que necesitan
+consultar la fuente, la base y el periodo de un agregado.
 
-El producto entrega **estado, severidad, cobertura y recibo**. No entrega un
-puntaje de 0 a 100 y no certifica.
+El producto muestra estado, severidad y cobertura, y genera un recibo. No asigna
+un puntaje ni certifica los datos.
 
 ## 2. Arranque
 
@@ -53,7 +51,7 @@ Scripts disponibles (definidos en `package.json`):
 | `pnpm run mcp` | servidor MCP por stdio |
 | `pnpm run profiles:check` | valida los contratos YAML de `profiles/` |
 
-Después de `uv sync` y `pnpm install`, todo funciona **sin red**. Los contratos
+Después de `uv sync` y `pnpm install`, el sistema funciona sin red. Los contratos
 se pueden validar sin interfaz con `uv run python -m engine.profiles`.
 
 > La cola de revisión arranca sin decisiones: los recursos registrados y los
@@ -77,9 +75,9 @@ docs/                 README, licencias de terceros, nota de IA
 scripts/              arranque conjunto de servidores (Node)
 ```
 
-- **`engine/`** no importa nada de `web/`. Expone una API HTTP local
-  (`engine/api.py`) que la interfaz consume; toda la decisión vive en Python.
-- **`web/`** solo renderiza y recoge datos. No valida ni decide.
+- **`engine/`** expone una API HTTP local (`engine/api.py`) y ejecuta la
+  validación y las reglas de decisión. No importa código de `web/`.
+- **`web/`** muestra y recoge datos. No valida ni decide.
 - **`stores/review_store/`** es privado: cargas, recibos privados,
   bitácora de decisiones y enmiendas de simulación.
 - **`stores/public_snapshot/`** solo recibe agregados habilitados tras el gate.
@@ -96,7 +94,7 @@ Ambos del conjunto CKAN **IPC Base Anual 2024=100**
 
 URLs completas en `data/sources.json` y `data/manifest.json`.
 
-**Por qué el empalme.** Expone un error metodológico real y verificable:
+El empalme permite comprobar un error de comparación entre bases:
 
 | Celda | Valor | Qué es |
 |---|---|---|
@@ -111,9 +109,9 @@ URLs completas en `data/sources.json` y `data/manifest.json`.
   aparece en la pantalla privada de revisión: **no entra** al snapshot público,
   ni al export, ni a la ficha. Hay tests que lo verifican.
 
-**Por qué el regional.** Segundo recurso real con otra forma: tabla ancha (una
-columna por región), hoja `Hoja1`, sin variación publicada y con un rango de
-periodos (2025-01 a 2026-10). Se evalúa con el mismo motor y un perfil distinto.
+El recurso regional usa una tabla con una columna por región en `Hoja1`. Abarca
+de 2025-01 a 2026-10 y no incluye variaciones publicadas. Se evalúa con el mismo
+motor y otro perfil.
 
 ## 5. Perfiles declarativos y reglas
 

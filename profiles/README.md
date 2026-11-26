@@ -1,8 +1,8 @@
 # Contratos declarativos (`profiles/`)
 
-Cada archivo `.yaml` de esta carpeta es un contrato que la validación evalúa contra
-un archivo candidato. Añadir un contrato **no requiere tocar código**. Basta con
-declarar columnas, grano, fechas y comparabilidad.
+Cada archivo `.yaml` de esta carpeta define un contrato para validar archivos
+candidatos. Para añadir uno, declare columnas, grano, fechas y comparabilidad.
+No necesita modificar el código.
 
 El validador está en `engine/profiles.py` y se puede ejecutar sin la interfaz:
 

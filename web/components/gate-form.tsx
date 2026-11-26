@@ -57,7 +57,7 @@ export function GateForm({
   return (
     <div className="space-y-4">
       {blocked ? (
-        <div className="rounded-lg border border-[#ffb699] bg-fail-bg px-4 py-3 text-[13px] text-fail">
+        <div className="rounded-lg border border-[#ffb699] bg-fail-bg px-4 py-3 text-[14px] text-fail">
           <p className="flex items-center gap-1.5 font-semibold">
             <WarningCircle className="h-4 w-4" aria-hidden />
             Todavía no se puede habilitar
@@ -67,7 +67,7 @@ export function GateForm({
               <li key={reason}>{reason}</li>
             ))}
           </ul>
-          <p className="mt-2 text-[12px]">
+          <p className="mt-2 text-[13px]">
             Las reglas y el estado del recurso impiden habilitarlo. La interfaz no lo bloquea.
           </p>
         </div>
@@ -80,8 +80,8 @@ export function GateForm({
         {!blocked && warnings.length ? (
           <div className="space-y-3">
             <div>
-              <p className="text-[13px] font-semibold text-ink">Advertencias por justificar</p>
-              <p className="text-[12px] text-muted">
+              <p className="text-[14px] font-semibold text-ink">Advertencias por justificar</p>
+              <p className="text-[13px] text-muted">
                 Cada advertencia necesita un responsable y un motivo antes de habilitar el agregado.
               </p>
             </div>
@@ -90,15 +90,15 @@ export function GateForm({
                 key={warning.rule_id}
                 className="rounded-lg border border-[#ffe28a] bg-[#fff9e6] p-3"
               >
-                <p className="mb-1 flex flex-wrap items-center gap-2 text-[11.5px] text-warn">
+                <p className="mb-1 flex flex-wrap items-center gap-2 text-[12.5px] text-warn">
                   <span className="font-mono">{warning.rule_id}</span>
                   {warning.justified ? (
-                    <span className="rounded-full bg-ok-bg px-2 py-0.5 text-[10.5px] font-semibold text-ok">
+                    <span className="rounded-full bg-ok-bg px-2 py-0.5 text-[11.5px] font-semibold text-ok">
                       justificada
                     </span>
                   ) : null}
                 </p>
-                <p className="mb-2 text-[13px] leading-relaxed text-ink">{warning.message}</p>
+                <p className="mb-2 text-[14px] leading-relaxed text-ink">{warning.message}</p>
                 {warning.justified ? null : (
                   <div className="grid gap-2 sm:grid-cols-2">
                     <div>
@@ -172,7 +172,7 @@ export function GateForm({
             <Label htmlFor="rationale">Motivo de la decisión</Label>
             <span
               className={cn(
-                "text-[11px]",
+                "text-[12px]",
                 rationale.trim().length >= 10 ? "text-ok" : "text-muted",
               )}
             >
@@ -195,7 +195,7 @@ export function GateForm({
         {state.message ? (
           <p
             className={cn(
-              "rounded-md border px-3 py-2 text-[13px]",
+              "rounded-md border px-3 py-2 text-[14px]",
               state.ok
                 ? "border-[#c9e68a] bg-ok-bg text-ok"
                 : "border-[#ffb699] bg-fail-bg text-fail",
@@ -224,7 +224,7 @@ export function GateForm({
             </>
           )}
         </Button>
-        <p className="text-center text-[11.5px] text-muted">
+        <p className="text-center text-[12.5px] text-muted">
           El recibo guarda la decisión y el digest que la respalda.
         </p>
       </form>

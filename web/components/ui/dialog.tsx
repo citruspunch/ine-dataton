@@ -44,7 +44,7 @@ function DialogTitle({
 }: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
-      className={cn("text-lg font-semibold tracking-tight", className)}
+      className={cn("text-[19px] font-semibold tracking-tight", className)}
       {...props}
     />
   );
@@ -56,7 +56,7 @@ function DialogDescription({
 }: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>) {
   return (
     <DialogPrimitive.Description
-      className={cn("text-[13px] text-muted", className)}
+      className={cn("text-[14px] text-muted", className)}
       {...props}
     />
   );

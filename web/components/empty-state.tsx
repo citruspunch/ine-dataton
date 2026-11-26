@@ -17,9 +17,9 @@ export function EmptyState({
         <Icon className="h-5 w-5" aria-hidden weight="duotone" />
       </span>
       <div className="space-y-1">
-        <p className="text-[15px] font-semibold text-ink">{title}</p>
+        <p className="text-[16px] font-semibold text-ink">{title}</p>
         {children ? (
-          <div className="mx-auto max-w-md text-[13px] leading-relaxed text-muted">
+          <div className="mx-auto max-w-md text-[14px] leading-relaxed text-muted">
             {children}
           </div>
         ) : null}

@@ -37,7 +37,7 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
             onClick={() => setFilter(item.value)}
             aria-pressed={filter === item.value}
             className={cn(
-              "rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition-colors",
+              "rounded-full border px-2.5 py-1 text-[12.5px] font-semibold transition-colors",
               filter === item.value
                 ? "border-brand bg-brand text-white"
                 : "border-line bg-white text-muted hover:border-[#bfbfbf] hover:text-brand",
@@ -46,7 +46,7 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
             {item.label}
             <span
               className={cn(
-                "ml-1.5 rounded-full px-1.5 text-[10.5px]",
+                "ml-1.5 rounded-full px-1.5 text-[11.5px]",
                 filter === item.value ? "bg-white/20" : "bg-none-bg",
               )}
             >
@@ -67,18 +67,18 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
                       <SeverityBadge status={finding.status} />
                     </span>
                     <div className="min-w-0">
-                      <p className="text-[13px] font-semibold text-ink">
+                      <p className="text-[14px] font-semibold text-ink">
                         {finding.title}
                         {finding.critical ? (
-                          <span className="ml-2 align-middle text-[10.5px] font-bold uppercase tracking-wide text-brand">
+                          <span className="ml-2 align-middle text-[11.5px] font-bold text-brand">
                             crítica
                           </span>
                         ) : null}
                       </p>
-                      <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">
+                      <p className="mt-0.5 text-[13.5px] leading-relaxed text-muted">
                         {finding.message}
                       </p>
-                      <p className="mt-1 font-mono text-[11px] text-muted/80">{finding.rule_id}</p>
+                      <p className="mt-1 font-mono text-[12px] text-muted/80">{finding.rule_id}</p>
                     </div>
                   </div>
                   <CaretDown
@@ -87,15 +87,15 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
                   />
                 </summary>
                 <div className="border-t border-line bg-[#fafafa] px-4 py-3">
-                  <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-muted">
+                  <p className="mb-1.5 text-[12px] font-bold text-muted">
                     Evidencia
                   </p>
                   {Object.keys(finding.evidence ?? {}).length ? (
-                    <pre className="max-h-72 overflow-auto whitespace-pre-wrap break-words rounded-md border border-line bg-white p-3 font-mono text-[11px] leading-relaxed text-ink">
+                    <pre className="max-h-72 overflow-auto whitespace-pre-wrap break-words rounded-md border border-line bg-white p-3 font-mono text-[12px] leading-relaxed text-ink">
                       {JSON.stringify(finding.evidence, null, 2)}
                     </pre>
                   ) : (
-                    <p className="text-[12px] text-muted">Sin evidencia registrada.</p>
+                    <p className="text-[13px] text-muted">Sin evidencia registrada.</p>
                   )}
                   {finding.justified ? (
                     <Badge variant="ok" className="mt-2">
@@ -108,7 +108,7 @@ export function FindingsPanel({ findings }: { findings: Finding[] }) {
           ))}
         </ul>
       ) : (
-        <p className="flex items-center gap-2 px-4 py-6 text-[13px] text-muted">
+        <p className="flex items-center gap-2 px-4 py-6 text-[14px] text-muted">
           <WarningCircle className="h-4 w-4" aria-hidden />
           No hay hallazgos en esta categoría.
         </p>

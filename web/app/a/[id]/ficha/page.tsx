@@ -58,19 +58,19 @@ export default async function FichaPage({ params }: PageProps) {
 
       <header className="flex flex-wrap items-start justify-between gap-4 border-b-2 border-brand pb-4">
         <div>
-          <p className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-brand">
+          <p className="text-[11.5px] font-bold text-brand">
             INE Data Trust · Ficha técnica de validación
           </p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">
+          <h1 className="mt-1 text-[26px] font-semibold tracking-tight text-ink">
             {entity.title || aggregate.label}
           </h1>
-          <p className="mt-1 text-[12.5px] text-muted">
+          <p className="mt-1 text-[13.5px] text-muted">
             Documento para adjuntar al ticket de publicación. Sigue la propuesta de
             procedimiento 18, pasos 4 a 6. No certifica el dato ni sustituye la revisión del
             productor.
           </p>
         </div>
-        <div className="text-right text-[11.5px] text-muted">
+        <div className="text-right text-[12.5px] text-muted">
           <img
             src="/ine-logo-vertical.svg"
             alt="Instituto Nacional de Estadística"
@@ -85,7 +85,7 @@ export default async function FichaPage({ params }: PageProps) {
 
       <div className="flex flex-wrap items-center gap-2">
         <StateBadge state={aggregate.state} text={aggregate.state_text} />
-        <span className="text-[12px] text-muted">
+        <span className="text-[13px] text-muted">
           Publicado el {aggregate.published_at_utc?.slice(0, 10)}
         </span>
       </div>
@@ -98,13 +98,13 @@ export default async function FichaPage({ params }: PageProps) {
         <DataRow label="Base">{entity.display.base}</DataRow>
         <DataRow label="Unidad">{entity.display.unit}</DataRow>
         <DataRow label="URL oficial">
-          <span className="break-all font-mono text-[11.5px]">{entity.source_url || "Sin URL"}</span>
+          <span className="break-all font-mono text-[12.5px]">{entity.source_url || "Sin URL"}</span>
         </DataRow>
         <DataRow label="Descarga UTC">
           <span className="font-mono">{entity.downloaded_at_utc || "Sin registro"}</span>
         </DataRow>
         <DataRow label="SHA-256 del archivo">
-          <span className="break-all font-mono text-[11.5px]">{entity.sha256}</span>
+          <span className="break-all font-mono text-[12.5px]">{entity.sha256}</span>
         </DataRow>
         <DataRow label="Licencia">
           {entity.license.id || "Sin licencia"} · {entity.license.attribution || "Sin atribución"}
@@ -116,15 +116,15 @@ export default async function FichaPage({ params }: PageProps) {
           <span className="font-mono">{rulesVersion ?? "Sin registro"}</span>
         </DataRow>
         <DataRow label="Digest de validación">
-          <span className="break-all font-mono text-[11.5px]">{aggregate.digest}</span>
+          <span className="break-all font-mono text-[12.5px]">{aggregate.digest}</span>
         </DataRow>
       </DataList>
 
       <section className="space-y-2">
-        <h2 className="text-[11.5px] font-bold uppercase tracking-[0.14em] text-brand">
+        <h2 className="text-[12.5px] font-bold text-brand">
           Resultado por regla
         </h2>
-        <Table className="text-[12.5px] print:text-[10.5px]">
+        <Table className="text-[13.5px] print:text-[11.5px]">
           <THead>
             <TR>
               <TH>Regla</TH>
@@ -152,10 +152,10 @@ export default async function FichaPage({ params }: PageProps) {
 
       {aggregate.comparisons.length ? (
         <section className="space-y-2">
-          <h2 className="text-[11.5px] font-bold uppercase tracking-[0.14em] text-brand">
+          <h2 className="text-[12.5px] font-bold text-brand">
             Comparaciones evaluadas
           </h2>
-          <Table className="text-[12.5px] print:text-[10.5px]">
+          <Table className="text-[13.5px] print:text-[11.5px]">
             <THead>
               <TR>
                 <TH>Solicitud</TH>
@@ -176,7 +176,7 @@ export default async function FichaPage({ params }: PageProps) {
                       {comparison.status === "ok" ? (
                         <>
                           {formatPct(evidence.published_pct as number)}{" "}
-                          <span className="font-mono text-[11px] text-muted">
+                          <span className="font-mono text-[12px] text-muted">
                             {String(evidence.published_cell ?? "")}
                           </span>
                         </>
@@ -193,7 +193,7 @@ export default async function FichaPage({ params }: PageProps) {
       ) : null}
 
       <section className="space-y-2">
-        <h2 className="text-[11.5px] font-bold uppercase tracking-[0.14em] text-brand">
+        <h2 className="text-[12.5px] font-bold text-brand">
           Decisión registrada
         </h2>
         {decision ? (
@@ -205,32 +205,32 @@ export default async function FichaPage({ params }: PageProps) {
             </DataRow>
             <DataRow label="Motivo">{decision.rationale}</DataRow>
             <DataRow label="Digest de la decisión">
-              <span className="break-all font-mono text-[11.5px]">
+              <span className="break-all font-mono text-[12.5px]">
                 {decision.decision_basis_digest}
               </span>
             </DataRow>
           </DataList>
         ) : (
-          <p className="text-[13px] text-muted">Sin decisión registrada en el recibo público.</p>
+          <p className="text-[14px] text-muted">Sin decisión registrada en el recibo público.</p>
         )}
       </section>
 
       <div className="grid gap-8 pt-6 sm:grid-cols-2">
         <div>
-          <p className="mb-8 text-[12.5px] text-muted">Revisado por (publicaciones)</p>
-          <div className="border-t border-[#999999] pt-1 text-[11.5px] text-muted">
+          <p className="mb-8 text-[13.5px] text-muted">Revisado por (publicaciones)</p>
+          <div className="border-t border-[#999999] pt-1 text-[12.5px] text-muted">
             Nombre y firma
           </div>
         </div>
         <div>
-          <p className="mb-8 text-[12.5px] text-muted">Aprobado por (producción)</p>
-          <div className="border-t border-[#999999] pt-1 text-[11.5px] text-muted">
+          <p className="mb-8 text-[13.5px] text-muted">Aprobado por (producción)</p>
+          <div className="border-t border-[#999999] pt-1 text-[12.5px] text-muted">
             Nombre y firma
           </div>
         </div>
       </div>
 
-      <p className="border-t border-line pt-3 text-[11px] leading-relaxed text-muted">
+      <p className="border-t border-line pt-3 text-[12px] leading-relaxed text-muted">
         La habilitación corresponde a INE Data Trust, no al INE. Este documento no certifica.
         El digest no incluye marcas de tiempo de ejecución ni de decisión. Los datos
         mantienen su licencia {entity.license.id || "original"}.
