@@ -16,6 +16,7 @@ import {
   CheckCircle,
   CircleNotch,
   CopySimple,
+  Info,
   Plus,
   Trash,
   WarningCircle,
@@ -39,6 +40,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { ActionState } from "@/lib/types";
 
@@ -165,7 +172,6 @@ interface Draft {
   profileId: string;
   version: string;
   kind: "delimited" | "xlsx";
-  topic: string;
   title: string;
   description: string;
   expectedSheet: string;
@@ -192,7 +198,6 @@ function initialDraft(): Draft {
     profileId: "",
     version: "1.0.0",
     kind: "delimited",
-    topic: "",
     title: "",
     description: "",
     expectedSheet: "",
@@ -223,7 +228,6 @@ function buildYaml(draft: Draft): string {
   lines.push(`profile_id: ${scalar(draft.profileId)}`);
   lines.push(`version: ${scalar(draft.version || "1.0.0")}`);
   lines.push(`kind: ${draft.kind}`);
-  if (draft.topic.trim()) lines.push(`topic: ${scalar(draft.topic)}`);
   lines.push(`title: ${scalar(draft.title)}`);
   lines.push(`description: ${block(draft.description, 2)}`);
   lines.push(
@@ -423,711 +427,724 @@ export function NewProfileDialog() {
     checked && !checking && liveErrors.length === 0 && Boolean(draft.profileId);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" type="button" className="whitespace-nowrap">
-          <Plus className="h-4 w-4" aria-hidden />
-          Nueva regla
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="w-[min(960px,94vw)] p-0">
-        <div className="border-b border-line px-6 py-4">
-          <DialogHeader className="mb-0">
-            <DialogTitle>Nuevo perfil declarativo</DialogTitle>
-            <DialogDescription>
-              Cree un contrato. El sistema revisa sus campos antes de guardarlo en{" "}
-              <code>profiles/</code>.
-            </DialogDescription>
-          </DialogHeader>
-        </div>
+    <TooltipProvider delayDuration={150}>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="secondary" size="sm" type="button" className="whitespace-nowrap">
+            <Plus className="h-4 w-4" aria-hidden />
+            Nueva regla
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="w-[min(960px,94vw)] p-0">
+          <div className="border-b border-line px-6 py-4">
+            <DialogHeader className="mb-0">
+              <DialogTitle>Nuevo perfil declarativo</DialogTitle>
+              <DialogDescription>
+                Cree un contrato. El sistema revisa sus campos antes de guardarlo en{" "}
+                <code>profiles/</code>.
+              </DialogDescription>
+            </DialogHeader>
+          </div>
 
-        <form
-          action={formAction}
-          onSubmit={(event) => {
-            setShowErrors(true);
-            if (validateDraft(draft).length) event.preventDefault();
-          }}
-        >
-          <input type="hidden" name="yaml" value={yaml} />
-          <div className="max-h-[64vh] space-y-6 overflow-y-auto px-6 py-5">
-            <Section number="01" title="Identidad del contrato">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Identificador" required hint="minúsculas, dígitos y guion bajo">
-                  <Input
-                    value={draft.profileId}
-                    onChange={(event) =>
-                      update(
-                        "profileId",
-                        event.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "_"),
-                      )
-                    }
-                    placeholder="ipc_mensual_v1"
-                  />
-                </Field>
-                <Field label="Versión" required>
-                  <Input
-                    value={draft.version}
-                    onChange={(event) => update("version", event.target.value)}
-                    placeholder="1.0.0"
-                  />
-                </Field>
-                <Field label="Título" required>
-                  <Input
-                    value={draft.title}
-                    onChange={(event) => update("title", event.target.value)}
-                    placeholder="IPC mensual, República"
-                  />
-                </Field>
-                <Field label="Tema" hint="Opcional. Agrupa perfiles por tema, por ejemplo ipc.">
-                  <Input
-                    value={draft.topic}
-                    onChange={(event) => update("topic", event.target.value)}
-                    placeholder="ipc"
-                  />
-                </Field>
-                <div className="sm:col-span-2">
-                  <Field label="Descripción">
-                    <Textarea
-                      value={draft.description}
-                      onChange={(event) => update("description", event.target.value)}
-                      placeholder="Qué archivo valida este contrato y qué supuestos declara."
-                    />
-                  </Field>
-                </div>
-              </div>
-            </Section>
-
-            <Section number="02" title="Estructura del archivo">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Tipo de archivo" required>
-                  <DraftSelect
-                    value={draft.kind}
-                    onChange={(value) => update("kind", value as Draft["kind"])}
-                    options={[
-                      { value: "delimited", label: "CSV / delimitado" },
-                      { value: "xlsx", label: "Libro de Excel" },
-                    ]}
-                  />
-                </Field>
-                <Field label="Fila de encabezados" required>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={draft.headerRow}
-                    onChange={(event) => update("headerRow", event.target.value)}
-                  />
-                </Field>
-                {draft.kind === "xlsx" ? (
-                  <Field label="Hoja esperada" required>
-                    <Input
-                      value={draft.expectedSheet}
-                      onChange={(event) => update("expectedSheet", event.target.value)}
-                      placeholder="Hoja1"
-                    />
-                  </Field>
-                ) : null}
-              </div>
-            </Section>
-
-            <Section
-              number="03"
-              title="Columnas"
-              description="Cada columna se resuelve por su encabezado, nunca por coordenadas fijas."
-              action={
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() =>
-                    update("columns", [
-                      ...draft.columns,
-                      {
-                        uid: nextUid(),
-                        name: "",
-                        column: "",
-                        type: "float",
-                        role: "",
-                        nullable: false,
-                      },
-                    ])
-                  }
-                >
-                  <Plus className="h-3.5 w-3.5" aria-hidden />
-                  Columna
-                </Button>
-              }
-            >
-              <div className="space-y-3">
-                <div className="hidden grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] gap-2 px-1 text-[12px] font-bold text-muted sm:grid">
-                  <span>Campo interno</span>
-                  <span>Encabezado</span>
-                  <span>Tipo</span>
-                  <span>Rol</span>
-                  <span />
-                </div>
-                {draft.columns.map((column) => (
-                  <div
-                    key={column.uid}
-                    className="grid gap-2 rounded-lg border border-line bg-[#fafafa] p-3 sm:grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] sm:items-center sm:border-0 sm:bg-transparent sm:p-0"
+          <form
+            action={formAction}
+            onSubmit={(event) => {
+              setShowErrors(true);
+              if (validateDraft(draft).length) event.preventDefault();
+            }}
+          >
+            <input type="hidden" name="yaml" value={yaml} />
+            <div className="max-h-[64vh] space-y-6 overflow-y-auto px-6 py-5">
+              <Section number="01" title="Identidad del contrato">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field
+                    label="Identificador"
+                    required
+                    hint="minúsculas, dígitos y guion bajo"
+                    tooltip="Clave única del perfil en minúsculas, números y guion bajo. Identifica el contrato en profiles/ y vincula los recibos de validación a esta definición."
                   >
                     <Input
-                      value={column.name}
+                      value={draft.profileId}
                       onChange={(event) =>
-                        updateColumn(column.uid, {
-                          name: event.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "_"),
-                        })
+                        update(
+                          "profileId",
+                          event.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "_"),
+                        )
                       }
-                      placeholder="year"
-                      aria-label="Campo interno"
-                    />
-                    <Input
-                      value={column.column}
-                      onChange={(event) => updateColumn(column.uid, { column: event.target.value })}
-                      placeholder="Año"
-                      aria-label="Encabezado"
-                    />
-                    <DraftSelect
-                      value={column.type}
-                      onChange={(value) => updateColumn(column.uid, { type: value as ColumnType })}
-                      options={COLUMN_TYPES}
-                      ariaLabel="Tipo"
-                    />
-                    <DraftSelect
-                      value={column.role || "none"}
-                      onChange={(value) =>
-                        updateColumn(column.uid, {
-                          role: value === "none" ? "" : (value as ColumnDraft["role"]),
-                        })
-                      }
-                      options={[
-                        { value: "none", label: "Dato" },
-                        { value: "period_year", label: "Año" },
-                        { value: "period_month", label: "Mes" },
-                      ]}
-                      ariaLabel="Rol"
-                    />
-                    <div className="flex items-center justify-between gap-2 sm:justify-end">
-                      <label className="flex items-center gap-1.5 text-[13px] text-muted">
-                        <Checkbox
-                          checked={column.nullable}
-                          onChange={(event) =>
-                            updateColumn(column.uid, { nullable: event.target.checked })
-                          }
-                        />
-                        Nulo
-                      </label>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-muted hover:text-fail"
-                        onClick={() =>
-                          update(
-                            "columns",
-                            draft.columns.filter((item) => item.uid !== column.uid),
-                          )
-                        }
-                        aria-label="Quitar columna"
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Section>
-
-            <Section number="04" title="Periodo y grano">
-              <div className="grid gap-4 sm:grid-cols-3">
-                <Field label="Campo de año" required>
-                  <DraftSelect
-                    value={draft.dateYear}
-                    onChange={(value) => update("dateYear", value)}
-                    options={fieldOptions}
-                    placeholder="Seleccione"
-                  />
-                </Field>
-                <Field label="Campo de mes" required>
-                  <DraftSelect
-                    value={draft.dateMonth}
-                    onChange={(value) => update("dateMonth", value)}
-                    options={fieldOptions}
-                    placeholder="Seleccione"
-                  />
-                </Field>
-                <Field label="Formato del mes" required>
-                  <DraftSelect
-                    value={draft.monthFormat}
-                    onChange={(value) =>
-                      update("monthFormat", value as Draft["monthFormat"])
-                    }
-                    options={[
-                      { value: "number", label: "Número del 1 al 12" },
-                      { value: "name_es", label: "Nombre en español" },
-                    ]}
-                  />
-                </Field>
-                <Field label="Campo adicional del grano" hint="Opcional. Por ejemplo, un indicador.">
-                  <DraftSelect
-                    value={draft.grainExtra || "none"}
-                    onChange={(value) => update("grainExtra", value === "none" ? "" : value)}
-                    options={[
-                      { value: "none", label: "Ninguno" },
-                      ...fieldOptions.filter(
-                        (option) =>
-                          option.value !== draft.dateYear && option.value !== draft.dateMonth,
-                      ),
-                    ]}
-                  />
-                </Field>
-                <Field label="Periodos declarados" required>
-                  <DraftSelect
-                    value={draft.periodMode}
-                    onChange={(value) => update("periodMode", value as PeriodMode)}
-                    options={[
-                      { value: "expected", label: "Lista de periodos" },
-                      { value: "range", label: "Rango continuo" },
-                    ]}
-                  />
-                </Field>
-              </div>
-
-              {draft.periodMode === "range" ? (
-                <div className="mt-3 grid gap-4 sm:grid-cols-2">
-                  <Field label="Desde" required>
-                    <Input
-                      value={draft.rangeFrom}
-                      onChange={(event) => update("rangeFrom", event.target.value)}
-                      placeholder="2025-01"
+                      placeholder="ipc_mensual_v1"
                     />
                   </Field>
-                  <Field label="Hasta" required>
-                    <Input
-                      value={draft.rangeTo}
-                      onChange={(event) => update("rangeTo", event.target.value)}
-                      placeholder="2025-12"
-                    />
-                  </Field>
-                </div>
-              ) : (
-                <div className="mt-3">
-                  <PeriodsInput
-                    periods={draft.periods}
-                    onChange={(periods) => update("periods", periods)}
-                  />
-                </div>
-              )}
-            </Section>
-
-            <Section number="05" title="Comparabilidad">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Unidad" required>
-                  <Input
-                    value={draft.unit}
-                    onChange={(event) => update("unit", event.target.value)}
-                    placeholder="índice"
-                  />
-                </Field>
-                <div className="flex items-end pb-2 text-[13px] text-muted">
-                  Una serie solo es comparable si declara su base.
-                </div>
-              </div>
-
-              <div className="mt-4 flex items-center justify-between">
-                <p className="text-[13px] font-bold text-muted">
-                  Series
-                </p>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() =>
-                    update("series", [
-                      ...draft.series,
-                      {
-                        uid: nextUid(),
-                        id: `serie_${draft.series.length + 1}`,
-                        label: "",
-                        index: "",
-                        base: "",
-                        variation: "",
-                        comparable: true,
-                        reason: "",
-                      },
-                    ])
-                  }
-                >
-                  <Plus className="h-3.5 w-3.5" aria-hidden />
-                  Serie
-                </Button>
-              </div>
-              <div className="mt-3 space-y-3">
-                {draft.series.map((series, index) => (
-                  <div
-                    key={series.uid}
-                    className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
+                  <Field
+                    label="Versión"
+                    required
+                    tooltip="Versión del contrato (por ejemplo, 1.0.0). Forma parte del digest de validación, por lo que cambiarla invalida aprobaciones anteriores si cambia el perfil."
                   >
-                    <div className="flex items-center justify-between">
-                      <p className="text-[13px] font-semibold text-muted">Serie {index + 1}</p>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-muted hover:text-fail"
-                        onClick={() =>
-                          update(
-                            "series",
-                            draft.series.filter((item) => item.uid !== series.uid),
-                          )
+                    <Input
+                      value={draft.version}
+                      onChange={(event) => update("version", event.target.value)}
+                      placeholder="1.0.0"
+                    />
+                  </Field>
+                  <div className="sm:col-span-2">
+                    <Field
+                      label="Título"
+                      required
+                      tooltip="Nombre legible del perfil para mostrar en la bandeja de revisión, la ficha y la consulta pública."
+                    >
+                      <Input
+                        value={draft.title}
+                        onChange={(event) => update("title", event.target.value)}
+                        placeholder="IPC mensual, República"
+                      />
+                    </Field>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <Field
+                      label="Descripción"
+                      tooltip="Contexto breve para el revisor sobre el conjunto o agregado que cubre el contrato, su alcance y los supuestos clave declarados."
+                    >
+                      <Textarea
+                        value={draft.description}
+                        onChange={(event) => update("description", event.target.value)}
+                        placeholder="Qué archivo valida este contrato y qué supuestos declara."
+                      />
+                    </Field>
+                  </div>
+                </div>
+              </Section>
+
+              <Section number="02" title="Estructura del archivo">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Tipo de archivo" required>
+                    <DraftSelect
+                      value={draft.kind}
+                      onChange={(value) => update("kind", value as Draft["kind"])}
+                      options={[
+                        { value: "delimited", label: "CSV / delimitado" },
+                        { value: "xlsx", label: "Libro de Excel" },
+                      ]}
+                    />
+                  </Field>
+                  <Field label="Fila de encabezados" required>
+                    <Input
+                      type="number"
+                      min={1}
+                      value={draft.headerRow}
+                      onChange={(event) => update("headerRow", event.target.value)}
+                    />
+                  </Field>
+                  {draft.kind === "xlsx" ? (
+                    <Field label="Hoja esperada" required>
+                      <Input
+                        value={draft.expectedSheet}
+                        onChange={(event) => update("expectedSheet", event.target.value)}
+                        placeholder="Hoja1"
+                      />
+                    </Field>
+                  ) : null}
+                </div>
+              </Section>
+
+              <Section
+                number="03"
+                title="Columnas"
+                description="Cada columna se resuelve por su encabezado, nunca por coordenadas fijas."
+                action={
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                      update("columns", [
+                        ...draft.columns,
+                        {
+                          uid: nextUid(),
+                          name: "",
+                          column: "",
+                          type: "float",
+                          role: "",
+                          nullable: false,
+                        },
+                      ])
+                    }
+                  >
+                    <Plus className="h-3.5 w-3.5" aria-hidden />
+                    Columna
+                  </Button>
+                }
+              >
+                <div className="space-y-3">
+                  <div className="hidden grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] gap-2 px-1 text-[12px] font-bold text-muted sm:grid">
+                    <span>Campo interno</span>
+                    <span>Encabezado</span>
+                    <span>Tipo</span>
+                    <span>Rol</span>
+                    <span />
+                  </div>
+                  {draft.columns.map((column) => (
+                    <div
+                      key={column.uid}
+                      className="grid gap-2 rounded-lg border border-line bg-[#fafafa] p-3 sm:grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] sm:items-center sm:border-0 sm:bg-transparent sm:p-0"
+                    >
+                      <Input
+                        value={column.name}
+                        onChange={(event) =>
+                          updateColumn(column.uid, {
+                            name: event.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "_"),
+                          })
                         }
-                        aria-label="Quitar serie"
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <Field label="Identificador">
-                        <Input
-                          value={series.id}
-                          onChange={(event) => updateSeries(series.uid, { id: event.target.value })}
-                          placeholder="serie_f"
-                        />
-                      </Field>
-                      <Field label="Etiqueta">
-                        <Input
-                          value={series.label}
-                          onChange={(event) =>
-                            updateSeries(series.uid, { label: event.target.value })
+                        placeholder="year"
+                        aria-label="Campo interno"
+                      />
+                      <Input
+                        value={column.column}
+                        onChange={(event) => updateColumn(column.uid, { column: event.target.value })}
+                        placeholder="Año"
+                        aria-label="Encabezado"
+                      />
+                      <DraftSelect
+                        value={column.type}
+                        onChange={(value) => updateColumn(column.uid, { type: value as ColumnType })}
+                        options={COLUMN_TYPES}
+                        ariaLabel="Tipo"
+                      />
+                      <DraftSelect
+                        value={column.role || "none"}
+                        onChange={(value) =>
+                          updateColumn(column.uid, {
+                            role: value === "none" ? "" : (value as ColumnDraft["role"]),
+                          })
+                        }
+                        options={[
+                          { value: "none", label: "Dato" },
+                          { value: "period_year", label: "Año" },
+                          { value: "period_month", label: "Mes" },
+                        ]}
+                        ariaLabel="Rol"
+                      />
+                      <div className="flex items-center justify-between gap-2 sm:justify-end">
+                        <label className="flex items-center gap-1.5 text-[13px] text-muted">
+                          <Checkbox
+                            checked={column.nullable}
+                            onChange={(event) =>
+                              updateColumn(column.uid, { nullable: event.target.checked })
+                            }
+                          />
+                          Nulo
+                        </label>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted hover:text-fail"
+                          onClick={() =>
+                            update(
+                              "columns",
+                              draft.columns.filter((item) => item.uid !== column.uid),
+                            )
                           }
-                          placeholder="Serie F · base 2024=100"
-                        />
-                      </Field>
-                      <Field label="Campo índice" required>
-                        <DraftSelect
-                          value={series.index}
-                          onChange={(value) => updateSeries(series.uid, { index: value })}
-                          options={fieldOptions}
-                          placeholder="Seleccione"
-                        />
-                      </Field>
-                      <Field label="Base" required>
-                        <Input
-                          value={series.base}
-                          onChange={(event) =>
-                            updateSeries(series.uid, { base: event.target.value })
-                          }
-                          placeholder="2024=100"
-                        />
-                      </Field>
-                      <Field label="Campo de variación publicada" hint="opcional">
-                        <DraftSelect
-                          value={series.variation || "none"}
-                          onChange={(value) =>
-                            updateSeries(series.uid, {
-                              variation: value === "none" ? "" : value,
-                            })
-                          }
-                          options={[{ value: "none", label: "Ninguno" }, ...fieldOptions]}
-                        />
-                      </Field>
-                      <div className="flex items-center gap-2 pt-6">
-                        <Checkbox
-                          checked={series.comparable}
-                          onChange={(event) =>
-                            updateSeries(series.uid, { comparable: event.target.checked })
-                          }
-                        />
-                        <span className="text-[14px] text-ink">
-                          Comparable con las demás series
-                        </span>
+                          aria-label="Quitar columna"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
-                    {!series.comparable ? (
-                      <Field label="Motivo de no comparabilidad">
-                        <Textarea
-                          className="min-h-[64px]"
-                          value={series.reason}
-                          onChange={(event) =>
-                            updateSeries(series.uid, { reason: event.target.value })
-                          }
-                          placeholder="Base distinta: el cociente no es una variación."
-                        />
-                      </Field>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 flex items-center justify-between">
-                <div>
-                  <p className="text-[13px] font-bold text-muted">
-                    Comparaciones
-                  </p>
-                  <p className="text-[13px] text-muted">
-                    Opcional. Cada comprobación contrasta dos periodos de la misma base.
-                  </p>
+                  ))}
                 </div>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() =>
-                    update("checks", [
-                      ...draft.checks,
-                      {
-                        uid: nextUid(),
-                        id: `comparacion_${draft.checks.length + 1}`,
-                        label: "",
-                        numeratorField: draft.series[0]?.index ?? "",
-                        numeratorPeriod: "",
-                        denominatorField: draft.series[0]?.index ?? "",
-                        denominatorPeriod: "",
-                        publishedField: "",
-                        publishedPeriod: "",
-                        tolerance: "0.005",
-                        unit: "porcentaje",
-                      },
-                    ])
-                  }
-                >
-                  <Plus className="h-3.5 w-3.5" aria-hidden />
-                  Comparación
-                </Button>
-              </div>
-              <div className="mt-3 space-y-3">
-                {draft.checks.map((check, index) => (
-                  <div
-                    key={check.uid}
-                    className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
-                  >
-                    <div className="flex items-center justify-between">
-                      <p className="text-[13px] font-semibold text-muted">
-                        Comparación {index + 1}
-                      </p>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-muted hover:text-fail"
-                        onClick={() =>
-                          update(
-                            "checks",
-                            draft.checks.filter((item) => item.uid !== check.uid),
-                          )
-                        }
-                        aria-label="Quitar comparación"
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <Field label="Identificador">
-                        <Input
-                          value={check.id}
-                          onChange={(event) => updateCheck(check.uid, { id: event.target.value })}
-                        />
-                      </Field>
-                      <Field label="Etiqueta">
-                        <Input
-                          value={check.label}
-                          onChange={(event) =>
-                            updateCheck(check.uid, { label: event.target.value })
-                          }
-                          placeholder="Variación mensual de enero"
-                        />
-                      </Field>
-                    </div>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <Field label="Campo del numerador">
-                        <DraftSelect
-                          value={check.numeratorField}
-                          onChange={(value) =>
-                            updateCheck(check.uid, { numeratorField: value })
-                          }
-                          options={fieldOptions}
-                          placeholder="Seleccione"
-                        />
-                      </Field>
-                      <Field label="Periodo del numerador">
-                        <Input
-                          value={check.numeratorPeriod}
-                          onChange={(event) =>
-                            updateCheck(check.uid, { numeratorPeriod: event.target.value })
-                          }
-                          placeholder="2025-01"
-                        />
-                      </Field>
-                      <Field label="Campo del denominador">
-                        <DraftSelect
-                          value={check.denominatorField}
-                          onChange={(value) =>
-                            updateCheck(check.uid, { denominatorField: value })
-                          }
-                          options={fieldOptions}
-                          placeholder="Seleccione"
-                        />
-                      </Field>
-                      <Field label="Periodo del denominador">
-                        <Input
-                          value={check.denominatorPeriod}
-                          onChange={(event) =>
-                            updateCheck(check.uid, { denominatorPeriod: event.target.value })
-                          }
-                          placeholder="2024-12"
-                        />
-                      </Field>
-                      <Field label="Campo de variación publicada" hint="opcional">
-                        <DraftSelect
-                          value={check.publishedField || "none"}
-                          onChange={(value) =>
-                            updateCheck(check.uid, {
-                              publishedField: value === "none" ? "" : value,
-                            })
-                          }
-                          options={[{ value: "none", label: "Sin variación publicada" }, ...fieldOptions]}
-                        />
-                      </Field>
-                      <Field label="Periodo de la variación publicada" hint="opcional">
-                        <Input
-                          value={check.publishedPeriod}
-                          onChange={(event) =>
-                            updateCheck(check.uid, { publishedPeriod: event.target.value })
-                          }
-                          placeholder="2025-01"
-                        />
-                      </Field>
-                      <Field label="Tolerancia en puntos porcentuales">
-                        <Input
-                          value={check.tolerance}
-                          onChange={(event) =>
-                            updateCheck(check.uid, { tolerance: event.target.value })
-                          }
-                          placeholder="0.005"
-                        />
-                      </Field>
-                      <Field label="Unidad de la comparación">
-                        <Input
-                          value={check.unit}
-                          onChange={(event) => updateCheck(check.uid, { unit: event.target.value })}
-                          placeholder="porcentaje"
-                        />
-                      </Field>
-                    </div>
+              </Section>
+
+              <Section number="04" title="Periodo y grano">
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <Field label="Campo de año" required>
+                    <DraftSelect
+                      value={draft.dateYear}
+                      onChange={(value) => update("dateYear", value)}
+                      options={fieldOptions}
+                      placeholder="Seleccione"
+                    />
+                  </Field>
+                  <Field label="Campo de mes" required>
+                    <DraftSelect
+                      value={draft.dateMonth}
+                      onChange={(value) => update("dateMonth", value)}
+                      options={fieldOptions}
+                      placeholder="Seleccione"
+                    />
+                  </Field>
+                  <Field label="Formato del mes" required>
+                    <DraftSelect
+                      value={draft.monthFormat}
+                      onChange={(value) =>
+                        update("monthFormat", value as Draft["monthFormat"])
+                      }
+                      options={[
+                        { value: "number", label: "Número del 1 al 12" },
+                        { value: "name_es", label: "Nombre en español" },
+                      ]}
+                    />
+                  </Field>
+                  <Field label="Campo adicional del grano" hint="Opcional. Por ejemplo, un indicador.">
+                    <DraftSelect
+                      value={draft.grainExtra || "none"}
+                      onChange={(value) => update("grainExtra", value === "none" ? "" : value)}
+                      options={[
+                        { value: "none", label: "Ninguno" },
+                        ...fieldOptions.filter(
+                          (option) =>
+                            option.value !== draft.dateYear && option.value !== draft.dateMonth,
+                        ),
+                      ]}
+                    />
+                  </Field>
+                  <Field label="Periodos declarados" required>
+                    <DraftSelect
+                      value={draft.periodMode}
+                      onChange={(value) => update("periodMode", value as PeriodMode)}
+                      options={[
+                        { value: "expected", label: "Lista de periodos" },
+                        { value: "range", label: "Rango continuo" },
+                      ]}
+                    />
+                  </Field>
+                </div>
+
+                {draft.periodMode === "range" ? (
+                  <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                    <Field label="Desde" required>
+                      <Input
+                        value={draft.rangeFrom}
+                        onChange={(event) => update("rangeFrom", event.target.value)}
+                        placeholder="2025-01"
+                      />
+                    </Field>
+                    <Field label="Hasta" required>
+                      <Input
+                        value={draft.rangeTo}
+                        onChange={(event) => update("rangeTo", event.target.value)}
+                        placeholder="2025-12"
+                      />
+                    </Field>
                   </div>
-                ))}
-              </div>
-            </Section>
-
-            <Section
-              number="06"
-              title="Presentación pública"
-              description="Texto para la consulta pública. Si lo deja vacío, se usarán los datos declarados arriba."
-            >
-              <div className="grid gap-4 sm:grid-cols-3">
-                <Field label="Periodo mostrado">
-                  <Input
-                    value={draft.displayPeriod}
-                    onChange={(event) => update("displayPeriod", event.target.value)}
-                    placeholder="diciembre 2024 y enero 2025"
-                  />
-                </Field>
-                <Field label="Base mostrada">
-                  <Input
-                    value={draft.displayBase}
-                    onChange={(event) => update("displayBase", event.target.value)}
-                    placeholder="2024=100"
-                  />
-                </Field>
-                <Field label="Unidad mostrada">
-                  <Input
-                    value={draft.displayUnit}
-                    onChange={(event) => update("displayUnit", event.target.value)}
-                    placeholder="índice"
-                  />
-                </Field>
-              </div>
-            </Section>
-
-            <details className="rounded-lg border border-line bg-[#fafafa] px-4 py-3">
-              <summary className="flex cursor-pointer list-none items-center gap-2 text-[14px] font-semibold text-brand">
-                <BracketsCurly className="h-4 w-4" aria-hidden />
-                Vista previa del YAML generado
-              </summary>
-              <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-md bg-[#1a1a1a] p-3 font-mono text-[12.5px] leading-relaxed text-[#f0f0f0]">
-                {yaml}
-              </pre>
-            </details>
-          </div>
-
-          <div className="space-y-3 border-t border-line bg-[#fafafa] px-6 py-4">
-            {localProblems.length ? (
-              <AlertList title="Revise el formulario" items={localProblems} />
-            ) : null}
-            {errors.length ? (
-              <AlertList
-                title="La validación encontró errores"
-                items={errors.map((error) => `${error.field}: ${error.message}`)}
-              />
-            ) : null}
-            {!localProblems.length && !errors.length && draft.profileId && draft.title ? (
-              <p
-                className={cn(
-                  "flex items-center gap-1.5 text-[13.5px]",
-                  liveValid ? "text-ok" : "text-muted",
-                )}
-              >
-                {checking ? (
-                  <>
-                    <CircleNotch className="h-3.5 w-3.5 animate-spin" aria-hidden />
-                    Validando el contrato…
-                  </>
-                ) : liveValid ? (
-                  <>
-                    <CheckCircle className="h-3.5 w-3.5" aria-hidden />
-                    El contrato es válido. Puede guardarlo.
-                  </>
                 ) : (
-                  <>
-                    <WarningCircle className="h-3.5 w-3.5" aria-hidden />
-                    {liveErrors.length} error(es) de validación.
-                  </>
+                  <div className="mt-3">
+                    <PeriodsInput
+                      periods={draft.periods}
+                      onChange={(periods) => update("periods", periods)}
+                    />
+                  </div>
                 )}
-              </p>
-            ) : null}
+              </Section>
 
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <label className="flex items-center gap-2 text-[14px] text-muted">
-                <Checkbox name="overwrite" />
-                Sobrescribir si el identificador ya existe
-              </label>
-              <div className="flex items-center gap-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => {
-                    setDraft(initialDraft());
-                    setShowErrors(false);
-                    setLiveErrors([]);
-                  }}
+              <Section number="05" title="Comparabilidad">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label="Unidad" required>
+                    <Input
+                      value={draft.unit}
+                      onChange={(event) => update("unit", event.target.value)}
+                      placeholder="índice"
+                    />
+                  </Field>
+                  <div className="flex items-end pb-2 text-[13px] text-muted">
+                    Una serie solo es comparable si declara su base.
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between">
+                  <p className="text-[13px] font-bold text-muted">
+                    Series
+                  </p>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                      update("series", [
+                        ...draft.series,
+                        {
+                          uid: nextUid(),
+                          id: `serie_${draft.series.length + 1}`,
+                          label: "",
+                          index: "",
+                          base: "",
+                          variation: "",
+                          comparable: true,
+                          reason: "",
+                        },
+                      ])
+                    }
+                  >
+                    <Plus className="h-3.5 w-3.5" aria-hidden />
+                    Serie
+                  </Button>
+                </div>
+                <div className="mt-3 space-y-3">
+                  {draft.series.map((series, index) => (
+                    <div
+                      key={series.uid}
+                      className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
+                    >
+                      <div className="flex items-center justify-between">
+                        <p className="text-[13px] font-semibold text-muted">Serie {index + 1}</p>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted hover:text-fail"
+                          onClick={() =>
+                            update(
+                              "series",
+                              draft.series.filter((item) => item.uid !== series.uid),
+                            )
+                          }
+                          aria-label="Quitar serie"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <Field label="Identificador">
+                          <Input
+                            value={series.id}
+                            onChange={(event) => updateSeries(series.uid, { id: event.target.value })}
+                            placeholder="serie_f"
+                          />
+                        </Field>
+                        <Field label="Etiqueta">
+                          <Input
+                            value={series.label}
+                            onChange={(event) =>
+                              updateSeries(series.uid, { label: event.target.value })
+                            }
+                            placeholder="Serie F · base 2024=100"
+                          />
+                        </Field>
+                        <Field label="Campo índice" required>
+                          <DraftSelect
+                            value={series.index}
+                            onChange={(value) => updateSeries(series.uid, { index: value })}
+                            options={fieldOptions}
+                            placeholder="Seleccione"
+                          />
+                        </Field>
+                        <Field label="Base" required>
+                          <Input
+                            value={series.base}
+                            onChange={(event) =>
+                              updateSeries(series.uid, { base: event.target.value })
+                            }
+                            placeholder="2024=100"
+                          />
+                        </Field>
+                        <Field label="Campo de variación publicada" hint="opcional">
+                          <DraftSelect
+                            value={series.variation || "none"}
+                            onChange={(value) =>
+                              updateSeries(series.uid, {
+                                variation: value === "none" ? "" : value,
+                              })
+                            }
+                            options={[{ value: "none", label: "Ninguno" }, ...fieldOptions]}
+                          />
+                        </Field>
+                        <div className="flex items-center gap-2 pt-6">
+                          <Checkbox
+                            checked={series.comparable}
+                            onChange={(event) =>
+                              updateSeries(series.uid, { comparable: event.target.checked })
+                            }
+                          />
+                          <span className="text-[14px] text-ink">
+                            Comparable con las demás series
+                          </span>
+                        </div>
+                      </div>
+                      {!series.comparable ? (
+                        <Field label="Motivo de no comparabilidad">
+                          <Textarea
+                            className="min-h-[64px]"
+                            value={series.reason}
+                            onChange={(event) =>
+                              updateSeries(series.uid, { reason: event.target.value })
+                            }
+                            placeholder="Base distinta: el cociente no es una variación."
+                          />
+                        </Field>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex items-center justify-between">
+                  <div>
+                    <p className="text-[13px] font-bold text-muted">
+                      Comparaciones
+                    </p>
+                    <p className="text-[13px] text-muted">
+                      Opcional. Cada comprobación contrasta dos periodos de la misma base.
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                      update("checks", [
+                        ...draft.checks,
+                        {
+                          uid: nextUid(),
+                          id: `comparacion_${draft.checks.length + 1}`,
+                          label: "",
+                          numeratorField: draft.series[0]?.index ?? "",
+                          numeratorPeriod: "",
+                          denominatorField: draft.series[0]?.index ?? "",
+                          denominatorPeriod: "",
+                          publishedField: "",
+                          publishedPeriod: "",
+                          tolerance: "0.005",
+                          unit: "porcentaje",
+                        },
+                      ])
+                    }
+                  >
+                    <Plus className="h-3.5 w-3.5" aria-hidden />
+                    Comparación
+                  </Button>
+                </div>
+                <div className="mt-3 space-y-3">
+                  {draft.checks.map((check, index) => (
+                    <div
+                      key={check.uid}
+                      className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
+                    >
+                      <div className="flex items-center justify-between">
+                        <p className="text-[13px] font-semibold text-muted">
+                          Comparación {index + 1}
+                        </p>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted hover:text-fail"
+                          onClick={() =>
+                            update(
+                              "checks",
+                              draft.checks.filter((item) => item.uid !== check.uid),
+                            )
+                          }
+                          aria-label="Quitar comparación"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <Field label="Identificador">
+                          <Input
+                            value={check.id}
+                            onChange={(event) => updateCheck(check.uid, { id: event.target.value })}
+                          />
+                        </Field>
+                        <Field label="Etiqueta">
+                          <Input
+                            value={check.label}
+                            onChange={(event) =>
+                              updateCheck(check.uid, { label: event.target.value })
+                            }
+                            placeholder="Variación mensual de enero"
+                          />
+                        </Field>
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        <Field label="Campo del numerador">
+                          <DraftSelect
+                            value={check.numeratorField}
+                            onChange={(value) =>
+                              updateCheck(check.uid, { numeratorField: value })
+                            }
+                            options={fieldOptions}
+                            placeholder="Seleccione"
+                          />
+                        </Field>
+                        <Field label="Periodo del numerador">
+                          <Input
+                            value={check.numeratorPeriod}
+                            onChange={(event) =>
+                              updateCheck(check.uid, { numeratorPeriod: event.target.value })
+                            }
+                            placeholder="2025-01"
+                          />
+                        </Field>
+                        <Field label="Campo del denominador">
+                          <DraftSelect
+                            value={check.denominatorField}
+                            onChange={(value) =>
+                              updateCheck(check.uid, { denominatorField: value })
+                            }
+                            options={fieldOptions}
+                            placeholder="Seleccione"
+                          />
+                        </Field>
+                        <Field label="Periodo del denominador">
+                          <Input
+                            value={check.denominatorPeriod}
+                            onChange={(event) =>
+                              updateCheck(check.uid, { denominatorPeriod: event.target.value })
+                            }
+                            placeholder="2024-12"
+                          />
+                        </Field>
+                        <Field label="Campo de variación publicada" hint="opcional">
+                          <DraftSelect
+                            value={check.publishedField || "none"}
+                            onChange={(value) =>
+                              updateCheck(check.uid, {
+                                publishedField: value === "none" ? "" : value,
+                              })
+                            }
+                            options={[{ value: "none", label: "Sin variación publicada" }, ...fieldOptions]}
+                          />
+                        </Field>
+                        <Field label="Periodo de la variación publicada" hint="opcional">
+                          <Input
+                            value={check.publishedPeriod}
+                            onChange={(event) =>
+                              updateCheck(check.uid, { publishedPeriod: event.target.value })
+                            }
+                            placeholder="2025-01"
+                          />
+                        </Field>
+                        <Field label="Tolerancia en puntos porcentuales">
+                          <Input
+                            value={check.tolerance}
+                            onChange={(event) =>
+                              updateCheck(check.uid, { tolerance: event.target.value })
+                            }
+                            placeholder="0.005"
+                          />
+                        </Field>
+                        <Field label="Unidad de la comparación">
+                          <Input
+                            value={check.unit}
+                            onChange={(event) => updateCheck(check.uid, { unit: event.target.value })}
+                            placeholder="porcentaje"
+                          />
+                        </Field>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Section>
+
+              <Section
+                number="06"
+                title="Presentación pública"
+                description="Texto para la consulta pública. Si lo deja vacío, se usarán los datos declarados arriba."
+              >
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <Field label="Periodo mostrado">
+                    <Input
+                      value={draft.displayPeriod}
+                      onChange={(event) => update("displayPeriod", event.target.value)}
+                      placeholder="diciembre 2024 y enero 2025"
+                    />
+                  </Field>
+                  <Field label="Base mostrada">
+                    <Input
+                      value={draft.displayBase}
+                      onChange={(event) => update("displayBase", event.target.value)}
+                      placeholder="2024=100"
+                    />
+                  </Field>
+                  <Field label="Unidad mostrada">
+                    <Input
+                      value={draft.displayUnit}
+                      onChange={(event) => update("displayUnit", event.target.value)}
+                      placeholder="índice"
+                    />
+                  </Field>
+                </div>
+              </Section>
+
+              <details className="rounded-lg border border-line bg-[#fafafa] px-4 py-3">
+                <summary className="flex cursor-pointer list-none items-center gap-2 text-[14px] font-semibold text-brand">
+                  <BracketsCurly className="h-4 w-4" aria-hidden />
+                  Vista previa del YAML generado
+                </summary>
+                <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-md bg-[#1a1a1a] p-3 font-mono text-[12.5px] leading-relaxed text-[#f0f0f0]">
+                  {yaml}
+                </pre>
+              </details>
+            </div>
+
+            <div className="space-y-3 border-t border-line bg-[#fafafa] px-6 py-4">
+              {localProblems.length ? (
+                <AlertList title="Revise el formulario" items={localProblems} />
+              ) : null}
+              {errors.length ? (
+                <AlertList
+                  title="La validación encontró errores"
+                  items={errors.map((error) => `${error.field}: ${error.message}`)}
+                />
+              ) : null}
+              {!localProblems.length && !errors.length && draft.profileId && draft.title ? (
+                <p
+                  className={cn(
+                    "flex items-center gap-1.5 text-[13.5px]",
+                    liveValid ? "text-ok" : "text-muted",
+                  )}
                 >
-                  Limpiar
-                </Button>
-                <Button type="submit" disabled={pending}>
-                  {pending ? (
+                  {checking ? (
                     <>
-                      <CircleNotch className="h-4 w-4 animate-spin" aria-hidden />
-                      Guardando…
+                      <CircleNotch className="h-3.5 w-3.5 animate-spin" aria-hidden />
+                      Validando el contrato…
+                    </>
+                  ) : liveValid ? (
+                    <>
+                      <CheckCircle className="h-3.5 w-3.5" aria-hidden />
+                      El contrato es válido. Puede guardarlo.
                     </>
                   ) : (
-                    "Guardar perfil"
+                    <>
+                      <WarningCircle className="h-3.5 w-3.5" aria-hidden />
+                      {liveErrors.length} error(es) de validación.
+                    </>
                   )}
-                </Button>
+                </p>
+              ) : null}
+
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <label className="flex items-center gap-2 text-[14px] text-muted">
+                  <Checkbox name="overwrite" />
+                  Sobrescribir si el identificador ya existe
+                </label>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => {
+                      setDraft(initialDraft());
+                      setShowErrors(false);
+                      setLiveErrors([]);
+                    }}
+                  >
+                    Limpiar
+                  </Button>
+                  <Button type="submit" disabled={pending}>
+                    {pending ? (
+                      <>
+                        <CircleNotch className="h-4 w-4 animate-spin" aria-hidden />
+                        Guardando…
+                      </>
+                    ) : (
+                      "Guardar perfil"
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </TooltipProvider>
   );
 }
 
@@ -1169,11 +1186,13 @@ function Field({
   label,
   required,
   hint,
+  tooltip,
   children,
 }: {
   label: string;
   required?: boolean;
   hint?: string;
+  tooltip?: string;
   children: React.ReactNode;
 }) {
   const id = useId();
@@ -1182,13 +1201,33 @@ function Field({
     : children;
   return (
     <div>
-      <Label htmlFor={id} className="flex items-center gap-1">
-        {label}
-        {required ? <span className="text-fail">*</span> : null}
-      </Label>
+      <div className="mb-1.5 flex items-center gap-1.5">
+        <Label htmlFor={id} className="mb-0 flex items-center gap-1">
+          {label}
+          {required ? <span className="text-fail">*</span> : null}
+        </Label>
+        {tooltip ? <InfoTip label={label} text={tooltip} /> : null}
+      </div>
       {control}
       {hint ? <FieldHint>{hint}</FieldHint> : null}
     </div>
+  );
+}
+
+function InfoTip({ label, text }: { label: string; text: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          aria-label={`Más información sobre ${label}`}
+          className="inline-flex h-4 w-4 items-center justify-center rounded-full text-muted transition-colors hover:text-brand focus-visible:text-brand"
+        >
+          <Info className="h-3.5 w-3.5" aria-hidden />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent>{text}</TooltipContent>
+    </Tooltip>
   );
 }
 
