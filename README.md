@@ -22,6 +22,7 @@ habilitados junto con un **recibo reproducible**.
 
 ## Tabla de contenidos
 
+- [Problema y usuarios](#problema-y-usuarios)
 - [Características](#características)
 - [Inicio rápido](#inicio-rápido)
 - [Arquitectura](#arquitectura)
@@ -38,11 +39,26 @@ habilitados junto con un **recibo reproducible**.
 - [CLI](#cli)
 - [Estructura del repositorio](#estructura-del-repositorio)
 - [Pruebas](#pruebas)
+- [Recursos de prueba](#recursos-de-prueba)
 - [Solución de problemas](#solución-de-problemas)
 - [Convenciones y contribución](#convenciones-y-contribución)
 - [Limitaciones](#limitaciones)
 - [Documentación adicional](#documentación-adicional)
 - [Licencias](#licencias)
+- [IA, pagos y nube](#ia-pagos-y-nube)
+
+## Problema y usuarios
+
+Un agregado candidato puede diferir de la versión oficial en su base, periodo,
+unidad, esquema, identidad o licencia.
+
+El usuario principal es el técnico de publicaciones que coteja un agregado con la
+ficha oficial en el procedimiento 18 del Manual de procesos de la Dirección de
+Informática del INE. También puede servir a periodistas y analistas que necesitan
+consultar la fuente, la base y el periodo de un agregado.
+
+El producto muestra estado, severidad y cobertura, y genera un recibo. No asigna
+un puntaje ni certifica los datos.
 
 ## Características
 
@@ -87,6 +103,12 @@ portal de consulta arranca **vacío**: un agregado solo aparece cuando un reviso
 lo valida y registra su visto bueno en la bandeja de revisión.
 
 La documentación interactiva de la API está en <http://127.0.0.1:8000/docs>.
+
+Tras `uv sync` y `pnpm install` el sistema funciona **sin red**. Los contratos se
+pueden validar sin interfaz con `uv run python -m engine.profiles`. La cola de
+revisión arranca sin decisiones: los recursos registrados y los archivos cargados
+se validan y habilitan desde la interfaz, y cada decisión queda en la bitácora
+con responsable y motivo.
 
 ### Scripts disponibles
 
@@ -274,6 +296,28 @@ summary_notes: >
   Cobertura nacional; no se publican cifras derivadas.
 ```
 
+Campos obligatorios: `profile_id`, `version`, `kind`, `title`, `expected_sheet`
+(obligatoria en XLSX, `null` en CSV), `header_row` (1 o mayor), `schema`, `types`,
+`grain` y `dates`. Cada variable de `schema` declara `name`, `column` y `type`, y
+opcionalmente `unit`, `reference`, `nullable`, `notes` y `role`. `summary_notes`
+es opcional. Tipos permitidos: `integer`, `float`, `string` y `date`.
+
+Reglas de validación del propio contrato:
+
+- Los tipos de `schema` deben pertenecer a `types`, y `types` a la lista permitida.
+- `grain`, `dates.year` y, si se declara, `dates.month` deben existir en `schema`.
+- `profile_id` usa minúsculas, dígitos y guion bajo; la `version` entra en el digest.
+- `unit`, `reference` y `notes` son texto; `nullable` es booleano.
+- `dates` acepta `expected` (lista de `AAAA` o `AAAA-MM`) o `range` (`from`/`to`,
+  con `from` anterior a `to`). Sin `dates.month` el contrato es anual y los
+  periodos usan `AAAA`; con mes usan `AAAA-MM`.
+
+Los perfiles **no declaran coordenadas**: las columnas se resuelven por
+encabezado y los periodos por año, con mes opcional. Las celdas (`F504`, `G504`)
+se descubren al leer el archivo y solo aparecen como metadato en la evidencia.
+Un test recorre los YAML y falla si alguien escribe `letter`, `cell` o
+`row_number`.
+
 Para validar contratos sin la interfaz:
 
 ```bash
@@ -395,9 +439,30 @@ Configuración de ejemplo para un cliente MCP:
 | `/a/[id]` | Ficha pública: fuente, base, periodo, reglas evaluadas y descarga de `recibo.json` |
 | `/a/[id]/ficha` | Ficha técnica imprimible para adjuntar al procedimiento 18 |
 
-La interfaz implementa la *Guía de diseño gráfico para Datatón* del INE
-(tipografía Ubuntu Sans servida localmente, paleta institucional y logotipos
-oficiales en `web/public/`).
+Estados visibles: `borrador`, `no_habilitado`, `en_revision`,
+`habilitado_para_consulta` y `cerrado`. No existe "aprobado por el INE". La
+consulta no incluye comparador de periodos ni series.
+
+### Identidad visual
+
+La interfaz implementa la *Guía de diseño gráfico para Datatón* (INE, noviembre
+2026):
+
+- **Logotipo.** Versiones vectoriales oficiales en `web/public/`: horizontal
+  (`ine-logo-horizontal.svg`) en la cabecera; vertical (`ine-logo-vertical.svg`)
+  en la ficha técnica; isologo (`ine-isologo.svg`) en el pie y el favicon; e
+  isologo negativo (`ine-isologo-negative.svg`) en blanco sobre azul oscuro en la
+  portada. Sin efectos, recortes, recolores ni deformación.
+- **Tonos principales.** Azul radiante `#0080FF`, azul oscuro `#004080` y blanco.
+  La cinta superior sigue la secuencia azul / azul oscuro / naranja de la portada
+  del manual.
+- **Tonos secundarios.** Naranja `#FF5500`, verde lima `#9DD926`, lila `#A97EFF` y
+  amarillo `#FFD500`, para estados, acentos y fondos suaves.
+- **Tipografía.** Ubuntu Sans variable, servida localmente desde
+  `web/app/fonts/` (subconjunto latino en WOFF2, licencia UFL).
+- **Fondos.** Blanco para tarjetas y superficies de contenido y gris claro
+  `#F5F5F5` para el lienzo. El logotipo nunca se coloca sobre azul, fotografía ni
+  fondos con textura.
 
 ## CLI
 
@@ -450,6 +515,42 @@ La suite incluye dos recursos reales del conjunto CKAN *IPC Base Anual 2024=100*
 (licencia `cc-by`) en `tests/data/real/`, con sus contratos en `tests/profiles/`.
 Estos recursos no se publican en la aplicación.
 
+## Recursos de prueba
+
+El producto arranca sin perfiles ni agregados registrados: `data/sources.json`,
+`data/manifest.json`, `stores/review_store/cases.json` y `profiles/` quedan
+vacíos hasta que se registren recursos y se creen contratos.
+
+La suite conserva copias de dos recursos del conjunto CKAN **IPC Base Anual
+2024=100** (`dataset_id 4243818d-b479-4bc1-aae6-2735e2b51265`, licencia `cc-by`)
+en `tests/data/real/`, con sus contratos en `tests/profiles/`. No se publican en
+la aplicación.
+
+| Recurso | Archivo de prueba | Descarga (UTC) | Bytes | SHA-256 |
+|---|---|---|---|---|
+| Empalme del IPC por República | `tests/data/real/ipc_emprepu_es25.xlsx` | 2026-11-24T05:41:54Z | 68.016 | `d0101e366ee6d6bb02345db64b8c725c0a4c65ee85aa800d751d41b8381664d4` |
+| IPC por Región | `tests/data/real/ipc_porreg_es25.xlsx` | 2026-11-24T19:34:21Z | 12.703 | `841dada98d20bca5ec8c23755ac8d793ce76b2e06dc7c82d34fc4f48475c8c1e` |
+
+Las URL completas están en `tests/data/real/sources.json`.
+
+El **empalme** permite comprobar el resumen de variables y unidades entre
+columnas con bases distintas:
+
+| Celda | Valor | Qué declara el perfil |
+|---|---|---|
+| `E503` | 101,702855 | `e_index`, unidad índice, referencia diciembre 2023=100 |
+| `F503` | 100,513541 | `f_index`, unidad índice, referencia 2024=100 |
+| `F504` | 101,017579 | `f_index`, misma variable y referencia |
+| `G504` | 0,501463 % | `g_monthly`, unidad porcentaje, variación publicada |
+
+El resumen muestra nombre interno, encabezado, tipo, unidad, base o alcance,
+nulabilidad, notas y conteos de valores válidos, nulos y excluidos. No calcula
+cocientes entre columnas ni series y no publica cifras derivadas.
+
+El recurso **regional** usa una tabla con una columna por región en `Hoja1`.
+Abarca de 2025-01 a 2026-10, no incluye variaciones publicadas y se evalúa con el
+mismo motor y otro perfil.
+
 ## Solución de problemas
 
 | Síntoma | Causa probable | Solución |
@@ -485,11 +586,14 @@ Estos recursos no se publican en la aplicación.
 - La cobertura es la del perfil declarado, no la de toda la hoja.
 - No se calculan variaciones, cocientes ni comparaciones entre periodos o series.
 - `n<5` no se usa como garantía legal; no se afirma secreto estadístico.
+- El portal muestra metadatos, resumen de variables y unidades, reglas y recibo;
+  no calcula variaciones ni cocientes entre columnas.
+- El recurso regional publica índices, no variaciones; el sistema no las calcula.
+- La fecha de descarga del regional proviene de la `mtime` del archivo
+  (`downloaded_at_source: "mtime"`), declarada en el manifiesto.
 
 ## Documentación adicional
 
-- [`docs/README.md`](docs/README.md): documento extendido del producto (problema,
-  usuarios, recursos de prueba e identidad visual).
 - [`PRD_INE_DATA_TRUST.md`](PRD_INE_DATA_TRUST.md): requisitos del producto.
 - [`Nota Conceptual Datatón INE 2026.md`](<Nota Conceptual Datatón INE 2026.md>):
   nota conceptual.
@@ -504,3 +608,12 @@ Estos recursos no se publican en la aplicación.
 - **Datos del INE:** `cc-by`, atribuidos al Instituto Nacional de Estadística
   (INE), Guatemala.
 - **Dependencias de terceros:** [`docs/LICENSES_THIRD_PARTY.md`](docs/LICENSES_THIRD_PARTY.md).
+
+## IA, pagos y nube
+
+- **IA en el producto:** ninguna. No hay modelos ni prompts en tiempo de
+  ejecución; el motor es determinista y funciona sin red.
+- **IA en el desarrollo:** ver [`docs/AI_USAGE.md`](docs/AI_USAGE.md).
+- **Pagos:** ninguno.
+- **Nube:** ninguna. Todo corre local; el único uso de red es la descarga inicial
+  del snapshot y la instalación de dependencias.
