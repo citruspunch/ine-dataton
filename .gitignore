@@ -35,8 +35,10 @@ next-env.d.ts
 /discovery_ine/
 
 # --- Transient session artifacts ---
-# Uploaded files and every artifact generated from them are session state
-# and are not versioned.
+# Uploaded files, generated rule profiles and every artifact derived from
+# them are session state and are not versioned.
+/profiles/*.yaml
+/profiles/*.yml
 /stores/review_store/uploads/
 /stores/review_store/receipts/
 /stores/review_store/decisions/
@@ -44,3 +46,4 @@ next-env.d.ts
 /stores/review_store/quarantine/
 /stores/public_snapshot/aggregates/
 /stores/public_snapshot/receipts/
+/stores/public_snapshot/index.json
