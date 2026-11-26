@@ -27,7 +27,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -352,7 +351,11 @@ function validateDraft(draft: Draft): string[] {
   return problems;
 }
 
-export function NewProfileDialog() {
+export function NewProfileDialog({
+  title = "Crear perfil de validación",
+}: {
+  title?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Draft>(initialDraft);
   const [showErrors, setShowErrors] = useState(false);
@@ -435,14 +438,19 @@ export function NewProfileDialog() {
             Nueva regla
           </Button>
         </DialogTrigger>
-        <DialogContent className="w-[min(960px,94vw)] p-0">
+        <DialogContent
+          aria-describedby={undefined}
+          className="w-[min(960px,94vw)] p-0"
+          onOpenAutoFocus={(event) => {
+            event.preventDefault();
+            window.setTimeout(() => {
+              document.querySelector<HTMLInputElement>("[data-autofocus]")?.focus();
+            }, 0);
+          }}
+        >
           <div className="border-b border-line px-6 py-4">
             <DialogHeader className="mb-0">
-              <DialogTitle>Nuevo perfil declarativo</DialogTitle>
-              <DialogDescription>
-                Cree un contrato. El sistema revisa sus campos antes de guardarlo en{" "}
-                <code>profiles/</code>.
-              </DialogDescription>
+              <DialogTitle>{title}</DialogTitle>
             </DialogHeader>
           </div>
 
@@ -464,6 +472,7 @@ export function NewProfileDialog() {
                     tooltip="Clave única del perfil en minúsculas, números y guion bajo. Identifica el contrato en profiles/ y vincula los recibos de validación a esta definición."
                   >
                     <Input
+                      data-autofocus
                       value={draft.profileId}
                       onChange={(event) =>
                         update(
