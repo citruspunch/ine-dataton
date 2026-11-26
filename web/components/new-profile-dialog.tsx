@@ -52,10 +52,16 @@ type ColumnType = "integer" | "float" | "string" | "date";
 type PeriodMode = "expected" | "range";
 
 let uid = 0;
-const nextUid = () => ++uid;
+const nextUid = () => {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  uid += 1;
+  return `uid-${Date.now()}-${uid}`;
+};
 
 interface ColumnDraft {
-  uid: number;
+  uid: string;
   name: string;
   column: string;
   type: ColumnType;
@@ -63,7 +69,7 @@ interface ColumnDraft {
 }
 
 interface SeriesDraft {
-  uid: number;
+  uid: string;
   id: string;
   label: string;
   index: string;
@@ -74,7 +80,7 @@ interface SeriesDraft {
 }
 
 interface CheckDraft {
-  uid: number;
+  uid: string;
   id: string;
   label: string;
   numeratorField: string;
@@ -372,7 +378,7 @@ export function NewProfileDialog({
     setDraft((current) => ({ ...current, [key]: value }));
   }
 
-  function updateColumn(uidValue: number, patch: Partial<ColumnDraft>) {
+  function updateColumn(uidValue: string, patch: Partial<ColumnDraft>) {
     setDraft((current) => ({
       ...current,
       columns: current.columns.map((column) =>
@@ -381,7 +387,7 @@ export function NewProfileDialog({
     }));
   }
 
-  function updateSeries(uidValue: number, patch: Partial<SeriesDraft>) {
+  function updateSeries(uidValue: string, patch: Partial<SeriesDraft>) {
     setDraft((current) => ({
       ...current,
       series: current.series.map((series) =>
@@ -390,7 +396,7 @@ export function NewProfileDialog({
     }));
   }
 
-  function updateCheck(uidValue: number, patch: Partial<CheckDraft>) {
+  function updateCheck(uidValue: string, patch: Partial<CheckDraft>) {
     setDraft((current) => ({
       ...current,
       checks: current.checks.map((check) =>
@@ -399,7 +405,7 @@ export function NewProfileDialog({
     }));
   }
 
-  function removeColumn(uidValue: number) {
+  function removeColumn(uidValue: string) {
     setDraft((current) => {
       const target = current.columns.find((column) => column.uid === uidValue);
       if (!target) return current;
