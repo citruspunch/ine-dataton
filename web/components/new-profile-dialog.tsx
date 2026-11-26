@@ -161,7 +161,7 @@ function initialDraft(): Draft {
     dateMonth: "",
     monthFormat: "number",
     periodMode: "expected",
-    periods: ["2025-01"],
+    periods: [],
     rangeFromYear: "",
     rangeFromMonth: "",
     rangeToYear: "",
@@ -221,9 +221,11 @@ function buildYaml(draft: Draft): string {
     lines.push(
       `    to: ${scalar(rangePeriod(draft.rangeToYear, draft.rangeToMonth))}`,
     );
-  } else {
+  } else if (draft.periods.length) {
     lines.push("  expected:");
     for (const period of draft.periods) lines.push(`    - ${scalar(period)}`);
+  } else {
+    lines.push("  expected: []");
   }
 
   lines.push("");
