@@ -1420,13 +1420,16 @@ function PeriodsInput({
   onChange: (periods: string[]) => void;
   tooltip?: string;
 }) {
-  const [text, setText] = useState("");
-  const valid = /^\d{4}-(0[1-9]|1[0-2])$/.test(text);
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
+  const value = rangePeriod(year, month);
+  const canAdd = Boolean(value) && !periods.includes(value);
 
   function add() {
-    if (!valid || periods.includes(text)) return;
-    onChange([...periods, text].sort());
-    setText("");
+    if (!canAdd) return;
+    onChange([...periods, value].sort());
+    setYear("");
+    setMonth("");
   }
 
   return (
@@ -1435,20 +1438,22 @@ function PeriodsInput({
         <Label className="mb-0">Periodos esperados</Label>
         {tooltip ? <InfoTip label="Periodos esperados" text={tooltip} /> : null}
       </div>
-      <div className="flex gap-2">
-        <Input
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              add();
-            }
-          }}
-          placeholder="2025-01"
-          className="max-w-[180px]"
+      <div className="grid gap-2 sm:grid-cols-[160px_190px_max-content] sm:items-center">
+        <DraftSelect
+          value={year}
+          onChange={setYear}
+          options={YEAR_OPTIONS}
+          placeholder="Año"
+          ariaLabel="Año del periodo"
         />
-        <Button type="button" variant="secondary" onClick={add} disabled={!valid}>
+        <DraftSelect
+          value={month}
+          onChange={setMonth}
+          options={MONTH_OPTIONS}
+          placeholder="Mes"
+          ariaLabel="Mes del periodo"
+        />
+        <Button type="button" variant="secondary" onClick={add} disabled={!canAdd}>
           <CopySimple className="h-4 w-4" aria-hidden />
           Añadir
         </Button>
