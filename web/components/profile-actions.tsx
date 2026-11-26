@@ -1,11 +1,15 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { CircleNotch, CopySimple, WarningCircle } from "@phosphor-icons/react/dist/ssr";
+import {
+  CircleNotch,
+  CopySimple,
+  Eye,
+  WarningCircle,
+} from "@phosphor-icons/react/dist/ssr";
 
 import { getProfileDefinition } from "@/app/actions";
 import { NewProfileDialog } from "@/components/new-profile-dialog";
-import { ProfileViewDialog } from "@/components/profile-view-dialog";
 import { Button } from "@/components/ui/button";
 import type { ProfileSummary } from "@/lib/types";
 
@@ -51,7 +55,10 @@ export function ProfileActions({
 
   return (
     <div className="mt-2 flex flex-wrap items-center gap-1">
-      <ProfileViewDialog profile={profile} />
+      <Button type="button" variant="ghost" size="sm" onClick={duplicate} disabled={pending}>
+        <Eye className="h-3.5 w-3.5" aria-hidden />
+        Ver
+      </Button>
       <Button type="button" variant="ghost" size="sm" onClick={duplicate} disabled={pending}>
         {pending ? (
           <CircleNotch className="h-3.5 w-3.5 animate-spin" aria-hidden />
@@ -70,6 +77,8 @@ export function ProfileActions({
         <NewProfileDialog
           key={String(initialProfile.profile_id)}
           title="Duplicar perfil de validación"
+          submitLabel="Duplicar perfil"
+          pendingLabel="Duplicando…"
           initialProfile={initialProfile}
           openInitially
           trigger={null}

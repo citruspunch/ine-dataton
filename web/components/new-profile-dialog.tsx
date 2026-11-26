@@ -386,12 +386,16 @@ function validateDraft(draft: Draft): string[] {
 
 export function NewProfileDialog({
   title = "Crear perfil de validación",
+  submitLabel = "Guardar perfil",
+  pendingLabel = "Guardando…",
   initialProfile,
   openInitially = false,
   trigger,
   onClosed,
 }: {
   title?: string;
+  submitLabel?: string;
+  pendingLabel?: string;
   initialProfile?: Record<string, unknown> | null;
   openInitially?: boolean;
   trigger?: React.ReactNode | null;
@@ -996,10 +1000,10 @@ export function NewProfileDialog({
                     {pending ? (
                       <>
                         <CircleNotch className="h-4 w-4 animate-spin" aria-hidden />
-                        Guardando…
+                        {pendingLabel}
                       </>
                     ) : (
-                      "Guardar perfil"
+                      submitLabel
                     )}
                   </Button>
                 </div>

@@ -158,9 +158,9 @@ Reglas versionadas en `rules/rules.json`: `SNAP-01` integridad, `LIC-01` licenci
 - **Bandeja de revisión** (`/review`): carga de `.csv`/`.xlsx`/`.xls` con arrastrar
   y soltar, selectores accesibles de perfil y licencia, y un **formulario guiado**
   que genera el YAML y lo valida campo a campo antes de guardarlo.
-- **Perfiles inmutables**: cada contrato se puede ver en solo lectura y duplicar
-  con un identificador nuevo. La copia se edita antes de guardarse; el original
-  no cambia.
+- **Perfiles inmutables**: cada contrato se abre en el formulario precargado y
+  se duplica con un identificador nuevo. La acción de guardar crea la copia; el
+  original no cambia.
 - **Detalle y gate** (`/review/[id]`): ficha, hallazgos filtrables por severidad,
   comparaciones con evidencia privada y formulario de gate con justificación de
   advertencias.
