@@ -327,7 +327,11 @@ export function NewProfileDialog({
   const yaml = useMemo(() => buildYaml(draft), [draft]);
   const fieldOptions = draft.columns
     .filter((column) => column.name.trim())
-    .map((column) => ({ value: column.name, label: `${column.column || column.name} · ${column.name}` }));
+    .map((column) => ({
+      value: column.name,
+      label: column.column || column.name,
+      description: column.column && column.column !== column.name ? column.name : undefined,
+    }));
 
   useEffect(() => {
     if (!open) return;
@@ -1012,7 +1016,7 @@ function DraftSelect({
   id?: string;
   value: string;
   onChange: (value: string) => void;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; description?: string }[];
   placeholder?: string;
   ariaLabel?: string;
 }) {
@@ -1025,7 +1029,12 @@ function DraftSelect({
       <SelectContent>
         {options.map((option) => (
           <SelectItem key={option.value} value={option.value}>
-            {option.label}
+            <span className="flex flex-col py-0.5">
+              <span>{option.label}</span>
+              {option.description ? (
+                <span className="text-[11.5px] text-muted">{option.description}</span>
+              ) : null}
+            </span>
           </SelectItem>
         ))}
       </SelectContent>
