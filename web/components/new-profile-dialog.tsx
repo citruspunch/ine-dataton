@@ -59,7 +59,6 @@ interface ColumnDraft {
   name: string;
   column: string;
   type: ColumnType;
-  role: "" | "period_year" | "period_month";
   nullable: boolean;
 }
 
@@ -95,42 +94,13 @@ const COLUMN_TYPES: { value: ColumnType; label: string }[] = [
   { value: "date", label: "Fecha" },
 ];
 
-function initialColumns(): ColumnDraft[] {
-  return [
-    {
-      uid: nextUid(),
-      name: "year",
-      column: "Año",
-      type: "integer",
-      role: "period_year",
-      nullable: false,
-    },
-    {
-      uid: nextUid(),
-      name: "month",
-      column: "Mes",
-      type: "string",
-      role: "period_month",
-      nullable: false,
-    },
-    {
-      uid: nextUid(),
-      name: "value",
-      column: "Índice",
-      type: "float",
-      role: "",
-      nullable: false,
-    },
-  ];
-}
-
 function initialSeries(): SeriesDraft[] {
   return [
     {
       uid: nextUid(),
       id: "serie",
       label: "Serie principal",
-      index: "value",
+      index: "",
       base: "2024=100",
       variation: "",
       comparable: true,
@@ -201,9 +171,9 @@ function initialDraft(): Draft {
     description: "",
     expectedSheet: "",
     headerRow: "1",
-    columns: initialColumns(),
-    dateYear: "year",
-    dateMonth: "month",
+    columns: [],
+    dateYear: "",
+    dateMonth: "",
     monthFormat: "number",
     periodMode: "expected",
     periods: ["2025-01"],
@@ -235,13 +205,16 @@ function buildYaml(draft: Draft): string {
   lines.push(`header_row: ${Number.parseInt(draft.headerRow, 10) || 1}`);
 
   lines.push("");
-  lines.push("schema:");
-  for (const column of columns) {
-    lines.push(`  - name: ${scalar(column.name)}`);
-    lines.push(`    column: ${scalar(column.column)}`);
-    lines.push(`    type: ${column.type}`);
-    if (column.role) lines.push(`    role: ${column.role}`);
-    if (column.nullable) lines.push("    nullable: true");
+  if (columns.length) {
+    lines.push("schema:");
+    for (const column of columns) {
+      lines.push(`  - name: ${scalar(column.name)}`);
+      lines.push(`    column: ${scalar(column.column)}`);
+      lines.push(`    type: ${column.type}`);
+      if (column.nullable) lines.push("    nullable: true");
+    }
+  } else {
+    lines.push("schema: []");
   }
 
   lines.push("");
@@ -330,8 +303,10 @@ function validateDraft(draft: Draft): string[] {
     problems.push("El identificador del perfil solo admite minúsculas, dígitos y guion bajo.");
   }
   if (!draft.title.trim()) problems.push("El título es obligatorio.");
-  if (!draft.columns.some((column) => column.name.trim() && column.column.trim())) {
-    problems.push("Declare al menos una columna.");
+  if (draft.columns.length === 0) {
+    problems.push("Agregue al menos una columna antes de guardar el perfil.");
+  } else if (draft.columns.some((column) => !column.name.trim() || !column.column.trim())) {
+    problems.push("Complete el campo interno y el encabezado de cada columna.");
   }
   if (draft.kind === "xlsx" && !draft.expectedSheet.trim()) {
     problems.push("Un perfil XLSX necesita el nombre de la hoja esperada.");
@@ -422,6 +397,32 @@ export function NewProfileDialog({
         check.uid === uidValue ? { ...check, ...patch } : check,
       ),
     }));
+  }
+
+  function removeColumn(uidValue: number) {
+    setDraft((current) => {
+      const target = current.columns.find((column) => column.uid === uidValue);
+      if (!target) return current;
+      const name = target.name;
+      return {
+        ...current,
+        columns: current.columns.filter((column) => column.uid !== uidValue),
+        dateYear: current.dateYear === name ? "" : current.dateYear,
+        dateMonth: current.dateMonth === name ? "" : current.dateMonth,
+        grainExtra: current.grainExtra === name ? "" : current.grainExtra,
+        series: current.series.map((series) => ({
+          ...series,
+          index: series.index === name ? "" : series.index,
+          variation: series.variation === name ? "" : series.variation,
+        })),
+        checks: current.checks.map((check) => ({
+          ...check,
+          numeratorField: check.numeratorField === name ? "" : check.numeratorField,
+          denominatorField: check.denominatorField === name ? "" : check.denominatorField,
+          publishedField: check.publishedField === name ? "" : check.publishedField,
+        })),
+      };
+    });
   }
 
   const localProblems = showErrors ? validateDraft(draft) : [];
@@ -593,7 +594,6 @@ export function NewProfileDialog({
                           name: "",
                           column: "",
                           type: "float",
-                          role: "",
                           nullable: false,
                         },
                       ])
@@ -604,84 +604,90 @@ export function NewProfileDialog({
                   </Button>
                 }
               >
-                <div className="space-y-3">
-                  <div className="hidden grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] gap-2 px-1 text-[12px] font-bold text-muted sm:grid">
-                    <span>Campo interno</span>
-                    <span>Encabezado</span>
-                    <span>Tipo</span>
-                    <span>Rol</span>
-                    <span />
-                  </div>
-                  {draft.columns.map((column) => (
-                    <div
-                      key={column.uid}
-                      className="grid gap-2 rounded-lg border border-line bg-[#fafafa] p-3 sm:grid-cols-[1.1fr_1.2fr_0.9fr_1fr_auto] sm:items-center sm:border-0 sm:bg-transparent sm:p-0"
-                    >
-                      <Input
-                        value={column.name}
-                        onChange={(event) =>
-                          updateColumn(column.uid, {
-                            name: event.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "_"),
-                          })
-                        }
-                        placeholder="year"
-                        aria-label="Campo interno"
-                      />
-                      <Input
-                        value={column.column}
-                        onChange={(event) => updateColumn(column.uid, { column: event.target.value })}
-                        placeholder="Año"
-                        aria-label="Encabezado"
-                      />
-                      <DraftSelect
-                        value={column.type}
-                        onChange={(value) => updateColumn(column.uid, { type: value as ColumnType })}
-                        options={COLUMN_TYPES}
-                        ariaLabel="Tipo"
-                      />
-                      <DraftSelect
-                        value={column.role || "none"}
-                        onChange={(value) =>
-                          updateColumn(column.uid, {
-                            role: value === "none" ? "" : (value as ColumnDraft["role"]),
-                          })
-                        }
-                        options={[
-                          { value: "none", label: "Dato" },
-                          { value: "period_year", label: "Año" },
-                          { value: "period_month", label: "Mes" },
-                        ]}
-                        ariaLabel="Rol"
-                      />
-                      <div className="flex items-center justify-between gap-2 sm:justify-end">
-                        <label className="flex items-center gap-1.5 text-[13px] text-muted">
-                          <Checkbox
-                            checked={column.nullable}
-                            onChange={(event) =>
-                              updateColumn(column.uid, { nullable: event.target.checked })
-                            }
-                          />
-                          Nulo
-                        </label>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted hover:text-fail"
-                          onClick={() =>
-                            update(
-                              "columns",
-                              draft.columns.filter((item) => item.uid !== column.uid),
-                            )
-                          }
-                          aria-label="Quitar columna"
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>
-                      </div>
+                {draft.columns.length ? (
+                  <div className="space-y-3">
+                    <div className="hidden grid-cols-[1.1fr_1.2fr_0.9fr_auto] gap-2 px-1 text-[12px] font-bold text-muted sm:grid">
+                      <span className="flex items-center gap-1">
+                        Campo interno
+                        <InfoTip
+                          label="Campo interno"
+                          text="Nombre interno que usan las reglas y el contrato para referirse a esta columna, sin depender del texto exacto del encabezado."
+                        />
+                      </span>
+                      <span className="flex items-center gap-1">
+                        Encabezado
+                        <InfoTip
+                          label="Encabezado"
+                          text="Texto exacto del encabezado de columna en el archivo de datos. El lector resuelve la columna por nombre de encabezado."
+                        />
+                      </span>
+                      <span className="flex items-center gap-1">
+                        Tipo
+                        <InfoTip
+                          label="Tipo"
+                          text="Tipo de dato esperado para validar que los valores de la columna se puedan convertir sin error."
+                        />
+                      </span>
+                      <span />
                     </div>
-                  ))}
-                </div>
+                    {draft.columns.map((column) => (
+                      <div
+                        key={column.uid}
+                        className="grid gap-2 rounded-lg border border-line bg-[#fafafa] p-3 sm:grid-cols-[1.1fr_1.2fr_0.9fr_auto] sm:items-center sm:border-0 sm:bg-transparent sm:p-0"
+                      >
+                        <Input
+                          value={column.name}
+                          onChange={(event) =>
+                            updateColumn(column.uid, {
+                              name: event.target.value.toLowerCase().replace(/[^a-z0-9_]/g, "_"),
+                            })
+                          }
+                          placeholder="year"
+                          aria-label="Campo interno"
+                        />
+                        <Input
+                          value={column.column}
+                          onChange={(event) => updateColumn(column.uid, { column: event.target.value })}
+                          placeholder="Año"
+                          aria-label="Encabezado"
+                        />
+                        <DraftSelect
+                          value={column.type}
+                          onChange={(value) => updateColumn(column.uid, { type: value as ColumnType })}
+                          options={COLUMN_TYPES}
+                          ariaLabel="Tipo"
+                        />
+                        <div className="flex items-center justify-between gap-2 sm:justify-end">
+                          <label className="flex items-center gap-1.5 text-[13px] text-muted">
+                            <Checkbox
+                              checked={column.nullable}
+                              onChange={(event) =>
+                                updateColumn(column.uid, { nullable: event.target.checked })
+                              }
+                            />
+                            Nulo
+                          </label>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted hover:text-fail"
+                            onClick={() => removeColumn(column.uid)}
+                            aria-label="Quitar columna"
+                          >
+                            <Trash className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-dashed border-[#c7c7c7] bg-[#fafafa] px-4 py-8 text-center">
+                    <p className="text-[14px] text-muted">
+                      No hay columnas definidas todavía. Usa + Columna para agregar una.
+                    </p>
+                  </div>
+                )}
               </Section>
 
               <Section number="04" title="Periodo y grano">
