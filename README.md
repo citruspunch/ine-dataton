@@ -25,17 +25,21 @@ habilitados junto con un **recibo reproducible**.
 - [Características](#características)
 - [Inicio rápido](#inicio-rápido)
 - [Arquitectura](#arquitectura)
+- [Ciclo de vida de los datos](#ciclo-de-vida-de-los-datos)
 - [Flujo de validación y publicación](#flujo-de-validación-y-publicación)
 - [Modelo de estados](#modelo-de-estados)
 - [Reglas de validación](#reglas-de-validación)
 - [Contratos (perfiles YAML)](#contratos-perfiles-yaml)
 - [Digest y reproducibilidad](#digest-y-reproducibilidad)
+- [Recibos](#recibos)
 - [API HTTP del motor](#api-http-del-motor)
 - [Servidor MCP](#servidor-mcp)
 - [Interfaz web](#interfaz-web)
 - [CLI](#cli)
 - [Estructura del repositorio](#estructura-del-repositorio)
 - [Pruebas](#pruebas)
+- [Solución de problemas](#solución-de-problemas)
+- [Convenciones y contribución](#convenciones-y-contribución)
 - [Limitaciones](#limitaciones)
 - [Documentación adicional](#documentación-adicional)
 - [Licencias](#licencias)
@@ -134,6 +138,27 @@ la interfaz solo muestra y recoge datos.** El motor no importa código de `web/`
   valida las rutas para impedir salidas del directorio. El servidor MCP depende
   exclusivamente de este módulo, por lo que no puede leer la cola de revisión.
 
+## Ciclo de vida de los datos
+
+Un **sujeto** (`Subject`) es lo que el motor valida. Puede venir de dos orígenes:
+
+| Origen | Cómo entra | Fuente de verdad |
+|---|---|---|
+| Recurso registrado | `data/sources.json` → `pnpm run prepare` → `data/manifest.json`; el caso se declara en `stores/review_store/cases.json` | Manifiesto (ruta, bytes, SHA-256, licencia, URL, fecha de descarga) |
+| Archivo cargado | `POST /review/upload` o la bandeja `/review`; se guarda en `uploads/` con un registro propio | `stores/review_store/uploads/manifest.json` |
+
+`pnpm run prepare` (`engine/prepare.py`) recorre `sources.json`, calcula tamaño y
+SHA-256 de cada archivo y los contrasta con `expected_sha256` y `expected_bytes`
+(códigos de salida 2 y 3 si falta el archivo con `--offline` o si no coincide).
+Sin `--offline` descarga los recursos reales que falten; `--force-download`
+repite la descarga. Si el manifiesto previo no registra la fecha, se usa la
+`mtime` del archivo y se declara con `downloaded_at_source: "mtime"`. El
+manifiesto que entrega el repositorio está vacío: el producto arranca sin
+recursos hasta que se registren.
+
+Esa cadena alimenta `SNAP-01`: el archivo evaluado debe coincidir con los bytes y
+el SHA-256 registrados.
+
 ## Flujo de validación y publicación
 
 ![Validación y publicación](docs/02-validation-and-publication.png)
@@ -163,8 +188,13 @@ la interfaz solo muestra y recoge datos.** El motor no importa código de `web/`
 - la cobertura de reglas críticas no es completa.
 
 El responsable es obligatorio y el motivo debe tener al menos 10 caracteres.
-Las decisiones aceptadas son `aprobar`, `aprobar_con_excepcion` y `rechazar`;
-`gate.revoke()` registra `revocado` y retira el agregado.
+Las decisiones aceptadas son `aprobar`, `aprobar_con_excepcion` y `rechazar`.
+En `decisions.jsonl` `aprobar` se persiste como `habilitado`; si se pide
+`aprobar_con_excepcion` pero no hay advertencias, se registra como `habilitado`
+porque no hay excepción que documentar. `rechazar` retira el agregado del corte
+público. `gate.revoke()` registra `revocado` y también lo retira. Cada registro
+guarda `decision_id` (`dec-<caso>-NNN`), responsable, motivo, `rules_version`,
+`profile_version` y las justificaciones.
 
 ## Modelo de estados
 
@@ -200,6 +230,15 @@ Las reglas están versionadas en [`rules/rules.json`](rules/rules.json)
 | `CONT-05` | contrato | Los periodos declarados existen y no se mezclan |
 | `CONT-06` | contrato | Resumen de variables, tipos, unidades, referencias y conteos |
 | `ID-01` | par | Identidad por SHA-256: mismos bytes con identidad incompatible requieren revisión |
+
+### Identidad de recursos (`ID-01`)
+
+Los casos de método `identity_pair` comparan dos recursos (`kind: pair`). Si sus
+bytes son idénticos (mismo SHA-256) y su identidad semántica es compatible, el
+hallazgo es `ok`. Si los bytes coinciden pero la identidad declarada difiere
+(`mismatched_fields`), es `falla` y exige revisión. Si existe una justificación
+registrada con una política de reutilización documentada, pasa a `advertencia`
+justificada. Los pares de identidad no requieren licencia verificada en el gate.
 
 ## Contratos (perfiles YAML)
 
@@ -242,10 +281,18 @@ uv run python -m engine.profiles                       # todos
 uv run python -m engine.profiles profiles/mi_contrato.yaml
 ```
 
+El resumen de variables y unidades (`CONT-06`) se construye así:
+
+![Resumen de variables y unidades](docs/03-variables-and-units.png)
+
 La referencia completa de campos está en [`profiles/README.md`](profiles/README.md).
 La interfaz ofrece un formulario guiado ("Nueva regla") que genera el YAML y
-devuelve errores por campo. Los contratos son **inmutables desde la interfaz**:
-editar uno crea una copia con identificador nuevo.
+devuelve errores por campo. La interfaz trata los contratos como inmutables:
+abrir uno lo precarga en el formulario y guardar crea una copia con identificador
+nuevo. La API es más permisiva: `POST /profiles` responde `409` si el
+`profile_id` ya existe, salvo que se envíe `overwrite: true`. Un cambio en el
+contenido o la versión del perfil altera el digest e invalida los agregados que
+dependan de él en la siguiente verificación.
 
 ## Digest y reproducibilidad
 
@@ -265,7 +312,29 @@ digest vigente al momento de aprobar. `gate.verify()` (`pnpm run verify` o
 agregado se copia a `quarantine/` con el motivo, se retira de `aggregates/` y se
 reconstruye `index.json`. El recibo público se conserva.
 
-Cada recibo separa `technical_payload` (reproducible) de `decision_log` (humano).
+### Simulación de invalidación
+
+`POST /review/{id}/simulate` guarda una enmienda del perfil con la versión
+sufijada `+sim` en `review_store/overrides/` y ejecuta `verify()`: el digest
+cambia y el agregado pasa a cuarentena. Sirve para demostrar la invalidación sin
+tocar el YAML. `POST /review/{id}/simulate/undo` elimina la enmienda, revalida y
+vuelve a publicar el agregado si recupera el estado `habilitado_para_consulta`.
+Solo puede haber una simulación activa por caso (`409` en caso contrario).
+
+## Recibos
+
+Cada recibo tiene `receipt_id` (`rec-<snapshot_id>-<caso>`), `generated_at_utc`,
+`technical_payload` y `decision_log`.
+
+| | Recibo privado (`review_store/receipts/`) | Recibo público (`public_snapshot/receipts/`) |
+|---|---|---|
+| `technical_payload` | Origen, fuente, periodo, base, unidad, SHA-256, `profile_version`, `rules_version`, hallazgos con evidencia, resumen de variables, cobertura, estado y `digest` | Los mismos campos técnicos sin `origin` |
+| `decision_log` | `decision_id`, fecha, responsable, motivo, decisión, `decision_basis_digest`, justificaciones y `still_valid` | Fecha, responsable, motivo, decisión y `decision_basis_digest` |
+| `decision_log` sin decisión | `null` | `null` |
+
+`still_valid` indica si el digest registrado en la decisión sigue coincidiendo con
+el digest vigente. `validation_digest` y `decision_basis_digest` tienen hoy el
+mismo valor.
 
 ## API HTTP del motor
 
@@ -286,7 +355,7 @@ Base local: `http://127.0.0.1:8000`. Esquema interactivo en `/docs`.
 | `GET /review/{id}/receipt.json` | Recibo privado |
 | `GET /public` · `GET /public/{id}` | Índice y ficha pública |
 | `GET /public/{id}/receipt.json` | Recibo público |
-| `GET /public/{id}/warnings` | Advertencias del agregado |
+| `GET /public/{id}/warnings` | Hallazgos del agregado y subconjunto en `advertencia` |
 
 ## Servidor MCP
 
@@ -380,6 +449,32 @@ pnpm run test
 La suite incluye dos recursos reales del conjunto CKAN *IPC Base Anual 2024=100*
 (licencia `cc-by`) en `tests/data/real/`, con sus contratos en `tests/profiles/`.
 Estos recursos no se publican en la aplicación.
+
+## Solución de problemas
+
+| Síntoma | Causa probable | Solución |
+|---|---|---|
+| El portal `/` está vacío | Ningún agregado ha pasado el gate | Es el comportamiento esperado; valide y apruebe uno en `/review` |
+| `pnpm run prepare` falla con código 2 | Falta el archivo y se usó `--offline` | Coloque el archivo en la ruta de `sources.json` o ejecute `uv run python -m engine.prepare` con red |
+| `prepare` falla con código 3 | SHA-256 o tamaño distinto del esperado | Verifique el archivo; el manifiesto no se actualiza |
+| La interfaz no conecta con el motor | El motor no está en `127.0.0.1:8000` | Inicie `pnpm run dev:engine` o defina `ENGINE_URL` para la interfaz (valor por defecto `http://127.0.0.1:8000`) |
+| El gate responde `GateError` | Una precondición no se cumple | Revise la lista devuelta: reglas críticas, advertencias sin justificar, licencia o cobertura |
+| Un agregado desapareció del portal | `verify()` detectó un digest distinto | Revise `review_store/quarantine/`; cambió el archivo, el perfil o las reglas. Vuelva a validar y aprobar |
+| El perfil se rechaza con errores por campo | Contrato inválido (`schema[2].type`, `dates.expected[0]`, …) | Corrija el campo indicado; use `pnpm run profiles:check` |
+
+## Convenciones y contribución
+
+- **Idioma.** Comentarios, docstrings e identificadores del código están en
+  inglés. La interfaz, los mensajes, los datos y la documentación están en
+  español, porque ese vocabulario (estados, severidades, decisiones) se persiste
+  en reglas, recibos y snapshot.
+- **Contratos sin coordenadas.** Un test recorre los YAML y falla si aparecen
+  `letter`, `cell` o `row_number`.
+- **Antes de abrir un PR:** ejecute `pnpm run test` y `pnpm run profiles:check`.
+- **Diagramas.** Edite el `.puml` y regenere el PNG con
+  `plantuml -tpng docs/<archivo>.puml`.
+- **Dependencias.** Si cambian, regenere `docs/LICENSES_THIRD_PARTY.md` con
+  `pnpm run licenses`.
 
 ## Limitaciones
 
