@@ -393,7 +393,7 @@ export function NewProfileDialog({
         </DialogTrigger>
         <DialogContent
           aria-describedby={undefined}
-          className="w-[min(960px,94vw)] p-0"
+          className="flex w-[min(960px,94vw)] max-h-[88vh] flex-col overflow-hidden p-0"
           onOpenAutoFocus={(event) => {
             event.preventDefault();
             window.setTimeout(() => {
@@ -401,7 +401,7 @@ export function NewProfileDialog({
             }, 0);
           }}
         >
-          <div className="border-b border-line px-6 py-4">
+          <div className="shrink-0 border-b border-line px-6 py-4">
             <DialogHeader className="mb-0">
               <DialogTitle>{title}</DialogTitle>
             </DialogHeader>
@@ -413,9 +413,10 @@ export function NewProfileDialog({
               setShowErrors(true);
               if (validateDraft(draft).length) event.preventDefault();
             }}
+            className="flex min-h-0 flex-1 flex-col"
           >
             <input type="hidden" name="yaml" value={yaml} />
-            <div className="max-h-[64vh] space-y-6 overflow-y-auto px-6 py-5">
+            <div className="min-h-0 flex-1 space-y-6 overflow-y-auto px-6 py-5">
               <Section number="01" title="Identidad del contrato">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Field
@@ -831,18 +832,18 @@ export function NewProfileDialog({
                 </div>
               </Section>
 
-              <details className="rounded-lg border border-line bg-[#fafafa] px-4 py-3">
-                <summary className="flex cursor-pointer list-none items-center gap-2 text-[14px] font-semibold text-brand">
+              <div className="rounded-lg border border-line bg-[#fafafa] px-4 py-3">
+                <p className="flex items-center gap-2 text-[14px] font-semibold text-brand">
                   <BracketsCurly className="h-4 w-4" aria-hidden />
                   Vista previa del YAML generado
-                </summary>
-                <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap break-words rounded-md bg-[#1a1a1a] p-3 font-mono text-[12.5px] leading-relaxed text-[#f0f0f0]">
+                </p>
+                <pre className="mt-3 overflow-x-auto whitespace-pre-wrap break-words rounded-md bg-[#1a1a1a] p-3 font-mono text-[12.5px] leading-relaxed text-[#f0f0f0]">
                   {yaml}
                 </pre>
-              </details>
+              </div>
             </div>
 
-            <div className="space-y-3 border-t border-line bg-[#fafafa] px-6 py-4">
+            <div className="shrink-0 space-y-3 border-t border-line bg-[#fafafa] px-6 py-4">
               {localProblems.length ? (
                 <AlertList title="Revise el formulario" items={localProblems} />
               ) : null}
