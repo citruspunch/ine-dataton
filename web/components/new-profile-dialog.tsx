@@ -85,52 +85,12 @@ interface ColumnDraft {
   nullable: boolean;
 }
 
-interface SeriesDraft {
-  uid: string;
-  id: string;
-  label: string;
-  index: string;
-  base: string;
-  variation: string;
-  comparable: boolean;
-  reason: string;
-}
-
-interface CheckDraft {
-  uid: string;
-  id: string;
-  label: string;
-  numeratorField: string;
-  numeratorPeriod: string;
-  denominatorField: string;
-  denominatorPeriod: string;
-  publishedField: string;
-  publishedPeriod: string;
-  tolerance: string;
-  unit: string;
-}
-
 const COLUMN_TYPES: { value: ColumnType; label: string }[] = [
   { value: "integer", label: "Entero" },
   { value: "float", label: "Decimal" },
   { value: "string", label: "Texto" },
   { value: "date", label: "Fecha" },
 ];
-
-function initialSeries(): SeriesDraft[] {
-  return [
-    {
-      uid: nextUid(),
-      id: "serie",
-      label: "Serie principal",
-      index: "",
-      base: "2024=100",
-      variation: "",
-      comparable: true,
-      reason: "",
-    },
-  ];
-}
 
 function plainScalar(text: string) {
   return (
@@ -180,8 +140,8 @@ interface Draft {
   rangeToMonth: string;
   grainExtra: string;
   unit: string;
-  series: SeriesDraft[];
-  checks: CheckDraft[];
+  indexField: string;
+  base: string;
   displayPeriod: string;
   displayBase: string;
   displayUnit: string;
@@ -208,8 +168,8 @@ function initialDraft(): Draft {
     rangeToMonth: "",
     grainExtra: "",
     unit: "índice",
-    series: initialSeries(),
-    checks: [],
+    indexField: "",
+    base: "",
     displayPeriod: "",
     displayBase: "",
     displayUnit: "",
@@ -269,46 +229,18 @@ function buildYaml(draft: Draft): string {
   lines.push("");
   lines.push("comparability:");
   lines.push(`  unit: ${scalar(draft.unit)}`);
-  if (draft.series.length) {
+  if (draft.indexField) {
+    const column = columns.find((entry) => entry.name === draft.indexField);
     lines.push("  series:");
-    for (const series of draft.series) {
-      lines.push(`    - id: ${scalar(series.id)}`);
-      lines.push(`      label: ${scalar(series.label)}`);
-      lines.push(`      index: ${scalar(series.index)}`);
-      lines.push(`      base: ${scalar(series.base)}`);
-      if (series.variation) lines.push(`      variation: ${scalar(series.variation)}`);
-      lines.push(`      comparable: ${series.comparable}`);
-      if (!series.comparable && series.reason.trim()) {
-        lines.push(`      reason: ${block(series.reason, 8)}`);
-      }
-    }
+    lines.push("    - id: serie");
+    lines.push(`      label: ${scalar(column?.column || draft.indexField)}`);
+    lines.push(`      index: ${scalar(draft.indexField)}`);
+    lines.push(`      base: ${scalar(draft.base)}`);
+    lines.push("      comparable: true");
   } else {
     lines.push("  series: []");
   }
-  if (!draft.checks.length) {
-    lines.push("  checks: []");
-  } else {
-    lines.push("  checks:");
-    for (const check of draft.checks) {
-      lines.push(`    - id: ${scalar(check.id)}`);
-      lines.push(`      label: ${scalar(check.label)}`);
-      lines.push("      numerator:");
-      lines.push(`        field: ${scalar(check.numeratorField)}`);
-      lines.push(`        period: ${scalar(check.numeratorPeriod)}`);
-      lines.push("      denominator:");
-      lines.push(`        field: ${scalar(check.denominatorField)}`);
-      lines.push(`        period: ${scalar(check.denominatorPeriod)}`);
-      if (check.publishedField && check.publishedPeriod) {
-        lines.push("      published:");
-        lines.push(`        field: ${scalar(check.publishedField)}`);
-        lines.push(`        period: ${scalar(check.publishedPeriod)}`);
-      }
-      if (check.tolerance.trim()) {
-        lines.push(`      tolerance_pp: ${Number(check.tolerance)}`);
-      }
-      if (check.unit.trim()) lines.push(`      unit: ${scalar(check.unit)}`);
-    }
-  }
+  lines.push("  checks: []");
 
   const displayPeriod =
     draft.displayPeriod.trim() ||
@@ -320,7 +252,7 @@ function buildYaml(draft: Draft): string {
           .filter(Boolean)
           .join(" a ")
       : draft.periods.join(", "));
-  const displayBase = draft.displayBase.trim() || draft.series[0]?.base || "";
+  const displayBase = draft.displayBase.trim() || draft.base;
   const displayUnit = draft.displayUnit.trim() || draft.unit;
   if (displayPeriod || displayBase || displayUnit) {
     lines.push("");
@@ -362,8 +294,14 @@ function validateDraft(draft: Draft): string[] {
       problems.push("El fin del rango no puede ser anterior al inicio.");
     }
   }
-  if (!draft.series.some((series) => series.index.trim() && series.base.trim())) {
-    problems.push("Declare al menos una serie comparable con índice y base.");
+  if (!draft.unit.trim()) {
+    problems.push("La unidad es obligatoria.");
+  }
+  if (!draft.base.trim()) {
+    problems.push("La base es obligatoria.");
+  }
+  if (!draft.indexField) {
+    problems.push("Seleccione la columna del índice.");
   }
   return problems;
 }
@@ -423,24 +361,6 @@ export function NewProfileDialog({
     }));
   }
 
-  function updateSeries(uidValue: string, patch: Partial<SeriesDraft>) {
-    setDraft((current) => ({
-      ...current,
-      series: current.series.map((series) =>
-        series.uid === uidValue ? { ...series, ...patch } : series,
-      ),
-    }));
-  }
-
-  function updateCheck(uidValue: string, patch: Partial<CheckDraft>) {
-    setDraft((current) => ({
-      ...current,
-      checks: current.checks.map((check) =>
-        check.uid === uidValue ? { ...check, ...patch } : check,
-      ),
-    }));
-  }
-
   function removeColumn(uidValue: string) {
     setDraft((current) => {
       const target = current.columns.find((column) => column.uid === uidValue);
@@ -452,17 +372,7 @@ export function NewProfileDialog({
         dateYear: current.dateYear === name ? "" : current.dateYear,
         dateMonth: current.dateMonth === name ? "" : current.dateMonth,
         grainExtra: current.grainExtra === name ? "" : current.grainExtra,
-        series: current.series.map((series) => ({
-          ...series,
-          index: series.index === name ? "" : series.index,
-          variation: series.variation === name ? "" : series.variation,
-        })),
-        checks: current.checks.map((check) => ({
-          ...check,
-          numeratorField: check.numeratorField === name ? "" : check.numeratorField,
-          denominatorField: check.denominatorField === name ? "" : check.denominatorField,
-          publishedField: check.publishedField === name ? "" : check.publishedField,
-        })),
+        indexField: current.indexField === name ? "" : current.indexField,
       };
     });
   }
@@ -849,300 +759,40 @@ export function NewProfileDialog({
 
               <Section number="06" title="Comparabilidad">
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <Field label="Unidad" required>
+                  <Field
+                    label="Unidad"
+                    required
+                    tooltip="Unidad de medida declarada para los valores del conjunto (por ejemplo, índice o porcentaje)."
+                  >
                     <Input
                       value={draft.unit}
                       onChange={(event) => update("unit", event.target.value)}
                       placeholder="índice"
                     />
                   </Field>
-                  <div className="flex items-end pb-2 text-[13px] text-muted">
-                    Una serie solo es comparable si declara su base.
-                  </div>
-                </div>
-
-                <div className="mt-4 flex items-center justify-between">
-                  <p className="text-[13px] font-bold text-muted">
-                    Series
-                  </p>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={() =>
-                      update("series", [
-                        ...draft.series,
-                        {
-                          uid: nextUid(),
-                          id: `serie_${draft.series.length + 1}`,
-                          label: "",
-                          index: "",
-                          base: "",
-                          variation: "",
-                          comparable: true,
-                          reason: "",
-                        },
-                      ])
-                    }
+                  <Field
+                    label="Base"
+                    required
+                    tooltip="Periodo o año base de referencia del indicador. Permite distinguir cambios metodológicos de base antes de comparar series."
                   >
-                    <Plus className="h-3.5 w-3.5" aria-hidden />
-                    Serie
-                  </Button>
-                </div>
-                <div className="mt-3 space-y-3">
-                  {draft.series.map((series, index) => (
-                    <div
-                      key={series.uid}
-                      className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
-                    >
-                      <div className="flex items-center justify-between">
-                        <p className="text-[13px] font-semibold text-muted">Serie {index + 1}</p>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted hover:text-fail"
-                          onClick={() =>
-                            update(
-                              "series",
-                              draft.series.filter((item) => item.uid !== series.uid),
-                            )
-                          }
-                          aria-label="Quitar serie"
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <Field label="Identificador">
-                          <Input
-                            value={series.id}
-                            onChange={(event) => updateSeries(series.uid, { id: event.target.value })}
-                            placeholder="serie_f"
-                          />
-                        </Field>
-                        <Field label="Etiqueta">
-                          <Input
-                            value={series.label}
-                            onChange={(event) =>
-                              updateSeries(series.uid, { label: event.target.value })
-                            }
-                            placeholder="Serie F · base 2024=100"
-                          />
-                        </Field>
-                        <Field label="Campo índice" required>
-                          <DraftSelect
-                            value={series.index}
-                            onChange={(value) => updateSeries(series.uid, { index: value })}
-                            options={fieldOptions}
-                            placeholder="Seleccione"
-                          />
-                        </Field>
-                        <Field label="Base" required>
-                          <Input
-                            value={series.base}
-                            onChange={(event) =>
-                              updateSeries(series.uid, { base: event.target.value })
-                            }
-                            placeholder="2024=100"
-                          />
-                        </Field>
-                        <Field label="Campo de variación publicada" hint="opcional">
-                          <DraftSelect
-                            value={series.variation || "none"}
-                            onChange={(value) =>
-                              updateSeries(series.uid, {
-                                variation: value === "none" ? "" : value,
-                              })
-                            }
-                            options={[{ value: "none", label: "Ninguno" }, ...fieldOptions]}
-                          />
-                        </Field>
-                        <div className="flex items-center gap-2 pt-6">
-                          <Checkbox
-                            checked={series.comparable}
-                            onChange={(event) =>
-                              updateSeries(series.uid, { comparable: event.target.checked })
-                            }
-                          />
-                          <span className="text-[14px] text-ink">
-                            Comparable con las demás series
-                          </span>
-                        </div>
-                      </div>
-                      {!series.comparable ? (
-                        <Field label="Motivo de no comparabilidad">
-                          <Textarea
-                            className="min-h-[64px]"
-                            value={series.reason}
-                            onChange={(event) =>
-                              updateSeries(series.uid, { reason: event.target.value })
-                            }
-                            placeholder="Base distinta: el cociente no es una variación."
-                          />
-                        </Field>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 flex items-center justify-between">
-                  <div>
-                    <p className="text-[13px] font-bold text-muted">
-                      Comparaciones
-                    </p>
-                    <p className="text-[13px] text-muted">
-                      Opcional. Cada comprobación contrasta dos periodos de la misma base.
-                    </p>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    onClick={() =>
-                      update("checks", [
-                        ...draft.checks,
-                        {
-                          uid: nextUid(),
-                          id: `comparacion_${draft.checks.length + 1}`,
-                          label: "",
-                          numeratorField: draft.series[0]?.index ?? "",
-                          numeratorPeriod: "",
-                          denominatorField: draft.series[0]?.index ?? "",
-                          denominatorPeriod: "",
-                          publishedField: "",
-                          publishedPeriod: "",
-                          tolerance: "0.005",
-                          unit: "porcentaje",
-                        },
-                      ])
-                    }
+                    <Input
+                      value={draft.base}
+                      onChange={(event) => update("base", event.target.value)}
+                      placeholder="2024=100"
+                    />
+                  </Field>
+                  <Field
+                    label="Columna del índice"
+                    required
+                    tooltip="Columna que contiene los valores del indicador que se publican y comparan."
                   >
-                    <Plus className="h-3.5 w-3.5" aria-hidden />
-                    Comparación
-                  </Button>
-                </div>
-                <div className="mt-3 space-y-3">
-                  {draft.checks.map((check, index) => (
-                    <div
-                      key={check.uid}
-                      className="space-y-3 rounded-lg border border-line bg-[#fafafa] p-4"
-                    >
-                      <div className="flex items-center justify-between">
-                        <p className="text-[13px] font-semibold text-muted">
-                          Comparación {index + 1}
-                        </p>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted hover:text-fail"
-                          onClick={() =>
-                            update(
-                              "checks",
-                              draft.checks.filter((item) => item.uid !== check.uid),
-                            )
-                          }
-                          aria-label="Quitar comparación"
-                        >
-                          <Trash className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <Field label="Identificador">
-                          <Input
-                            value={check.id}
-                            onChange={(event) => updateCheck(check.uid, { id: event.target.value })}
-                          />
-                        </Field>
-                        <Field label="Etiqueta">
-                          <Input
-                            value={check.label}
-                            onChange={(event) =>
-                              updateCheck(check.uid, { label: event.target.value })
-                            }
-                            placeholder="Variación mensual de enero"
-                          />
-                        </Field>
-                      </div>
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        <Field label="Campo del numerador">
-                          <DraftSelect
-                            value={check.numeratorField}
-                            onChange={(value) =>
-                              updateCheck(check.uid, { numeratorField: value })
-                            }
-                            options={fieldOptions}
-                            placeholder="Seleccione"
-                          />
-                        </Field>
-                        <Field label="Periodo del numerador">
-                          <Input
-                            value={check.numeratorPeriod}
-                            onChange={(event) =>
-                              updateCheck(check.uid, { numeratorPeriod: event.target.value })
-                            }
-                            placeholder="2025-01"
-                          />
-                        </Field>
-                        <Field label="Campo del denominador">
-                          <DraftSelect
-                            value={check.denominatorField}
-                            onChange={(value) =>
-                              updateCheck(check.uid, { denominatorField: value })
-                            }
-                            options={fieldOptions}
-                            placeholder="Seleccione"
-                          />
-                        </Field>
-                        <Field label="Periodo del denominador">
-                          <Input
-                            value={check.denominatorPeriod}
-                            onChange={(event) =>
-                              updateCheck(check.uid, { denominatorPeriod: event.target.value })
-                            }
-                            placeholder="2024-12"
-                          />
-                        </Field>
-                        <Field label="Campo de variación publicada" hint="opcional">
-                          <DraftSelect
-                            value={check.publishedField || "none"}
-                            onChange={(value) =>
-                              updateCheck(check.uid, {
-                                publishedField: value === "none" ? "" : value,
-                              })
-                            }
-                            options={[{ value: "none", label: "Sin variación publicada" }, ...fieldOptions]}
-                          />
-                        </Field>
-                        <Field label="Periodo de la variación publicada" hint="opcional">
-                          <Input
-                            value={check.publishedPeriod}
-                            onChange={(event) =>
-                              updateCheck(check.uid, { publishedPeriod: event.target.value })
-                            }
-                            placeholder="2025-01"
-                          />
-                        </Field>
-                        <Field label="Tolerancia en puntos porcentuales">
-                          <Input
-                            value={check.tolerance}
-                            onChange={(event) =>
-                              updateCheck(check.uid, { tolerance: event.target.value })
-                            }
-                            placeholder="0.005"
-                          />
-                        </Field>
-                        <Field label="Unidad de la comparación">
-                          <Input
-                            value={check.unit}
-                            onChange={(event) => updateCheck(check.uid, { unit: event.target.value })}
-                            placeholder="porcentaje"
-                          />
-                        </Field>
-                      </div>
-                    </div>
-                  ))}
+                    <DraftSelect
+                      value={draft.indexField}
+                      onChange={(value) => update("indexField", value)}
+                      options={fieldOptions}
+                      placeholder="Seleccione"
+                    />
+                  </Field>
                 </div>
               </Section>
 
