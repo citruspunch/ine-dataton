@@ -1,0 +1,21 @@
+@startuml
+title Comparabilidad mensual del IPC · Enero de 2025
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+
+start
+:Seleccionar F504 · enero de 2025\nBase 2024=100;
+if (¿Índice de diciembre de 2024\nde la misma base?) then (Sí)
+  :Usar F503 · base 2024=100;
+  :Calcular (F504 / F503 − 1) × 100\nResultado **+0.501463%**;
+  :Contrastar con G504\nCoincide con la variación publicada;
+  :Mostrar el valor publicado de G504 en la ficha;
+else (No)
+  :Bloquear F504 con E503\nIPC-01 · E503 usa base diciembre 2023=100;
+  note right
+    **Evidencia de revisión**
+    (F504 / E503 − 1) × 100 = −0.673802%
+  end note
+endif
+stop
+@enduml

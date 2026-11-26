@@ -1,0 +1,50 @@
+@startuml
+title Cambio de perfil e invalidación de un agregado
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+
+actor Revisor
+participant FastAPI as API
+database "Perfiles YAML" as Profiles
+database "review_store" as Review
+participant "gate.verify" as Verify
+participant "Validador" as Validator
+database "public_snapshot" as Public
+
+note over Review, Public
+  Punto de partida: agregado habilitado e indexado,
+  recibo público y decisión aprobatoria vigente.
+end note
+
+alt Edición normal del perfil
+  Revisor -> API : POST /profiles (overwrite=true)
+  API -> Profiles : Guardar YAML
+  API --> Revisor : Confirmar guardado
+  Revisor -> API : Verificar después (POST /review/verify)
+  API -> Verify : verify()
+else Activación de una simulación
+  Revisor -> API : POST /review/{case_id}/simulate
+  API -> Review : Guardar perfil de simulación\nVersión con sufijo +sim
+  API -> Verify : verify() durante la activación
+end
+
+Verify -> Validator : validate(case_id, write_receipt=False)
+Validator -> Validator : Recalcular el hash de archivos, perfil vigente,\nreglas versionadas y hallazgos
+Validator --> Verify : validation_digest y decision_basis_digest
+Verify -> Review : Leer última decisión
+Verify -> Verify : Comparar el decision_basis_digest vigente\ncon el registrado en la aprobación
+
+alt Digest distinto y agregado presente
+  Verify -> Review : Guardar copia en cuarentena con motivo y fecha
+  Verify -> Public : Retirar archivo de aggregates/
+  Verify -> Public : Reconstruir index.json
+  note over Public
+    El recibo público se conserva en receipts/.
+    El agregado deja de aparecer en la consulta.
+  end note
+else La aprobación sigue vigente
+  Verify -> Verify : Mantener el agregado habilitado
+end
+
+Verify --> API : Informe de verificación
+@enduml

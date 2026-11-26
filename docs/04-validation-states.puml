@@ -1,0 +1,34 @@
+@startuml
+title Evaluación ordenada del estado · derive_state
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+
+start
+if (¿Licencia verificada?) then (No)
+  :cerrado;
+  stop
+else (Sí)
+endif
+if (¿Hay hallazgos críticos?) then (No)
+  :borrador;
+  stop
+else (Sí)
+endif
+if (¿Algún hallazgo crítico en falla\no sin evaluar?) then (Sí)
+  :no_habilitado;
+  stop
+else (No)
+endif
+if (¿Hay advertencias sin justificar?) then (Sí)
+  :en_revision;
+  stop
+else (No)
+endif
+if (¿La última decisión es habilitado\no aprobar_con_excepcion y coincide con\nel decision_basis_digest vigente?) then (No)
+  :en_revision;
+  stop
+else (Sí)
+endif
+:habilitado_para_consulta;
+stop
+@enduml

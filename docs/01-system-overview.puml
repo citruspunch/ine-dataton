@@ -1,0 +1,47 @@
+@startuml
+title INE Data Trust · Vista del sistema
+skinparam shadowing false
+left to right direction
+skinparam defaultFontName SansSerif
+
+actor "Revisor" as reviewer
+actor "Lector público" as reader
+actor "Cliente MCP\n(opcional)" as client
+
+rectangle "Next.js" {
+  component "Bandeja y detalle\n/review · /review/[id]" as reviewWeb
+  component "Portal y ficha pública\n/ · /a/[id] · /a/[id]/ficha" as publicWeb
+}
+
+package "Motor Python (engine/)" {
+  component "FastAPI\nengine.api" as api
+  component "Servidor MCP\nengine.mcp_server" as mcp
+
+  package "Revisión · límite lógico" {
+    component "Validador\nengine.rules" as validator
+    component "Gate humano\nengine.gate.decide" as gate
+    database "review_store\nEvidencia, recibos y decisiones" as reviewStore
+  }
+
+  package "Publicación · límite lógico" {
+    component "engine.public_api" as publicApi
+    database "public_snapshot\nÍndice, agregados y recibos públicos" as snapshot
+  }
+}
+
+reviewer --> reviewWeb
+reader --> publicWeb
+reviewWeb --> api : HTTP /review
+publicWeb --> api : HTTP /public
+client --> mcp : stdio
+api --> validator : validar
+api --> gate : registrar decisión
+api --> reviewStore : leer recibo privado
+validator --> reviewStore : escribir recibo privado
+gate --> validator : reevaluar
+gate --> reviewStore : registrar decisión
+gate --> snapshot : publicar agregado habilitado
+api --> publicApi : lecturas HTTP públicas
+mcp --> publicApi : listar y consultar
+publicApi --> snapshot : solo lectura
+@enduml

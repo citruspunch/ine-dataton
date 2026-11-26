@@ -1,0 +1,68 @@
+@startuml
+title Validación y publicación de un libro IPC registrado
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+
+actor Revisor
+actor "Lector público" as Lector
+participant "Pantalla Next.js" as Web
+participant FastAPI as API
+participant "Validador" as Validator
+database "Entradas registradas" as Inputs
+participant "Gate humano" as Gate
+database "review_store" as Review
+database "public_snapshot" as Public
+participant "engine.public_api" as Reader
+
+Revisor -> Web : Seleccionar libro IPC registrado
+Web -> API : GET /review/{case_id}
+API -> Validator : validate(case_id)
+Validator -> Inputs : Resolver caso y libro del manifiesto
+Validator -> Inputs : Cargar perfil YAML y reglas versionadas
+Validator -> Validator : Comprobar integridad y licencia\nEvaluar contrato y comparabilidad
+Validator -> Validator : Consolidar hallazgos y calcular\nvalidation_digest
+Validator -> Review : Guardar recibo privado
+Validator --> API : Estado, cobertura y hallazgos
+API --> Web : Mostrar evidencia de revisión
+
+alt Falla crítica o regla crítica sin evaluar
+  Web --> Revisor : Mostrar no_habilitado si la licencia está verificada
+  note over API, Gate
+    gate.decide bloquea la aprobación.
+  end note
+else Advertencia pendiente de justificación
+  Web --> Revisor : Solicitar responsable y motivo
+  note over API, Gate
+    La aprobación queda bloqueada mientras
+    falte una justificación.
+  end note
+else Aprobación con precondiciones cumplidas
+  Revisor -> Web : Aprobar con responsable y motivo\nAdjuntar justificaciones si corresponde
+  Web -> API : POST /review/{case_id}/gate
+  API -> Gate : decide(case_id, ...)
+  opt Se presentan justificaciones
+    Gate -> Review : Guardar justificaciones
+  end
+  Gate -> Validator : Revalidar y comprobar precondiciones
+  Gate -> Review : Registrar decisión humana con\ndecision_basis_digest vigente
+  Gate -> Validator : Revalidar con la decisión registrada
+  Validator --> Gate : habilitado_para_consulta
+  Gate -> Public : Escribir agregado y recibo público
+  Gate -> Public : Reconstruir index.json
+  note over Review, Public
+    validation_digest identifica la validación del recibo.
+    decision_basis_digest vincula la decisión a su base técnica.
+    El motor asigna el mismo hash de base a ambos campos.
+  end note
+  Gate --> API : Agregado publicado
+  API --> Web : Confirmar habilitación
+  Lector -> Web : Consultar agregado y recibo
+  Web -> API : Lecturas HTTP de /public
+  API -> Reader : Leer snapshot público
+  Reader -> Public : Leer índice, agregado y recibo público
+  Public --> Reader : Agregado indexado y recibo disponibles
+  Reader --> API : Datos públicos
+  API --> Web : Agregado y recibo
+  Web --> Lector : Mostrar ficha y enlace al recibo
+end
+@enduml
