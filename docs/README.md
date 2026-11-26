@@ -156,9 +156,11 @@ Reglas versionadas en `rules/rules.json`: `SNAP-01` integridad, `LIC-01` licenci
 ## 6. Interfaz
 
 - **Bandeja de revisión** (`/review`): carga de `.csv`/`.xlsx`/`.xls` con arrastrar
-  y soltar, selectores accesibles de perfil y licencia, lista de contratos
-  disponibles y **editor de reglas guiado**: un formulario genera el YAML y el
-  motor lo valida campo a campo antes de guardarlo.
+  y soltar, selectores accesibles de perfil y licencia, y un **formulario guiado**
+  que genera el YAML y lo valida campo a campo antes de guardarlo.
+- **Perfiles inmutables**: cada contrato se puede ver en solo lectura y duplicar
+  con un identificador nuevo. La copia se edita antes de guardarse; el original
+  no cambia.
 - **Detalle y gate** (`/review/[id]`): ficha, hallazgos filtrables por severidad,
   comparaciones con evidencia privada y formulario de gate con justificación de
   advertencias.

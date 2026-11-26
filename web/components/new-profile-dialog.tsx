@@ -176,6 +176,82 @@ function initialDraft(): Draft {
   };
 }
 
+function asRecord(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+function asText(value: unknown, fallback = "") {
+  return typeof value === "string" ? value : value == null ? fallback : String(value);
+}
+
+function periodBounds(value: unknown): [string, string] {
+  const text = asText(value);
+  return [text.slice(0, 4), text.slice(5, 7)];
+}
+
+function draftFromProfile(data: Record<string, unknown>): Draft {
+  const dates = asRecord(data.dates);
+  const range = asRecord(dates.range);
+  const [rangeFromYear, rangeFromMonth] = periodBounds(range.from);
+  const [rangeToYear, rangeToMonth] = periodBounds(range.to);
+  const schema = Array.isArray(data.schema) ? data.schema : [];
+  const columns: ColumnDraft[] = schema
+    .map((entry) => {
+      const column = asRecord(entry);
+      const type = asText(column.type) as ColumnType;
+      return {
+        uid: nextUid(),
+        name: asText(column.name),
+        column: asText(column.column),
+        type: (["integer", "float", "string", "date"] as ColumnType[]).includes(type)
+          ? type
+          : ("string" as ColumnType),
+        nullable: column.nullable === true,
+      };
+    })
+    .filter((column) => column.name || column.column);
+  const grain = Array.isArray(data.grain) ? data.grain.map((name) => asText(name)) : [];
+  const comparability = asRecord(data.comparability);
+  const series = Array.isArray(comparability.series)
+    ? asRecord(comparability.series[0])
+    : {};
+  const display = asRecord(data.display);
+  const year = asText(dates.year);
+  const month = asText(dates.month);
+
+  return {
+    profileId: asText(data.profile_id),
+    version: asText(data.version, "1.0.0"),
+    kind: asText(data.kind) === "xlsx" ? "xlsx" : "delimited",
+    title: asText(data.title),
+    description: asText(data.description),
+    expectedSheet: asText(data.expected_sheet),
+    headerRow: asText(data.header_row, "1"),
+    columns,
+    dateYear: year,
+    dateMonth: month,
+    monthFormat: asText(dates.month_format) === "name_es" ? "name_es" : "number",
+    periodMode: range.from || range.to ? "range" : "expected",
+    periods: Array.isArray(dates.expected)
+      ? dates.expected.map((period) => asText(period))
+      : [],
+    rangeFromYear,
+    rangeFromMonth,
+    rangeToYear,
+    rangeToMonth,
+    grainExtra:
+      grain.find((name) => name && name !== year && name !== month) ?? "",
+    unit: asText(comparability.unit, "índice") || "índice",
+    indexField: asText(series.index),
+    base: asText(series.base),
+    displayPeriod: asText(display.period),
+    displayBase: asText(display.base),
+    displayUnit: asText(display.unit),
+  };
+}
+
 function buildYaml(draft: Draft): string {
   const columns = draft.columns.filter((column) => column.name.trim() && column.column.trim());
   const grain = [draft.dateYear, draft.dateMonth, draft.grainExtra].filter(Boolean);
@@ -310,11 +386,21 @@ function validateDraft(draft: Draft): string[] {
 
 export function NewProfileDialog({
   title = "Crear perfil de validación",
+  initialProfile,
+  openInitially = false,
+  trigger,
+  onClosed,
 }: {
   title?: string;
+  initialProfile?: Record<string, unknown> | null;
+  openInitially?: boolean;
+  trigger?: React.ReactNode | null;
+  onClosed?: () => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const [draft, setDraft] = useState<Draft>(initialDraft);
+  const [open, setOpen] = useState(openInitially);
+  const [draft, setDraft] = useState<Draft>(() =>
+    initialProfile ? draftFromProfile(initialProfile) : initialDraft(),
+  );
   const [showErrors, setShowErrors] = useState(false);
   const [checked, setChecked] = useState(false);
   const [liveErrors, setLiveErrors] = useState<{ field: string; message: string }[]>([]);
@@ -354,6 +440,10 @@ export function NewProfileDialog({
     }
   }, [state, router]);
 
+  useEffect(() => {
+    if (!open && openInitially) onClosed?.();
+  }, [open, openInitially, onClosed]);
+
   function update<K extends keyof Draft>(key: K, value: Draft[K]) {
     setDraft((current) => ({ ...current, [key]: value }));
   }
@@ -391,12 +481,16 @@ export function NewProfileDialog({
   return (
     <TooltipProvider delayDuration={150}>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="secondary" size="sm" type="button" className="whitespace-nowrap">
-            <Plus className="h-4 w-4" aria-hidden />
-            Nueva regla
-          </Button>
-        </DialogTrigger>
+        {trigger === null ? null : (
+          <DialogTrigger asChild>
+            {trigger ?? (
+              <Button variant="secondary" size="sm" type="button" className="whitespace-nowrap">
+                <Plus className="h-4 w-4" aria-hidden />
+                Nueva regla
+              </Button>
+            )}
+          </DialogTrigger>
+        )}
         <DialogContent
           aria-describedby={undefined}
           className="flex w-[min(960px,94vw)] max-h-[88vh] flex-col overflow-hidden p-0"
@@ -885,11 +979,7 @@ export function NewProfileDialog({
                 </p>
               ) : null}
 
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <label className="flex items-center gap-2 text-[14px] text-muted">
-                  <Checkbox name="overwrite" />
-                  Sobrescribir si el identificador ya existe
-                </label>
+              <div className="flex flex-wrap items-center justify-end gap-3">
                 <div className="flex items-center gap-2">
                   <Button
                     type="button"

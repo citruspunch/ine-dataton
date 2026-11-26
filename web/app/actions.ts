@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { errorDetail, postForm, postJson } from "@/lib/api";
-import type { ActionState } from "@/lib/types";
+import { errorDetail, getJson, postForm, postJson } from "@/lib/api";
+import type { ActionState, ProfileDefinition } from "@/lib/types";
 
 function flash(path: string, message: string, kind: "ok" | "warn" | "err" = "ok") {
   redirect(`${path}?msg=${encodeURIComponent(message)}&kind=${kind}`);
@@ -88,6 +88,10 @@ export async function verifyAll() {
     const detail = errorDetail(error);
     flash("/review", detail.message, "err");
   }
+}
+
+export async function getProfileDefinition(profileId: string) {
+  return await getJson<ProfileDefinition>(`/profiles/${encodeURIComponent(profileId)}`);
 }
 
 export async function createProfile(

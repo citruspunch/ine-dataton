@@ -152,7 +152,11 @@ def get_profile(profile_id: str) -> dict[str, Any]:
         text = profiles.yaml_text(profile_id)
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail="perfil no encontrado")
-    return {"profile_id": profile_id, "yaml": text}
+    try:
+        data = profiles.read_yaml(profiles.profile_path(profile_id))
+    except (config.ConfigError, profiles.ProfileError):
+        data = None
+    return {"profile_id": profile_id, "yaml": text, "data": data}
 
 
 @app.post("/profiles/validate")

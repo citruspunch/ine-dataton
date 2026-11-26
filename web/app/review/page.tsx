@@ -14,6 +14,7 @@ import { StateBadge } from "@/components/badges";
 import { EmptyState } from "@/components/empty-state";
 import { PageHeader, SectionHeading } from "@/components/page-header";
 import { NewProfileDialog } from "@/components/new-profile-dialog";
+import { ProfileActions } from "@/components/profile-actions";
 import { UploadForm } from "@/components/upload-form";
 import { VerifyButton } from "@/components/verify-button";
 import { Alert } from "@/components/ui/alert";
@@ -127,6 +128,7 @@ export default async function ReviewInboxPage({ searchParams }: PageProps) {
                         <Badge variant="fail">con errores</Badge>
                       )}
                     </div>
+                    <ProfileActions profile={profile} profiles={profiles} />
                   </li>
                 ))}
               </ul>

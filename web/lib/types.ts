@@ -119,6 +119,12 @@ export interface CaseRow {
   override: boolean;
 }
 
+export interface ProfileDefinition {
+  profile_id: string;
+  yaml: string;
+  data: Record<string, unknown> | null;
+}
+
 export interface ProfileSummary {
   profile_id: string;
   version: string;
